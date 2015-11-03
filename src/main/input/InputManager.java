@@ -22,8 +22,8 @@ public class InputManager implements main.CustomRunnable
 	private static volatile State state = State.NORMAL;
 	/** The keyboard. */
 	private static Keyboard keyboard;
-//	/** The mouse. */
-//	private static Mouse mouse;
+	/** The mouse. */
+	private static Mouse mouse;
 	/** The main window event manager. */
 	private static WindowManager win;
 	
@@ -40,7 +40,7 @@ public class InputManager implements main.CustomRunnable
 	{
 		queue = new ConcurrentLinkedDeque<InputManagerEvent>();
 		keyboard = new Keyboard(window);
-//		mouse = new Mouse(window);
+		mouse = new Mouse(window);
 		win = new WindowManager(window);
 		clock = new main.ThreadClock(8);
 	}
@@ -237,7 +237,7 @@ public class InputManager implements main.CustomRunnable
 	private synchronized void doPoll()
 	{
 		keyboard.poll();
-//		mouse.poll();
+		mouse.poll();
 		win.poll();
 	}
 	
@@ -246,7 +246,7 @@ public class InputManager implements main.CustomRunnable
 	{
 		queue.clear();
 		keyboard.clear();
-//		mouse.clear();
+		mouse.clear();
 		win.clear();
 	}
 	

@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-// TODO?: Rewrite this to work as an event dispatcher
+// TODO ?Make key bindings like F11(Fullscreen) for function keys
 /** Handles processing of keyboard events. */
 public class Keyboard implements InputDevice, KeyListener
 {
