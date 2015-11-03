@@ -4,9 +4,6 @@ import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-
 // TODO?: Rewrite this to work as an event dispatcher
 /** Handles processing of keyboard events. */
 public class Keyboard implements InputDevice, KeyListener
@@ -103,7 +100,6 @@ public class Keyboard implements InputDevice, KeyListener
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		System.out.println("YEP");
 		// Get the key's integer ID
 		int keyCode = e.getKeyCode();
 		// Check if key is in range of used keys

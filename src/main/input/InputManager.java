@@ -18,12 +18,22 @@ public class InputManager implements main.CustomRunnable
 	private main.ThreadClock clock;
 	/** Event queue. */
 	private static volatile LinkedList<InputManagerEvent> queue;
+	/** The state the game is currently in. */
+	private static volatile State state = State.NORMAL;
 	/** The keyboard. */
 	private static Keyboard keyboard;
 //	/** The mouse. */
 //	private static Mouse mouse;
-//	/** The main window event manager. */
-//	private static WindowManager window;
+	/** The main window event manager. */
+	private static WindowManager win;
+	
+	/** Different basic states the game can be in. */
+	public enum State
+	{
+		NORMAL,
+		PAUSED,
+		QUIT
+	}
 	
 	/** Normal input setup. */
 	public InputManager(Window window)
@@ -31,7 +41,7 @@ public class InputManager implements main.CustomRunnable
 		queue = new LinkedList<InputManagerEvent>();
 		keyboard = new Keyboard(window);
 //		mouse = new Mouse(window);
-//		window = new WindowManager(window);
+		win = new WindowManager(window);
 		clock = new main.ThreadClock(8);
 	}
 	
@@ -61,6 +71,14 @@ public class InputManager implements main.CustomRunnable
 					case CLEAR:
 						doClear();
 						break;
+					case PAUSE:
+						doPause();
+						break;
+					case RESUME:
+						doResume();
+						break;
+					case QUIT:
+						doQuit();
 					default:
 						break;
 				}
@@ -69,7 +87,8 @@ public class InputManager implements main.CustomRunnable
 		}
 	}
 	
-	public static boolean isInQueue(Type type)
+	/** Check if an event of the specified type is currently queued. */
+	private static synchronized boolean isInQueue(Type type)
 	{
 		if (queue.size() == 0)
 		{
@@ -85,8 +104,14 @@ public class InputManager implements main.CustomRunnable
 		return false;
 	}
 	
+	/** Get the current general state of the game. */
+	public static synchronized State getState()
+	{
+		return state;
+	}
+	
 	/** Update state information for all input devices. */
-	public static void poll()
+	public static synchronized void poll()
 	{
 		// Only queue one poll event at a time
 		if (isInQueue(Type.POLL))
@@ -98,7 +123,7 @@ public class InputManager implements main.CustomRunnable
 	}
 	
 	/** Clear all buffered/stored data in input devices. */
-	public static void clear()
+	public static synchronized void clear()
 	{
 		// Don't queue multiple clear events in a row
 		if (queue.isEmpty() || queue.getLast().getType() == Type.CLEAR)
@@ -109,22 +134,61 @@ public class InputManager implements main.CustomRunnable
 		queue.add(new InputManagerEvent(Type.CLEAR));
 	}
 	
+	/** Pause the game. */
+	public static synchronized void pause()
+	{
+		queue.add(new InputManagerEvent(Type.PAUSE));
+	}
+	
+	/** Resume the game. */
+	public static synchronized void resume()
+	{
+		queue.add(new InputManagerEvent(Type.RESUME));
+	}
+	
+	/** Quit the program. */
+	public static synchronized void quit()
+	{
+		queue.add(new InputManagerEvent(Type.QUIT));
+	}
+	
 	/** Does the polling of all input devices. */
 	private synchronized void doPoll()
 	{
-		System.out.println("Polling...");
 		keyboard.poll();
 //		mouse.poll();
-//		window.poll();
+		win.poll();
 	}
 	
 	/** Does the clearing of input devices. */
 	private void doClear()
 	{
-		// TODO Implement
-		System.out.println("Clearing...");
 		keyboard.clear();
 //		mouse.clear();
-//		window.clear();
+		win.clear();
+	}
+	
+	/** Pause the game. */
+	private void doPause()
+	{
+		doClear();
+		queue.clear();
+		System.out.println("Paused");
+		state = State.PAUSED;
+	}
+	
+	/** Resume the game to normal operation. */
+	private void doResume()
+	{
+		System.out.println("Resumed");
+		state = State.NORMAL;
+	}
+	
+	/** Quit the game. */
+	private void doQuit()
+	{
+		queue.clear();
+		System.out.println("Quitted (FYI: Not a real word)");
+		state = State.QUIT;
 	}
 }

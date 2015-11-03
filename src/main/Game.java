@@ -2,6 +2,8 @@ package main;
 
 import main.input.InputManager;
 
+import static main.input.InputManager.State;
+
 /** Represents a game session. Handles game cycling. */
 public class Game
 {
@@ -34,7 +36,14 @@ public class Game
 	{
 		while(true)
 		{
-			main.input.InputManager.poll();
+			if (InputManager.getState() == State.NORMAL)
+			{
+				main.input.InputManager.poll();
+			}
+			else if (InputManager.getState() == State.QUIT)
+			{
+				break;
+			}
 			clock.nextCycle();
 		}
 	}

@@ -10,7 +10,10 @@ public class InputManagerEvent
 	public enum Type
 	{
 		POLL,
-		CLEAR
+		CLEAR,
+		PAUSE,
+		RESUME,
+		QUIT
 	}
 	
 	/** Basic constructor. */

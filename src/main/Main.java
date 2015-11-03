@@ -1,9 +1,8 @@
 package main;
 
 import main.Game;
-import main.input.InputManager;
 
-/** The main entrypoint for this game. */
+/** The main entry point for this program. */
 public class Main
 {
 	/** The game session object. */
@@ -15,6 +14,7 @@ public class Main
 		session = new Game();
 		session.start();
 		// When the game has stopped, stop the program
+		System.out.println("Quitting...");
 		System.exit(0);
 	}
 }
