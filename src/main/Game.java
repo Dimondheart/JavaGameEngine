@@ -1,40 +1,41 @@
 package main;
 
+import main.input.InputManager;
+
 /** Represents a game session. Handles game cycling. */
-public class Game implements CustomRunnable
+public class Game
 {
+	/** The graphics renderer. */
+	private main.graphics.Gfx gfx;
+	/** The manager of all input devices. */
+	private InputManager input;
 	/** Thread manager for this object. */
 	private ThreadClock clock;
 	
 	/** Sets up a standard game session. */
 	public Game()
 	{
+		gfx = new main.graphics.Gfx();
+		// Input device manager
+		input = new InputManager(main.graphics.Gfx.getMainWin());
 		clock = new ThreadClock(10);
 	}
 	
-	@Override
+	/** Final setup and start playing. */
 	public void start()
 	{
-		run();
+		input.start();
+		gfx.start();
+		play();
 	}
 
-	@Override
-	public void run()
+	/** Play the game. */
+	private void play()
 	{
-		int i = 10;
-		while(i > 0)
+		while(true)
 		{
 			main.input.InputManager.poll();
-			main.input.InputManager.clear();
-			main.input.InputManager.clear();
-			main.input.InputManager.poll();
-			clock.pauseThread(100);
-			main.input.InputManager.poll();
-			main.input.InputManager.poll();
-			i -= 1;
 			clock.nextCycle();
 		}
-		clock.pauseThread(1000);
-		System.exit(0);
 	}
 }

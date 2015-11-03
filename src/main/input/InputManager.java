@@ -1,10 +1,15 @@
 package main.input;
 
+import java.awt.Window;
 import java.util.LinkedList;
+
+import main.input.Keyboard;
+//import main.input.Mouse;
+//import main.input.WindowManager;
 
 import static main.input.InputManagerEvent.Type;
 
-/** Manages all input devices (keyboard, etc.). */
+/** Manages all input devices (keyboard, etc.) for the main window. */
 public class InputManager implements main.CustomRunnable
 {
 	/** Thread for this object. */
@@ -13,12 +18,21 @@ public class InputManager implements main.CustomRunnable
 	private main.ThreadClock clock;
 	/** Event queue. */
 	private static volatile LinkedList<InputManagerEvent> queue;
+	/** The keyboard. */
+	private static Keyboard keyboard;
+//	/** The mouse. */
+//	private static Mouse mouse;
+//	/** The main window event manager. */
+//	private static WindowManager window;
 	
 	/** Normal input setup. */
-	public InputManager()
+	public InputManager(Window window)
 	{
 		queue = new LinkedList<InputManagerEvent>();
-		clock = new main.ThreadClock();
+		keyboard = new Keyboard(window);
+//		mouse = new Mouse(window);
+//		window = new WindowManager(window);
+		clock = new main.ThreadClock(8);
 	}
 	
 	@Override
@@ -96,10 +110,12 @@ public class InputManager implements main.CustomRunnable
 	}
 	
 	/** Does the polling of all input devices. */
-	private void doPoll()
+	private synchronized void doPoll()
 	{
-		// TODO Implement
 		System.out.println("Polling...");
+		keyboard.poll();
+//		mouse.poll();
+//		window.poll();
 	}
 	
 	/** Does the clearing of input devices. */
@@ -107,5 +123,8 @@ public class InputManager implements main.CustomRunnable
 	{
 		// TODO Implement
 		System.out.println("Clearing...");
+		keyboard.clear();
+//		mouse.clear();
+//		window.clear();
 	}
 }

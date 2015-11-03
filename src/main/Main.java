@@ -6,16 +6,15 @@ import main.input.InputManager;
 /** The main entrypoint for this game. */
 public class Main
 {
-	/** The manager of all inputs. */
-	private static InputManager input;
 	/** The game session object. */
 	private static Game session;
 	
 	public static void main(String[] args)
 	{
-		input = new InputManager();
-		input.start();
+		// Setup and start the game session
 		session = new Game();
 		session.start();
+		// When the game has stopped, stop the program
+		System.exit(0);
 	}
 }
