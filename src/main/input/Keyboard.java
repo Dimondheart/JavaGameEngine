@@ -20,7 +20,7 @@ public class Keyboard implements InputDevice, KeyListener
 	private enum KeyState
 	{
 		RELEASED,  // Not down
-		PRESSED,  // Down, but not first pressed this frame
+		PRESSED,  // Down, but not first pressed this poll
 		ONCE  // Down for the first time
 	}
 	
@@ -33,6 +33,26 @@ public class Keyboard implements InputDevice, KeyListener
 			comp.addKeyListener(this);
 		}
 		clear();
+	}
+	
+	/** Checks if the specified key is pressed down.
+	 * @return True if the key is pressed
+	 */
+	public boolean isDown(int keyCode)
+	{
+		return (
+				justPressed(keyCode) ||
+				processedStates[keyCode] == KeyState.PRESSED
+				);
+	}
+	
+	/** Checks if the specified key is pressed down for the first time
+	 * since the last poll.
+	 * @return True if the key was first pressed during the last poll.
+	 */
+	public boolean justPressed(int keyCode)
+	{
+		return (processedStates[keyCode] == KeyState.ONCE);
 	}
 	
 	@Override
@@ -77,33 +97,13 @@ public class Keyboard implements InputDevice, KeyListener
 		}
 	}
 	
-	/** Checks if the specified key is pressed down.
-	 * @return True if the key is pressed
-	 */
-	public boolean isKeyDown(int keyCode)
-	{
-		return (
-				isKeyDownOnce(keyCode) ||
-				processedStates[keyCode] == KeyState.PRESSED
-				);
-	}
-	
-	/** Checks if the specified key is pressed down for the first time
-	 * since the last poll.
-	 * @return True if the key was first pressed during the last poll.
-	 */
-	public boolean isKeyDownOnce(int keyCode)
-	{
-		return (processedStates[keyCode] == KeyState.ONCE);
-	}
-	
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
 		// Get the key's integer ID
 		int keyCode = e.getKeyCode();
 		// Check if key is in range of used keys
-		if (keyCode >= 0 && keyCode < KEY_COUNT)
+		if (0 <= keyCode && keyCode < KEY_COUNT)
 		{
 			// Current key set to pressed
 			rawStates[keyCode] = true;
@@ -116,7 +116,7 @@ public class Keyboard implements InputDevice, KeyListener
 		// Get the key's integer ID
 		int keyCode = e.getKeyCode();
 		// Check if key in range of used keys
-		if (keyCode >= 0 && keyCode < KEY_COUNT)
+		if (0 <= keyCode && keyCode < KEY_COUNT)
 		{
 			// Set key as released
 			rawStates[keyCode] = false;

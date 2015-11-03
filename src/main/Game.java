@@ -36,10 +36,12 @@ public class Game
 	{
 		while(true)
 		{
+			// Normal operations
 			if (InputManager.getState() == State.NORMAL)
 			{
 				main.input.InputManager.poll();
 			}
+			// Quit
 			else if (InputManager.getState() == State.QUIT)
 			{
 				break;

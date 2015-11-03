@@ -13,21 +13,21 @@ import javax.swing.JFrame;
 /** Handles the rendering thread. */
 public class Gfx implements main.CustomRunnable
 {
-	/** Number of layers to create for the main window. */
-	public static final int NUM_MAIN_LAYERS = 14;
 	/** Default dimensions for a new window. */
 	public static final Dimension DEF_DIMS = new Dimension(480,270);
+	/** Number of layers to create for the main window. */
+	public static final int NUM_MAIN_LAYERS = 14;
 	
 	/** The main window frame. */
 	private static JFrame mainWin;
 	/** The layer container for the main window. */
 	private static LayerContainer mainLayers;
+	/** Component maps for all windows. */
+	private static volatile ConcurrentHashMap<Window, LinkedList<Component>> compMaps;
 	/** Thread for this system. */
 	private Thread thread;
 	/** Thread manager. */
 	private main.ThreadClock clock;
-	/** Component maps for all windows. */
-	private static ConcurrentHashMap<Window, LinkedList<Component>> compMaps;
 	
 	/** Normal graphics renderer setup. */
 	public Gfx()
@@ -61,32 +61,13 @@ public class Gfx implements main.CustomRunnable
 		}
 	}
 	
-	/** Add a component to the specified window and the component map. */
-	private static void addComponent(Window window, Component component)
+	/** Get the JFrame for the primary window. */
+	public static synchronized JFrame getMainWin()
 	{
-		// Get components from compMap or get default value
-		LinkedList<Component> compMap = compMaps.getOrDefault(
-				window,
-				new LinkedList<Component>()
-				);
-		// Add the component to the window's component map
-		compMap.add(component);
-		// Update the window's component map in compMap
-		compMaps.put(window, compMap);
-		// Actually add the component to the window
-		window.add(component);
+		return mainWin;
 	}
 	
-	/** Gets the component map for the specified window. */
-	private static LinkedList<Component> getCompMap(Window window)
-	{
-		return compMaps.getOrDefault(
-				window,
-				new LinkedList<Component>()
-				);
-	}
-	
-	/** Gets the drawing surface for the specified layer and container.
+	/** Gets the drawing surface for the specified window layer.
 	 * <br>For the primary window, there are 14 layers.
 	 * They should be used as follows:
 	 * <br>
@@ -94,11 +75,9 @@ public class Gfx implements main.CustomRunnable
 	 * <br>4-9: Main Content Layers
 	 * <br>10-13: GUI Layers
 	 * <br>
-	 * <br> Using "sub-layers" (drawing stuff within a layer in order) should
-	 * be preferred where possible. Use layers to simplify graphics operations,
-	 * for example rendering a tile grid at the same time as the entities
-	 * in that tile grid, or rendering background animations over a
-	 * background image that doesn't change.
+	 * <br> Using "sub-layers" (first drawn on a layer = lowest sub-layer)
+	 * should be preferred where possible.
+	 * @param window the window to get the layer from.
 	 * @param layer the index of the layer.
 	 * @return (Graphics2D) The graphics context to render to.
 	 */
@@ -106,39 +85,8 @@ public class Gfx implements main.CustomRunnable
 	{
 		// Find the layer container of the given window
 		LayerContainer lc = findLayerContainer(window);
+		// TODO Improve this for when no layer container is found
 		return lc.getDrawingSurface(layer);
-	}
-	
-	/** Get the layer container from the specified window. */
-	public static LayerContainer findLayerContainer(Window window)
-	{
-		// For each component in the window's component map...
-		for (Component c : getCompMap(window))
-		{
-			// Try casting the component to a LayerContainer
-			try
-			{
-				((LayerContainer) c).getHeight();
-			}
-			// If it fails to cast, try another component
-			catch (java.lang.ClassCastException e)
-			{
-				continue;
-			}
-			// Cast succeeded, return the discovered layer container
-			return (LayerContainer) c;
-		}
-		// No layer container found
-		System.out.println(
-				"Window does not contain a LayerContainer: " + window
-				);
-		return null;
-	}
-
-	/** Get the JFrame for the primary window. */
-	public static synchronized JFrame getMainWin()
-	{
-		return mainWin;
 	}
 	
 	/** Clears the drawing surface of the specified layer.
@@ -211,5 +159,56 @@ public class Gfx implements main.CustomRunnable
 			lc.adjustSize(newSize);
 		}
 		win.validate();
+	}
+	
+	/** Add a component to the specified window and the component map. */
+	private static synchronized void addComponent(Window window, Component component)
+	{
+		// Get components from compMap or get default value
+		LinkedList<Component> compMap = compMaps.getOrDefault(
+				window,
+				new LinkedList<Component>()
+				);
+		// Add the component to the window's component map
+		compMap.add(component);
+		// Update the window's component map in compMap
+		compMaps.put(window, compMap);
+		// Actually add the component to the window
+		window.add(component);
+	}
+	
+	/** Gets the component map for the specified window. */
+	private static synchronized LinkedList<Component> getCompMap(Window window)
+	{
+		return compMaps.getOrDefault(
+				window,
+				new LinkedList<Component>()
+				);
+	}
+	
+	/** Get the layer container from the specified window. */
+	private static synchronized LayerContainer findLayerContainer(Window window)
+	{
+		// For each component in the window's component map...
+		for (Component c : getCompMap(window))
+		{
+			// Try casting the component to a LayerContainer
+			try
+			{
+				((LayerContainer) c).getHeight();
+			}
+			// If it fails to cast, try another component
+			catch (java.lang.ClassCastException e)
+			{
+				continue;
+			}
+			// Cast succeeded, return the discovered layer container
+			return (LayerContainer) c;
+		}
+		// No layer container found
+		System.out.println(
+				"Window does not contain a LayerContainer: " + window
+				);
+		return null;
 	}
 }

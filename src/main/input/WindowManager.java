@@ -46,6 +46,10 @@ public class WindowManager implements InputDevice, WindowListener, ComponentList
 		{
 			InputManager.quit();
 		}
+		else
+		{
+			closeWindow();
+		}
 	}
 
 	@Override
@@ -60,6 +64,10 @@ public class WindowManager implements InputDevice, WindowListener, ComponentList
 		if (myWin == Gfx.getMainWin())
 		{
 			System.exit(0);
+		}
+		else
+		{
+			closeWindow();
 		}
 	}
 
@@ -128,5 +136,11 @@ public class WindowManager implements InputDevice, WindowListener, ComponentList
 		{
 			InputManager.resume();
 		}
+	}
+	
+	/** Safely destroys the window and all related info. */
+	private void closeWindow()
+	{
+		// TODO Safely remove the window (remove component map, etc.)
 	}
 }
