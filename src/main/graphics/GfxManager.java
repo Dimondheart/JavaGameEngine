@@ -11,7 +11,7 @@ import java.awt.Window;
 import javax.swing.JFrame;
 
 /** Handles the rendering thread. */
-public class Gfx implements main.CustomRunnable
+public class GfxManager implements main.CustomRunnable
 {
 	/** Default dimensions for a new window. */
 	public static final Dimension DEF_DIMS = new Dimension(480,270);
@@ -30,7 +30,7 @@ public class Gfx implements main.CustomRunnable
 	private main.ThreadClock clock;
 	
 	/** Normal graphics renderer setup. */
-	public Gfx()
+	public GfxManager()
 	{
 		System.out.println("Setting Up Graphics System...");
 		compMaps = new ConcurrentHashMap<Window, LinkedList<Component>>();

@@ -6,7 +6,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import main.graphics.Gfx;
+import main.graphics.GfxManager;
 import main.input.InputDevice;
 
 /** Event listener for window-related events. */
@@ -42,7 +42,7 @@ public class WindowManager implements InputDevice, WindowListener, ComponentList
 	public void windowClosing(WindowEvent e)
 	{
 		// If main window close btn hit, quit the program
-		if (myWin == Gfx.getMainWin())
+		if (myWin == GfxManager.getMainWin())
 		{
 			InputManager.quit();
 		}
@@ -61,7 +61,7 @@ public class WindowManager implements InputDevice, WindowListener, ComponentList
 	public void windowClosed(WindowEvent e)
 	{
 		// Main window disposed (not preferred quitting), exit the program
-		if (myWin == Gfx.getMainWin())
+		if (myWin == GfxManager.getMainWin())
 		{
 			System.exit(0);
 		}
@@ -110,7 +110,7 @@ public class WindowManager implements InputDevice, WindowListener, ComponentList
 	public void componentResized(ComponentEvent e)
 	{
 		// Do any special sizing adjustments for the window
-		Gfx.windowResized(myWin);
+		GfxManager.windowResized(myWin);
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class WindowManager implements InputDevice, WindowListener, ComponentList
 	private void focusLost()
 	{
 		// Main window; pause the game
-		if (myWin == Gfx.getMainWin())
+		if (myWin == GfxManager.getMainWin())
 		{
 			InputManager.pause();
 		}
@@ -132,7 +132,7 @@ public class WindowManager implements InputDevice, WindowListener, ComponentList
 	private void focusRegained()
 	{
 		// Main window; resume the game
-		if (myWin == Gfx.getMainWin())
+		if (myWin == GfxManager.getMainWin())
 		{
 			InputManager.resume();
 		}

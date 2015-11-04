@@ -3,10 +3,6 @@ package main.input;
 import java.awt.Window;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-import main.input.Keyboard;
-//import main.input.Mouse;
-//import main.input.WindowManager;
-
 import static main.input.InputManagerEvent.Type;
 
 /** Manages all input devices (keyboard, etc.) for the main window. */
@@ -98,7 +94,8 @@ public class InputManager implements main.CustomRunnable
 						break;
 					default:
 						System.out.println(
-								"Unrecognized Event Type: " + next.getType()
+								"Unrecognized InputManagerEvent Type: " +
+										next.getType()
 								);
 						break;
 				}
@@ -111,6 +108,18 @@ public class InputManager implements main.CustomRunnable
 	public static synchronized State getState()
 	{
 		return state;
+	}
+	
+	/** Get the keyboard object. */
+	public static Keyboard getKB()
+	{
+		return keyboard;
+	}
+	
+	/** Get the mouse object. */
+	public static Mouse getMS()
+	{
+		return mouse;
 	}
 	
 	/** Update processed state information for all input devices. */
