@@ -5,10 +5,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Window;
-import javax.swing.JLayeredPane;
+import javax.swing.JComponent;
 
 /** Handles multiple layers of rendering for a window. */
-public class LayerContainer extends JLayeredPane
+public class LayerContainer extends JComponent
 {
 	private static final long serialVersionUID = 1L;
 	/** Window this layer container is part of. */
@@ -53,13 +53,13 @@ public class LayerContainer extends JLayeredPane
 	}
 	
 	/** Get the container width. */
-	public int getWidth()
+	public int getLCWidth()
 	{
 		return width;
 	}
 	
 	/** Get the container height. */
-	public int getHeight()
+	public int getLCHeight()
 	{
 		return height;
 	}
