@@ -12,6 +12,8 @@ import static java.awt.event.MouseEvent.*;
 import static main.input.InputManager.State;
 import static main.sound.SoundManager.BGMTransition;
 
+import java.awt.Color;
+
 /** Represents a game session. Handles game cycling. */
 public class Game
 {
@@ -47,25 +49,22 @@ public class Game
 	/** Play the game. */
 	private void play()
 	{
+		// Sample renderer
+		SampleRenderer sr = new SampleRenderer();
+		SampleRenderer sr_2 = new SampleRenderer(40,200,1,-1,Color.green);
+		SampleRenderer2 sr2 = new SampleRenderer2();
+		SampleRenderer2 sr2_2 = new SampleRenderer2(0,0,80,270,Color.cyan,3);
+		SamplePlayerControlled spc = new SamplePlayerControlled();
 		while(true)
 		{
 			// Normal operations
 			if (InputManager.getState() == State.NORMAL)
 			{
 				InputManager.poll();
-				// Testing inputs and sound system
-				if (InputManager.getKB().isDown(VK_SPACE))
-				{
-					SoundManager.playSFX("testSFX");
-				}
-				if (InputManager.getKB().justPressed(VK_SHIFT))
-				{
-					SoundManager.playBGM("testBGM", BGMTransition.IMMEDIATE);
-				}
-				if (InputManager.getMS().justClicked(Mouse.BTN_LEFT))
-				{
-					SoundManager.changeVolume(VolumeSetting.MASTER, 50);
-				}
+				GfxManager.clearAllLayers(GfxManager.getMainWin());
+				sr.update();
+				sr_2.update();
+				spc.update();
 			}
 			// Quit
 			else if (InputManager.getState() == State.QUIT)

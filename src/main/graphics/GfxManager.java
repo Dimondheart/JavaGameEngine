@@ -141,6 +141,16 @@ public class GfxManager implements main.CustomRunnable
 		}
 	}
 	
+	public static synchronized void addRenderer(Renderer obj)
+	{
+		mainLayers.addRenderer(obj);
+	}
+	
+	public static synchronized void removeRenderer(Renderer obj)
+	{
+		mainLayers.removeRenderer(obj);
+	}
+	
 	/** Handles any changes needed because of a resized window. */
 	public static synchronized void windowResized(Window win)
 	{

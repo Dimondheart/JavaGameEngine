@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Window;
+import java.util.LinkedList;
 import javax.swing.JComponent;
 
 /** Handles multiple layers of rendering for a window. */
@@ -27,11 +28,14 @@ public class LayerContainer extends JComponent
 	private double horizScale = 1.0;
 	/** The vertical scale factor. */
 	private double vertScale = 1.0;
+	/** */
+	private LinkedList<Renderer> renderers;
 	
 	/** Standard layer container for the specified window. */
 	public LayerContainer(Window window, Dimension dims, int numLayers)
 	{
 		myWin = window;
+		renderers = new LinkedList<Renderer>();
 		this.numLayers = numLayers;
 		initDims = dims;
 		// Setup the layers
@@ -115,6 +119,16 @@ public class LayerContainer extends JComponent
 		}
 	}
 	
+	public synchronized void addRenderer(Renderer obj)
+	{
+		renderers.addLast(obj);
+	}
+	
+	public synchronized void removeRenderer(Renderer obj)
+	{
+		renderers.remove(obj);
+	}
+	
 	@Override
 	protected synchronized void paintComponent(Graphics g)
 	{
@@ -122,14 +136,15 @@ public class LayerContainer extends JComponent
 		// Clear the graphics context
 		g2.setBackground(Color.black);
 		g2.clearRect(0, 0, myWin.getWidth(), myWin.getHeight());
+		// Render content
+		for (Renderer obj : renderers)
+		{
+			obj.render(layers[obj.getLayer()].getDrawingSurface());
+		}
 		// Render the layers
 		for (int i = 0; i < numLayers; ++i)
 		{
-			// Draw only enabled layers
-			if (layers[i].isEnabled())
-			{
-				layers[i].flip(g2);
-			}
+			layers[i].flip(g2);
 		}
 	}
 	
