@@ -3,7 +3,6 @@ package main;
 import main.input.InputManager;
 
 import static java.awt.event.KeyEvent.*;
-import static java.awt.event.MouseEvent.*;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -47,18 +46,22 @@ public class SamplePlayerControlled extends main.graphics.Renderer
 		}
 		if (x <= 0)
 		{
+			main.sound.SoundManager.playSFX("bounce");
 			moveX = 1;
 		}
 		else if (x >= 480)
 		{
+			main.sound.SoundManager.playSFX("bounce");
 			moveX = -1;
 		}
 		if (y <= 0)
 		{
+			main.sound.SoundManager.playSFX("bounce");
 			moveY = 1;
 		}
 		else if (y >= 270)
 		{
+			main.sound.SoundManager.playSFX("bounce");
 			moveY = -1;
 		}
 		x += moveX;

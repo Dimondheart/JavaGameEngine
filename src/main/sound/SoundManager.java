@@ -1,6 +1,7 @@
 package main.sound;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SoundManager implements main.CustomRunnable
 {
@@ -12,14 +13,10 @@ public class SoundManager implements main.CustomRunnable
 	private static volatile ConcurrentLinkedDeque<SFXEvent> sfxQueue;
 	/** Queue used for general events. */
 	private static volatile ConcurrentLinkedDeque<SoundEvent> genQueue;
-	
-	/** The different volume settings. */
-	public enum VolumeSetting
-	{
-		MASTER,
-		SFX,
-		BGM
-	}
+	/** Currently playing sound effects. */
+	private static ConcurrentLinkedQueue<SFX> playingSFX;
+	/** The volume settings. */
+	public Volume volume;
 	
 	/** Different ways to transition BGM. */
 	public enum BGMTransition
@@ -34,6 +31,8 @@ public class SoundManager implements main.CustomRunnable
 		// Setup queues
 		sfxQueue = new ConcurrentLinkedDeque<SFXEvent>();
 		genQueue = new ConcurrentLinkedDeque<SoundEvent>();
+		playingSFX = new ConcurrentLinkedQueue<SFX>();
+		volume = new Volume();
 		// Setup thread controller
 		clock = new main.ThreadClock(10);
 	}
@@ -50,6 +49,14 @@ public class SoundManager implements main.CustomRunnable
 	{
 		while (true)
 		{
+			// Clear any finished sound effects
+			for (SFX sfx : playingSFX)
+			{
+				if (sfx.isDone())
+				{
+					playingSFX.remove(sfx);
+				}
+			}
 			// Get the next sound effect
 			SFXEvent nextSFX = sfxQueue.poll();
 			// Get the next general event
@@ -96,7 +103,7 @@ public class SoundManager implements main.CustomRunnable
 	}
 	
 	/** Change a volume setting. */
-	public static void changeVolume(VolumeSetting setting, int newVolume)
+	public static void changeVolume(Volume.Setting setting, int newVolume)
 	{
 		queueGenEvent(new VolumeEvent(setting, newVolume));
 	}
@@ -126,15 +133,20 @@ public class SoundManager implements main.CustomRunnable
 	/** Play the specified sound effect. */
 	private void doPlaySFX(SFXEvent sfx)
 	{
-		// TODO Implement
-		System.out.println("Playing SFX...");
+		playingSFX.add(new SFX(sfx.getSFX(), volume));
 	}
 	
 	/** Actually change the volume setting. */
 	private void doChangeVolume(VolumeEvent ve)
 	{
-		// TODO Implement
-		System.out.println("Changing Volume Setting...");
+		if (volume.getFinalVolume(ve.getSetting()) != ve.getNewVolume())
+		{
+			volume.setVolume(ve.getSetting(), ve.getNewVolume());
+			for (SFX sfx : playingSFX)
+			{
+				sfx.adjustVolume();
+			}
+		}
 	}
 	
 	/** Actually play/change the BGM track. */

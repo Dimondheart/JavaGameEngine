@@ -2,15 +2,13 @@ package main;
 
 import main.graphics.GfxManager;
 import main.input.InputManager;
-import main.input.Mouse;
 import main.sound.SoundManager;
-import main.sound.SoundManager.VolumeSetting;
+import main.sound.Volume;
 
 import static java.awt.event.KeyEvent.*;
-import static java.awt.event.MouseEvent.*;
+//import static java.awt.event.MouseEvent.*;
 
 import static main.input.InputManager.State;
-import static main.sound.SoundManager.BGMTransition;
 
 import java.awt.Color;
 
@@ -47,6 +45,7 @@ public class Game
 	}
 
 	/** Play the game. */
+	@SuppressWarnings("unused")
 	private void play()
 	{
 		// Sample renderer
@@ -61,6 +60,18 @@ public class Game
 			if (InputManager.getState() == State.NORMAL)
 			{
 				InputManager.poll();
+				if (InputManager.getKB().isDown(VK_SHIFT))
+				{
+					SoundManager.changeVolume(Volume.Setting.MASTER, 0);
+				}
+				else
+				{
+					SoundManager.changeVolume(Volume.Setting.MASTER, 100);
+				}
+				if (InputManager.getKB().justPressed(VK_SPACE))
+				{
+					SoundManager.playBGM("Into_the_Unknown", SoundManager.BGMTransition.IMMEDIATE);
+				}
 				sr.update();
 				sr_2.update();
 				spc.update();

@@ -1,13 +1,8 @@
 package main.graphics;
 
-import java.util.LinkedList;
-import java.util.concurrent.ConcurrentHashMap;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.Window;
-
 import javax.swing.JFrame;
 
 /** Handles the rendering thread. */
@@ -49,6 +44,7 @@ public class GfxManager implements main.CustomRunnable
 		thread.start();
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void run()
 	{

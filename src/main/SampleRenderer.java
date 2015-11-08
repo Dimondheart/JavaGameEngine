@@ -37,10 +37,12 @@ public class SampleRenderer extends main.graphics.Renderer
 	{
 		if (x <= 0 || x >= 480)
 		{
+			main.sound.SoundManager.playSFX("bounce");
 			vector[0] *= -1;
 		}
 		if (y <= 0 || y >= 270)
 		{
+			main.sound.SoundManager.playSFX("bounce");
 			vector[1] *= -1;
 		}
 		x += vector[0];
