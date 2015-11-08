@@ -56,6 +56,10 @@ public class GfxManager implements main.CustomRunnable
 	{
 		while (true)
 		{
+			System.out.println(
+					"Avg FPS: " +
+						String.format("%.2f", clock.getAvgCPS())
+					);
 			mainWin.repaint();
 			clock.nextCycle();
 		}

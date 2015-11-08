@@ -12,14 +12,12 @@ public class ThreadClock
 	
 	/** Actual average CPS. */
 	private double avgCPS;
+	/** Average CPS of the previous cycle. */
+	private double prevAvgCPS;
 	/** Number of milliseconds per cycle. */
 	private long msPerCycle;
 	/** Recorded start time. */
 	private long start;
-	/** Recorded stop time. */
-	private long stop;
-	/** Duration of the previous tick. */
-	private long duration;
 
 	/** Standard ThreadClock, defaults to MEDIUM_CPS speed. */
 	public ThreadClock()
@@ -41,15 +39,18 @@ public class ThreadClock
 	public void setSpeed(int interval)
 	{
 		msPerCycle = (long)interval;
+		// Reset average CPS values
+		avgCPS = 1000.000 / (double)msPerCycle;
+		prevAvgCPS = 1000.000 / (double)msPerCycle;
 	}
 	
 	/** Finish the current cycle and start the next one. */
 	public void nextCycle()
 	{
 		// Stop time (not literally, just get the current system time...)
-		stop = System.currentTimeMillis();
+		long stop = System.currentTimeMillis();
 		// Calculate tick duration
-		duration = stop - start;
+		long duration = stop - start;
 		// Processing finished before max cycle time, pause the thread
 		if (duration < msPerCycle)
 		{
@@ -59,25 +60,40 @@ public class ThreadClock
 		// Start time for the next tick
 		startCycle();
 		// Calculate average CPS
-		updateAvgCPS();
+		updateAvgCPS(duration);
 	}
 	
+	/** Get the average CPS of this ThreadClock. */
 	public double getAvgCPS()
 	{
 		return avgCPS;
 	}
 
-	/** Sets the start time for the next tick. */
+	/** Sets the start time for the next cycle. */
 	private void startCycle()
 	{
 		// Cycle start time
 		start = System.currentTimeMillis();
 	}
 	
-	private void updateAvgCPS()
+	private void updateAvgCPS(long duration)
 	{
-		// TODO Implement calculating this
-		avgCPS = -1.0;
+		// Set the previous avg CPS as avg CPS from previous cycle
+		prevAvgCPS = avgCPS;
+		// The instantaneous CPS for this cycle
+		double instantCPS;
+		// Calculate instantaneous CPS
+		if (duration <= msPerCycle)
+		{
+			// Cycle duration plus thread paused time
+			instantCPS = 1000.000 / (double)msPerCycle;
+		}
+		else
+		{
+			instantCPS = 1000.000 / (double)duration;
+		}
+		// Update the average CPS based on previous and instantaneous
+		avgCPS = (prevAvgCPS * 0.75) + (instantCPS * 0.25);
 	}
 
 	/** Puts the thread to sleep for the specified number of milliseconds. */
