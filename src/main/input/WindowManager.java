@@ -110,7 +110,7 @@ public class WindowManager implements InputDevice, WindowListener, ComponentList
 	public void componentResized(ComponentEvent e)
 	{
 		// Do any special sizing adjustments for the window
-		GfxManager.windowResized(myWin);
+		GfxManager.windowResized();
 	}
 
 	@Override

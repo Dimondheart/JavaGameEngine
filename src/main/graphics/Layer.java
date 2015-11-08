@@ -1,5 +1,7 @@
 package main.graphics;
 
+import java.awt.AlphaComposite;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -16,8 +18,12 @@ public class Layer extends JPanel
 	private BufferedImage buffImg;
 	/** The buffered image's surface for this layer. */
 	private Graphics2D buffSurf;
-	/** If this layer is enabled or not. */
+	/** If this layer is in use. */
 	private boolean enabled = false;
+	/** The original composite of the surface to reset to after clearing
+	 * using an AlphaComposite.
+	 */
+	private Composite oldComp = null;
 	
 	/** The normal constructor for a Layer.
 	 * @param width of the layer
@@ -37,8 +43,11 @@ public class Layer extends JPanel
 				BufferedImage.TYPE_INT_ARGB
 				);
 		buffSurf = buffImg.createGraphics();
-		// Disable this layer when it is reset
-		enabled = false;
+		// Initial setup of the original composite
+		if (oldComp == null)
+		{
+			oldComp = buffSurf.getComposite();
+		}
 	}
 	
 	/** Gets the buffered surface of this frame to draw on.
@@ -46,7 +55,7 @@ public class Layer extends JPanel
 	 */
 	public synchronized Graphics2D getDrawingSurface()
 	{
-		// Enable this layer
+		// Layer will be drawn to, enable this layer
 		enabled = true;
 		return buffSurf;
 	}
@@ -62,13 +71,27 @@ public class Layer extends JPanel
 	 */
 	public synchronized void flip(Graphics2D g2)
 	{
-		g2.drawImage(buffImg, 0, 0, getW(), getH(), null);
+		if (enabled)
+		{
+			g2.drawImage(buffImg, 0, 0, getW(), getH(), null);
+		}
 	}
 	
 	/** Clears the buffer of this layer. */
 	public synchronized void clear()
 	{
-		createNewBuffer();
+		// Don't bother to clear an empty layer
+		if (enabled)
+		{
+			// Change the composite
+			buffSurf.setComposite(AlphaComposite.Clear);
+			// Clear the surface
+			buffSurf.fillRect(0, 0, getW(), getH());
+			// Set the composite back to the original
+			buffSurf.setComposite(oldComp);
+			// Disable the layer
+			enabled = false;
+		}
 	}
 	
 	/** Get the current layer width. */
@@ -89,11 +112,5 @@ public class Layer extends JPanel
 		myDims = newDims;
 		this.setSize(newDims);
 		createNewBuffer();
-	}
-	
-	/** Gets if this layer is currently enabled or not. */
-	public synchronized boolean isEnabled()
-	{
-		return enabled;
 	}
 }

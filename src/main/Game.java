@@ -61,7 +61,6 @@ public class Game
 			if (InputManager.getState() == State.NORMAL)
 			{
 				InputManager.poll();
-				GfxManager.clearAllLayers(GfxManager.getMainWin());
 				sr.update();
 				sr_2.update();
 				spc.update();

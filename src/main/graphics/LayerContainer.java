@@ -80,40 +80,10 @@ public class LayerContainer extends JComponent
 		return vertScale;
 	}
 	
-	/** Clears the specified layer.
-	 * @param layer the index of the layer.
-	 */
-	public synchronized void clearLayer(int layer)
-	{
-		layers[layer].clear();
-	}
-	
 	/** Clears all layers. */
-	public synchronized void clearAllLayers()
+	public synchronized void clearLayers()
 	{
 		for (int i = 0; i < numLayers; ++i)
-		{
-			clearLayer(i);
-		}
-	}
-	
-	/** Clears only the specified layers. */
-	public synchronized void clearLayers(int[] layersToClear)
-	{
-		for (int i : layersToClear)
-		{
-			clearLayer(i);
-		}
-	}
-	
-	/** Clears all layers starting with <tt>start</tt> layer and stopping with
-	 * <tt>stop</tt> layer.
-	 * @param start the first layer to clear
-	 * @param stop the last layer to clear
-	 */
-	public synchronized void clearLayersInRange(int start, int stop)
-	{
-		for (int i = start; i <= stop; ++i)
 		{
 			clearLayer(i);
 		}
@@ -161,6 +131,14 @@ public class LayerContainer extends JComponent
 			layers[i].adjustSize(newDims);
 		}
 		updateScaleFactors();
+	}
+	
+	/** Clears the specified layer.
+	 * @param layer the index of the layer.
+	 */
+	private synchronized void clearLayer(int layer)
+	{
+		layers[layer].clear();
 	}
 	
 	/** Update the scale factors relative to the base dimensions. */
