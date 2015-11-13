@@ -8,7 +8,22 @@ import java.awt.Window;
 import java.util.LinkedList;
 import javax.swing.JComponent;
 
-/** Handles multiple layers of rendering for a window. */
+/** Handles multiple layers of rendering for a window.
+ * Gets the drawing surface for the specified window layer.
+ * <br>For the primary window, there are 10 layers.
+ * They should be used as follows:
+ * <br>
+ * <br>0-2: Background Layers
+ * <br>3-6: Main Content Layers
+ * <br>7-9: GUI Layers
+ * <br>
+ * <br> Using "sub-layers" (first drawn on a layer = lowest sub-layer)
+ * should be preferred where possible.
+ * @param window the window to get the layer from.
+ * @param layer the index of the layer.
+ * @return (Graphics2D) The graphics context to render to.
+ * @author Bryan
+ */
 public class LayerContainer extends JComponent
 {
 	private static final long serialVersionUID = 1L;
@@ -28,14 +43,17 @@ public class LayerContainer extends JComponent
 	private double horizScale = 1.0;
 	/** The vertical scale factor. */
 	private double vertScale = 1.0;
-	/** */
-	private LinkedList<Renderer> renderers;
+	/** The list of new renderers to add. */
+	private LinkedList<Renderer> addRenderers;
+	/** The list of renderers to be removed. */
+	private LinkedList<Renderer> remRenderers;
 	
 	/** Standard layer container for the specified window. */
 	public LayerContainer(Window window, Dimension dims, int numLayers)
 	{
 		myWin = window;
-		renderers = new LinkedList<Renderer>();
+		addRenderers = new LinkedList<Renderer>();
+		remRenderers = new LinkedList<Renderer>();
 		this.numLayers = numLayers;
 		initDims = dims;
 		// Setup the layers
@@ -45,15 +63,6 @@ public class LayerContainer extends JComponent
 			layers[i] = new Layer(dims);
 		}
 		this.setPreferredSize(dims);
-	}
-	
-	/** Gets the drawing surface for the specified layer.
-	 * @param layer the index of the layer
-	 * @return (Graphics2D) A reference to the drawing surface
-	 */
-	public Graphics2D getDrawingSurface(int layer)
-	{
-		return layers[layer].getDrawingSurface();
 	}
 	
 	/** Get the container width. */
@@ -80,23 +89,14 @@ public class LayerContainer extends JComponent
 		return vertScale;
 	}
 	
-	/** Clears all layers. */
-	public synchronized void clearLayers()
-	{
-		for (int i = 0; i < numLayers; ++i)
-		{
-			clearLayer(i);
-		}
-	}
-	
 	public synchronized void addRenderer(Renderer obj)
 	{
-		renderers.addLast(obj);
+		addRenderers.addLast(obj);
 	}
 	
 	public synchronized void removeRenderer(Renderer obj)
 	{
-		renderers.remove(obj);
+		remRenderers.addLast(obj);
 	}
 	
 	@Override
@@ -106,10 +106,33 @@ public class LayerContainer extends JComponent
 		// Clear the graphics context
 		g2.setBackground(Color.black);
 		g2.clearRect(0, 0, myWin.getWidth(), myWin.getHeight());
-		// Render content
-		for (Renderer obj : renderers)
+		// Add new renderers
+		while (true)
 		{
-			obj.render(layers[obj.getLayer()].getDrawingSurface());
+			if (addRenderers.isEmpty())
+			{
+				break;
+			}
+			Renderer newObj = addRenderers.poll();
+			if (newObj == null)
+			{
+				continue;
+			}
+			layers[newObj.getLayer()].addRenderer(newObj);
+		}
+		// Remove destroyed renderers
+		while (true)
+		{
+			if (remRenderers.isEmpty())
+			{
+				break;
+			}
+			Renderer newObj = remRenderers.poll();
+			if (newObj == null)
+			{
+				continue;
+			}
+			layers[newObj.getLayer()].removeRenderer(newObj);
 		}
 		// Render the layers
 		for (int i = 0; i < numLayers; ++i)
@@ -133,16 +156,30 @@ public class LayerContainer extends JComponent
 		updateScaleFactors();
 	}
 	
-	/** Clears the specified layer.
+	/** Removes all Renderer(s) from the specified layer.
 	 * @param layer the index of the layer.
 	 */
-	private synchronized void clearLayer(int layer)
+	public synchronized void clearLayer(int layer)
 	{
+		// TODO Clear any objects in addRenderers for this layer?
 		layers[layer].clear();
 	}
 	
+	/** Removes all Renderer(s) from all layers. */
+	public synchronized void clearAllLayers()
+	{
+		// Remove any renderers queued for adding/removal
+		addRenderers.clear();
+		remRenderers.clear();
+		// Clear each layer
+		for (int i = 0; i < numLayers; ++i)
+		{
+			clearLayer(i);
+		}
+	}
+	
 	/** Update the scale factors relative to the base dimensions. */
-	private void updateScaleFactors()
+	private synchronized void updateScaleFactors()
 	{
 		horizScale = (double)getWidth()/initDims.getWidth();
 		vertScale = (double)getHeight()/initDims.getHeight();

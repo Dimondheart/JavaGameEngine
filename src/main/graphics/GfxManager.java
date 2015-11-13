@@ -1,7 +1,6 @@
 package main.graphics;
 
 import java.awt.Dimension;
-import java.awt.Graphics2D;
 import java.awt.Insets;
 import javax.swing.JFrame;
 
@@ -53,7 +52,6 @@ public class GfxManager implements main.CustomRunnable
 		while (true)
 		{
 			FPS = clock.getAvgCPS();
-			clearLayers();
 			mainWin.repaint();
 			clock.nextCycle();
 		}
@@ -69,31 +67,6 @@ public class GfxManager implements main.CustomRunnable
 	public static synchronized JFrame getMainWin()
 	{
 		return mainWin;
-	}
-	
-	/** Gets the drawing surface for the specified window layer.
-	 * <br>For the primary window, there are 10 layers.
-	 * They should be used as follows:
-	 * <br>
-	 * <br>0-2: Background Layers
-	 * <br>3-6: Main Content Layers
-	 * <br>7-9: GUI Layers
-	 * <br>
-	 * <br> Using "sub-layers" (first drawn on a layer = lowest sub-layer)
-	 * should be preferred where possible.
-	 * @param window the window to get the layer from.
-	 * @param layer the index of the layer.
-	 * @return (Graphics2D) The graphics context to render to.
-	 */
-	public static Graphics2D getLayerSurface(int layer)
-	{
-		return mainLayers.getDrawingSurface(layer);
-	}
-	
-	/** Clears all layers' drawing surfaces. */
-	private static synchronized void clearLayers()
-	{
-		mainLayers.clearLayers();
 	}
 	
 	public static synchronized void addRenderer(Renderer obj)
