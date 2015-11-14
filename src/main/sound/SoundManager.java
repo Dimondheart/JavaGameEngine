@@ -3,6 +3,8 @@ package main.sound;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import main.input.InputManager;
+
 public class SoundManager implements main.CustomRunnable
 {
 	/** Thread for this object. */
@@ -52,6 +54,20 @@ public class SoundManager implements main.CustomRunnable
 	{
 		while (true)
 		{
+			clock.nextCycle();
+			// Pause/resume the current BGM based on program state
+			if (currTrack != null)
+			{
+				if (InputManager.getState() == InputManager.State.PAUSED)
+				{
+					currTrack.stop();
+					continue;
+				}
+				else
+				{
+					currTrack.resume();
+				}
+			}
 			// Clear any finished sound effects
 			for (SFX sfx : playingSFX)
 			{
@@ -95,7 +111,6 @@ public class SoundManager implements main.CustomRunnable
 				
 				}
 			}
-			clock.nextCycle();
 		}
 	}
 	
