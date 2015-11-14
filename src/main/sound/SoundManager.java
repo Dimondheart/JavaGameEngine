@@ -15,14 +15,17 @@ public class SoundManager implements main.CustomRunnable
 	private static volatile ConcurrentLinkedDeque<SoundEvent> genQueue;
 	/** Currently playing sound effects. */
 	private static ConcurrentLinkedQueue<SFX> playingSFX;
+	/** Queued BGM tracks. */
+	private static BGM currTrack;
 	/** The volume settings. */
 	public Volume volume;
 	
 	/** Different ways to transition BGM. */
 	public enum BGMTransition
 	{
-		IMMEDIATE,
-		SMOOTH
+		IMMEDIATE,  // Stop the previous track and start the new track
+		SMOOTH,  // Fade out old track then start new track (WIP)
+		CROSSOVER  // Fade out old track as the new one is faded in (WIP)
 	}
 	
 	/** Normal sound manager setup. */
@@ -109,9 +112,9 @@ public class SoundManager implements main.CustomRunnable
 	}
 	
 	/** Change/play a background music track. */
-	public static void playBGM(String sfx, BGMTransition effect)
+	public static void playBGM(String track, BGMTransition effect)
 	{
-		queueGenEvent(new BGMEvent(sfx, effect));
+		queueGenEvent(new BGMEvent(track, effect));
 	}
 	
 	/** Add the specified event to the sound effect queue.
@@ -152,7 +155,10 @@ public class SoundManager implements main.CustomRunnable
 	/** Actually play/change the BGM track. */
 	private void doPlayBGM(BGMEvent bgme)
 	{
-		// TODO Implement
-		System.out.println("Changing BGM...");
+		if (currTrack != null)
+		{
+			currTrack.stop();
+		}
+		currTrack = new BGM(bgme.getBGM(), volume);
 	}
 }

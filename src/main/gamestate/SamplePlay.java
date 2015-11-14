@@ -1,6 +1,7 @@
 package main.gamestate;
 
-import static java.awt.event.MouseEvent.BUTTON1;
+import static java.awt.event.MouseEvent.*;
+import static java.awt.event.KeyEvent.*;
 
 import java.awt.Color;
 
@@ -9,6 +10,7 @@ import main.SampleRenderer;
 import main.SampleRenderer2;
 import main.gamestate.GameStateManager.GameStates;
 import main.input.InputManager;
+import main.sound.SoundManager;
 import main.graphics.GfxManager;
 
 /** A sample game state with sample stuff. */
@@ -37,9 +39,11 @@ public class SamplePlay extends GameState
 	@Override
 	public void setup()
 	{
-		controls = new CtrlRenderer(
-				"Press WASD to move, click to return to main menu."
-				);
+		String[] cL = new String[3];
+		cL[0] = "WASD to move";
+		cL[1] = "click to return to main menu";
+		cL[2] = "space to reset BGM track";
+		controls = new CtrlRenderer(cL);
 	}
 
 	@Override
@@ -48,6 +52,10 @@ public class SamplePlay extends GameState
 		if (InputManager.getMS().justClicked(BUTTON1))
 		{
 			this.changeState(GameStates.MAIN_MENU);
+		}
+		if (InputManager.getKB().justPressed(VK_SPACE))
+		{
+			SoundManager.playBGM("Into_the_Unknown", SoundManager.BGMTransition.IMMEDIATE);
 		}
 		sr.update();
 		sr_2.update();

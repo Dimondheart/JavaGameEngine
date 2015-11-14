@@ -8,8 +8,9 @@ import main.graphics.TextDrawer;
 
 public class CtrlRenderer extends Renderer
 {
-	private String displayText;
-	public CtrlRenderer(String text)
+	private String[] displayText;
+	
+	public CtrlRenderer(String[] text)
 	{
 		super(9);
 		displayText = text;
@@ -18,8 +19,11 @@ public class CtrlRenderer extends Renderer
 	@Override
 	public void render(Graphics2D g)
 	{
-		String line1 = "Controls: " + displayText;
 		g.setColor(Color.white);
-		TextDrawer.drawText(g, line1, 2, 10, 24);
+		TextDrawer.drawText(g, "Controls:", 2, 11, 12);
+		for (int line = 0; line < displayText.length; ++line)
+		{
+			TextDrawer.drawText(g, displayText[line], 2, (line+1)*12+11, 12);
+		}
 	}
 }

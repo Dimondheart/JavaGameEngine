@@ -48,6 +48,7 @@ public class Game
 	/** Play the game. */
 	private void play()
 	{
+		SoundManager.playBGM("Into_the_Unknown", SoundManager.BGMTransition.IMMEDIATE);
 		while(true)
 		{
 			// Normal operations
