@@ -63,17 +63,6 @@ public class InputManager implements main.CustomRunnable
 			// If there is a next event, do it
 			if (next != null)
 			{
-				/* Debuging stuff */
-//				System.out.print("InputManager Queue: ");
-//				System.out.print(next.getType());
-//				System.out.print(", ");
-//				for (InputManagerEvent e : queue)
-//				{
-//					System.out.print(e.getType());
-//					System.out.print(", ");
-//				}
-//				System.out.println("");
-				/* End debugging stuff */
 				// Do the event
 				switch(next.getType())
 				{
@@ -250,7 +239,9 @@ public class InputManager implements main.CustomRunnable
 		win.poll();
 	}
 	
-	/** Does the clearing of input devices. */
+	/** Does the clearing of input devices and any miscellaneous things to
+	 * clear.
+	 */
 	private synchronized void doClear()
 	{
 		queue.clear();

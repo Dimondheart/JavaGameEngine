@@ -71,19 +71,23 @@ public class GfxManager implements main.CustomRunnable
 		return mainWin;
 	}
 	
+	/** Adds the specified Renderer to be rendered. */
 	public static synchronized void addRenderer(Renderer obj)
 	{
 		mainLayers.addRenderer(obj);
 	}
 	
+	/** Remove the specified renderer from being rendered. */
 	public static synchronized void removeRenderer(Renderer obj)
 	{
 		mainLayers.removeRenderer(obj);
 	}
 	
+	/** Clears all graphics data, like renderers, etc. */
 	public static synchronized void clearAll()
 	{
 		mainLayers.clearAllLayers();
+		// Re-add the FPS text renderer
 		addRenderer(fpsR);
 	}
 	
@@ -97,7 +101,7 @@ public class GfxManager implements main.CustomRunnable
 				newSize.getWidth()-mfi.right-mfi.left,
 				newSize.getHeight()-mfi.top-mfi.bottom
 				);
-		// Adjust the size of said layer container
+		// Adjust the size of the layer container
 		mainLayers.adjustSize(newSize);
 		mainWin.revalidate();
 	}

@@ -1,6 +1,8 @@
 package main.sound;
 
-import java.io.File;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -10,20 +12,30 @@ import main.sound.Volume.Setting;
 
 public class SFX
 {
+	/** The audio stream for this sound. */
 	private AudioInputStream ais;
+	/** The clip for this sound. */
 	private Clip clip;
-	private File sfx;
+	/** The volume settings this sound will use. */
 	private volatile Volume volume;
+	/** If this sound has started playing yet. */
 	private boolean started = false;
+	/** The volume control for this sound. */
 	private FloatControl volumeCtrl;
 	
 	public SFX(String sfx, Volume volume)
 	{
-		this.sfx = (new File("C:/Users/Bryan/Documents/GitHub/GameFrameworkRevamp/src/main/sound/sfx/" + sfx + ".wav")).getAbsoluteFile();
 		this.volume = volume;
+		// Get an input stream for the sound effect
+		InputStream is = this.getClass().getResourceAsStream(
+				"/main/sound/sfx/" + sfx + ".wav"
+				);
+		// Must be converted to a buffered input stream to work is a JAR
+		is = new BufferedInputStream(is);
 		try
 		{
-			ais = AudioSystem.getAudioInputStream(this.sfx);
+			// Setup the sound objects to be used for playing
+			ais = AudioSystem.getAudioInputStream(is);
 			clip = AudioSystem.getClip();
 			clip.open(ais);
 			// Get the volume controller
