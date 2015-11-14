@@ -1,14 +1,11 @@
 package main.graphics;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 
 /** One layer in a LayerContainer. */
 public class Layer
 {
-	/** If this layer is in use. */
-	private boolean enabled = true;
 	/** The renderers that render to this layer. */
 	private LinkedList<Renderer> renderers;
 	
@@ -16,10 +13,9 @@ public class Layer
 	 * @param width of the layer
 	 * @param height of the layer
 	 */
-	public Layer(Dimension dims)
+	public Layer()
 	{
 		renderers = new LinkedList<Renderer>();
-		adjustSize(dims);
 	}
 	
 	public synchronized void addRenderer(Renderer obj)
@@ -53,10 +49,5 @@ public class Layer
 	public synchronized void clear()
 	{
 		renderers.clear();
-	}
-	
-	/** Adjusts anything when the LayerContainer is resized. */
-	public synchronized void adjustSize(Dimension newDims)
-	{
 	}
 }

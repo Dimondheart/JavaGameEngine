@@ -60,7 +60,7 @@ public class LayerContainer extends JComponent
 		layers = new Layer[this.numLayers];
 		for (int i = 0; i < this.numLayers; ++i)
 		{
-			layers[i] = new Layer(dims);
+			layers[i] = new Layer();
 		}
 		this.setPreferredSize(dims);
 	}
@@ -148,21 +148,8 @@ public class LayerContainer extends JComponent
 	{
 		// Resize the whole container
 		this.setSize(newDims);
-		// Resize each layer
-		for (int i = 0; i < numLayers; ++i)
-		{
-			layers[i].adjustSize(newDims);
-		}
+		// Update the scale factors for the two axes
 		updateScaleFactors();
-	}
-	
-	/** Removes all Renderer(s) from the specified layer.
-	 * @param layer the index of the layer.
-	 */
-	public synchronized void clearLayer(int layer)
-	{
-		// TODO Clear any objects in addRenderers for this layer?
-		layers[layer].clear();
 	}
 	
 	/** Removes all Renderer(s) from all layers. */
@@ -174,7 +161,7 @@ public class LayerContainer extends JComponent
 		// Clear each layer
 		for (int i = 0; i < numLayers; ++i)
 		{
-			clearLayer(i);
+			layers[i].clear();
 		}
 	}
 	

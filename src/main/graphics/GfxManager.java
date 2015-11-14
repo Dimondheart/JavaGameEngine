@@ -20,7 +20,9 @@ public class GfxManager implements main.CustomRunnable
 	private Thread thread;
 	/** Thread manager. */
 	private main.ThreadClock clock;
+	/** The current average FPS. */
 	private static double FPS;
+	private static FPSRenderer fpsR;
 	
 	/** Normal graphics renderer setup. */
 	public GfxManager()
@@ -29,6 +31,8 @@ public class GfxManager implements main.CustomRunnable
 		mainWin = new JFrame("My Game Framework");
 		mainLayers = new LayerContainer(mainWin, DEF_DIMS, NUM_MAIN_LAYERS);
 		mainWin.add(mainLayers);
+		// Draw the average FPS to the screen
+		fpsR = new FPSRenderer();
 		// Run at about 60 FPS
 		clock = new main.ThreadClock(16);
 	}
@@ -47,8 +51,6 @@ public class GfxManager implements main.CustomRunnable
 	@Override
 	public void run()
 	{
-		FPSRenderer fpsR = new FPSRenderer();
-		CtrlRenderer controls = new CtrlRenderer();
 		while (true)
 		{
 			FPS = clock.getAvgCPS();
@@ -77,6 +79,12 @@ public class GfxManager implements main.CustomRunnable
 	public static synchronized void removeRenderer(Renderer obj)
 	{
 		mainLayers.removeRenderer(obj);
+	}
+	
+	public static synchronized void clearAll()
+	{
+		mainLayers.clearAllLayers();
+		addRenderer(fpsR);
 	}
 	
 	/** Handles any changes needed because of a resized window. */

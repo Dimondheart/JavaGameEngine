@@ -3,20 +3,9 @@ package main.input;
 import java.awt.Window;
 import java.awt.event.*;
 
-import main.input.InputDevice;
-
-import static java.awt.event.MouseEvent.*;
-
 /** Handles mouse input events. */
 public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 {
-	/** Left mouse button. */
-	public static final int BTN_LEFT = BUTTON1;
-	/** Middle mouse button. */
-	public static final int BTN_MIDDLE = BUTTON2;
-	/** Right mouse button. */
-	public static final int BTN_RIGHT = BUTTON3;
-	
 	/** Number of key values to be used. */
 	private static final int NUM_BTNS = 4;
 	
