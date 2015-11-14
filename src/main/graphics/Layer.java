@@ -9,10 +9,7 @@ public class Layer
 	/** The renderers that render to this layer. */
 	private LinkedList<Renderer> renderers;
 	
-	/** The normal constructor for a Layer.
-	 * @param width of the layer
-	 * @param height of the layer
-	 */
+	/** The normal constructor for a Layer. */
 	public Layer()
 	{
 		renderers = new LinkedList<Renderer>();

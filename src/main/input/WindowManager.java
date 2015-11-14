@@ -141,6 +141,6 @@ public class WindowManager implements InputDevice, WindowListener, ComponentList
 	/** Safely destroys the window and all related info. */
 	private void closeWindow()
 	{
-		// TODO Safely remove the window (remove component map, etc.)
+		// TODO Safely remove the window
 	}
 }

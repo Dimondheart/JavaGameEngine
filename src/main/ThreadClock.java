@@ -28,14 +28,17 @@ public class ThreadClock
 	
 	/** Constructor, takes a specified speed setting. Can be one of the 
 	 * presets/constants ending in '_CPS'.
+	 * @param interval the number of milliseconds per cycle
 	 */
-	public ThreadClock(int priority)
+	public ThreadClock(int interval)
 	{
-		setSpeed(priority);
+		setSpeed(interval);
 		startCycle();
 	}
 	
-	/** Changes the cycle speed of this thread. */
+	/** Changes the cycle speed of this thread.
+	 * @param interval the milliseconds per cycle
+	 */
 	public void setSpeed(int interval)
 	{
 		msPerCycle = (long)interval;
@@ -63,7 +66,9 @@ public class ThreadClock
 		updateAvgCPS(duration);
 	}
 	
-	/** Get the average CPS of this ThreadClock. */
+	/** Get the average CPS of this ThreadClock
+	 * @return the smoothed average number of cycles per second
+	 */
 	public double getAvgCPS()
 	{
 		return avgCPS;
@@ -96,7 +101,9 @@ public class ThreadClock
 		avgCPS = (prevAvgCPS * 0.75) + (instantCPS * 0.25);
 	}
 
-	/** Puts the thread to sleep for the specified number of milliseconds. */
+	/** Puts the thread to sleep for the specified number of milliseconds.
+	 * @param millisec the number of milliseconds to pause
+	 */
 	public void pauseThread(long millisec)
 	{
 		try

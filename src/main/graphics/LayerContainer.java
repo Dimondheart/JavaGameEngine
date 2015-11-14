@@ -19,10 +19,6 @@ import javax.swing.JComponent;
  * <br>
  * <br> Using "sub-layers" (first drawn on a layer = lowest sub-layer)
  * should be preferred where possible.
- * @param window the window to get the layer from.
- * @param layer the index of the layer.
- * @return (Graphics2D) The graphics context to render to.
- * @author Bryan
  */
 public class LayerContainer extends JComponent
 {
@@ -48,7 +44,11 @@ public class LayerContainer extends JComponent
 	/** The list of renderers to be removed. */
 	private LinkedList<Renderer> remRenderers;
 	
-	/** Standard layer container for the specified window. */
+	/** Standard layer container for the specified window.
+	 * @param window the window this LayerContainer is part of
+	 * @param dims the initial dimensions of the layers
+	 * @param numLayers the number of layers to create
+	 */
 	public LayerContainer(Window window, Dimension dims, int numLayers)
 	{
 		myWin = window;
@@ -65,25 +65,33 @@ public class LayerContainer extends JComponent
 		this.setPreferredSize(dims);
 	}
 	
-	/** Get the container width. */
+	/** Get the container width.
+	 * @return the width of the LayerContainer
+	 */
 	public int getLCWidth()
 	{
 		return width;
 	}
 	
-	/** Get the container height. */
+	/** Get the container height.
+	 * @return the height of the LayerContainer
+	 */
 	public int getLCHeight()
 	{
 		return height;
 	}
 	
-	/** Return the horizontal scale factor. */
+	/** Return the horizontal scale factor.
+	 * @return the horizontal scale factor
+	 */
 	public double getHorizScale()
 	{
 		return horizScale;
 	}
 	
-	/** Return the vertical scale factor. */
+	/** Return the vertical scale factor.
+	 * @return the vertical scale factor
+	 */
 	public double getVertScale()
 	{
 		return vertScale;
