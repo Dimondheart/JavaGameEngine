@@ -12,6 +12,7 @@ import main.gamestate.GameStateManager.GameStates;
 import main.input.InputManager;
 import main.sound.SoundManager;
 import main.graphics.GfxManager;
+import main.graphics.TestAnimator;
 
 /** A sample game state with sample stuff. */
 public class SamplePlay extends GameState
@@ -25,6 +26,8 @@ public class SamplePlay extends GameState
 	// Sample player controlled and renderer
 	SamplePlayerControlled spc;
 	CtrlRenderer controls;
+	// Animation testing
+	TestAnimator ta;
 	
 	public SamplePlay()
 	{
@@ -34,6 +37,7 @@ public class SamplePlay extends GameState
 		sr2 = new SampleRenderer2();
 		sr2_2 = new SampleRenderer2(0,0,80,270,Color.cyan,3);
 		spc = new SamplePlayerControlled();
+		ta = new TestAnimator(9,"test");
 	}
 	
 	@Override

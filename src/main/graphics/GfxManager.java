@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import javax.swing.JFrame;
 
+import main.graphics.resources.GfxResourceManager;
+
 /** Handles the rendering thread. */
 public class GfxManager implements main.CustomRunnable
 {
@@ -16,13 +18,17 @@ public class GfxManager implements main.CustomRunnable
 	private static JFrame mainWin;
 	/** The layer container for the main window. */
 	private static LayerContainer mainLayers;
+	/** Manages graphics loaded from files. */
+	private static GfxResourceManager grm;
+	/** The current average FPS. */
+	private static double FPS;
+	/** Renders the FPS to the screen. */
+	private static FPSRenderer fpsR;
+	
 	/** Thread for this system. */
 	private Thread thread;
 	/** Thread manager. */
 	private main.ThreadClock clock;
-	/** The current average FPS. */
-	private static double FPS;
-	private static FPSRenderer fpsR;
 	
 	/** Normal graphics renderer setup. */
 	public GfxManager()
@@ -33,6 +39,8 @@ public class GfxManager implements main.CustomRunnable
 		mainWin.add(mainLayers);
 		// Draw the average FPS to the screen
 		fpsR = new FPSRenderer();
+		// Create the graphics resource manager
+		grm = new GfxResourceManager();
 		// Run at about 60 FPS
 		clock = new main.ThreadClock(16);
 	}
@@ -47,7 +55,6 @@ public class GfxManager implements main.CustomRunnable
 		thread.start();
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void run()
 	{
@@ -69,6 +76,11 @@ public class GfxManager implements main.CustomRunnable
 	public static synchronized JFrame getMainWin()
 	{
 		return mainWin;
+	}
+	
+	public static synchronized GfxResourceManager getResManager()
+	{
+		return grm;
 	}
 	
 	/** Adds the specified Renderer to be rendered. */

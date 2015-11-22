@@ -42,6 +42,8 @@ public class Game
 		input.start();
 		gfx.start();
 		sound.start();
+		// Start the program timer
+		ProgramTimer.setup();
 		play();
 	}
 
@@ -51,6 +53,7 @@ public class Game
 		SoundManager.playBGM("Into_the_Unknown", SoundManager.BGMTransition.IMMEDIATE);
 		while(true)
 		{
+			clock.nextCycle();
 			// Normal operations
 			if (InputManager.getState() == InputManager.State.NORMAL)
 			{
@@ -65,7 +68,6 @@ public class Game
 				// Stop cycling
 				break;
 			}
-			clock.nextCycle();
 		}
 	}
 }
