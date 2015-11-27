@@ -78,6 +78,7 @@ public class GfxManager implements main.CustomRunnable
 		return mainWin;
 	}
 	
+	/** Gets the object that stores loaded graphics. */
 	public static synchronized GfxResourceManager getResManager()
 	{
 		return grm;
@@ -93,6 +94,15 @@ public class GfxManager implements main.CustomRunnable
 	public static synchronized void removeRenderer(Renderer obj)
 	{
 		mainLayers.removeRenderer(obj);
+	}
+	
+	/** Moves the layer of the specified renderer. <br>
+	 * <b>Important:</b> Use this sparingly, as any intra-layer
+	 * ordering of the specified object will be lost when moved.
+	 */
+	public static synchronized void moveRenderer(Renderer obj, int oldLayer, int newLayer)
+	{
+		mainLayers.moveRenderer(obj, oldLayer, newLayer);
 	}
 	
 	/** Clears all graphics data, like renderers, etc. */

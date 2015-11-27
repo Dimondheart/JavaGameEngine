@@ -3,22 +3,26 @@ package main.gamestate;
 public class GameStateManager
 {
 	private GameState currGS;
+	
 	public enum GameStates
 	{
 		MAIN_MENU,
 		SAMPLE_PLAY
 	}
 	
+	/** Basic constructor, default start GameState is MainMenu. */
 	public GameStateManager()
 	{
 		this(GameStates.MAIN_MENU);
 	}
 	
+	/** Takes an argument to specify the starting GameState. */
 	public GameStateManager(GameStates initState)
 	{
 		setNewGameState(initState);
 	}
 	
+	/** Cycle the current game state. */
 	public void cycle()
 	{
 		try
@@ -47,6 +51,20 @@ public class GameStateManager
 	{
 		currGS.cleanup();
 		currGS = null;
+	}
+	
+	/** Save the current game state, if it is a save-able state. */
+	public void saveState()
+	{
+		// TODO implement
+		if (currGS instanceof SavableGameState)
+		{
+			System.out.println("Current State IS saveable");
+		}
+		else
+		{
+			System.out.println("Current State is NOT saveable");
+		}
 	}
 	
 	/** Selects and sets the new game state object. */

@@ -19,8 +19,9 @@ public class MainMenu extends GameState
 	@Override
 	public void setup()
 	{
-		String[] cL = new String[1];
+		String[] cL = new String[2];
 		cL[0] = "Click to start.";
+		cL[1] = "Enter to test save-ability";
 		controls = new CtrlRenderer(cL);
 	}
 

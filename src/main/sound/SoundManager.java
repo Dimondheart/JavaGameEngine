@@ -14,7 +14,7 @@ public class SoundManager implements main.CustomRunnable
 	/** Queue used only for sound effects. */
 	private static volatile ConcurrentLinkedDeque<SFXEvent> sfxQueue;
 	/** Queue used for general events. */
-	private static volatile ConcurrentLinkedDeque<SoundEvent> genQueue;
+	private static volatile ConcurrentLinkedDeque<BaseSoundEvent> genQueue;
 	/** Currently playing sound effects. */
 	private static ConcurrentLinkedQueue<SFX> playingSFX;
 	/** Queued BGM tracks. */
@@ -35,7 +35,7 @@ public class SoundManager implements main.CustomRunnable
 	{
 		// Setup queues
 		sfxQueue = new ConcurrentLinkedDeque<SFXEvent>();
-		genQueue = new ConcurrentLinkedDeque<SoundEvent>();
+		genQueue = new ConcurrentLinkedDeque<BaseSoundEvent>();
 		playingSFX = new ConcurrentLinkedQueue<SFX>();
 		volume = new Volume();
 		// Setup thread controller
@@ -79,7 +79,7 @@ public class SoundManager implements main.CustomRunnable
 			// Get the next sound effect
 			SFXEvent nextSFX = sfxQueue.poll();
 			// Get the next general event
-			SoundEvent nextGen = genQueue.poll();
+			BaseSoundEvent nextGen = genQueue.poll();
 			// Play the next sound effect
 			if (nextSFX != null)
 			{
@@ -95,6 +95,9 @@ public class SoundManager implements main.CustomRunnable
 						break;
 					case PLAY_BGM:
 						doPlayBGM((BGMEvent) nextGen);
+						break;
+					case STOP_BGM:
+						doStopBGM((StopBGMEvent) nextGen);
 						break;
 					case PLAY_SFX:
 						System.out.println(
@@ -132,6 +135,20 @@ public class SoundManager implements main.CustomRunnable
 		queueGenEvent(new BGMEvent(track, effect));
 	}
 	
+	/** Stop the current BGM and remove any queued tracks, fades out the
+	 * current track using the specified transition effect.
+	 */
+	public static void stopBGM(BGMTransition effect)
+	{
+		queueGenEvent(new StopBGMEvent(effect));
+	}
+	
+	/** Immediately stop the current BGM and remove any queued tracks. */
+	public static void stopBGM()
+	{
+		stopBGM(BGMTransition.IMMEDIATE);
+	}
+	
 	/** Add the specified event to the sound effect queue.
 	 * @param e the main.sound.SFXEvent object
 	 */
@@ -143,7 +160,7 @@ public class SoundManager implements main.CustomRunnable
 	/** Add the specified event to the general queue.
 	 * @param e the main.sound.SoundEvent object
 	 */
-	private static synchronized void queueGenEvent(SoundEvent e)
+	private static synchronized void queueGenEvent(BaseSoundEvent e)
 	{
 		genQueue.add(e);
 	}
@@ -175,5 +192,12 @@ public class SoundManager implements main.CustomRunnable
 			currTrack.stop();
 		}
 		currTrack = new BGM(bgme.getBGM(), volume);
+	}
+	
+	/** Stops the current BGM and clears any queued ones. */
+	private void doStopBGM(StopBGMEvent sbgme)
+	{
+		currTrack.stop();
+		currTrack = null;
 	}
 }

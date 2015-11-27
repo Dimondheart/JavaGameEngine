@@ -2,33 +2,28 @@ package main.sound;
 
 import static main.sound.SoundManager.BGMTransition;
 
-public class BGMEvent implements SoundEvent
+public class BGMEvent extends BaseSoundEvent
 {
-	/** What type of sound event this is. */
-	private Type type;
 	/** The background music to play. */
 	private String bgm;
 	/** The transition effect into this track. */
 	private BGMTransition effect;
 	
+	/** Basic constructor. */
 	public BGMEvent(String bgm, BGMTransition effect)
 	{
-		type = Type.PLAY_BGM;
+		super(Type.PLAY_BGM);
 		this.bgm = bgm;
 		this.effect = effect;
 	}
-
-	@Override
-	public Type getType()
-	{
-		return type;
-	}
 	
+	/** Get the track to play. */
 	public String getBGM()
 	{
 		return bgm;
 	}
 	
+	/** Get the effect used to transition in this track. */
 	public BGMTransition getEffect()
 	{
 		return effect;

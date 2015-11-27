@@ -9,6 +9,8 @@ import java.awt.Graphics2D;
 
 public class SamplePlayerControlled extends main.graphics.Renderer
 {
+	private static final long serialVersionUID = 1L;
+	
 	private int x = 200;
 	private int y = 135;
 	

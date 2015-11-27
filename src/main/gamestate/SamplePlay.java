@@ -11,23 +11,24 @@ import main.SampleRenderer2;
 import main.gamestate.GameStateManager.GameStates;
 import main.input.InputManager;
 import main.sound.SoundManager;
-import main.graphics.GfxManager;
 import main.graphics.TestAnimator;
 
 /** A sample game state with sample stuff. */
-public class SamplePlay extends GameState
+public class SamplePlay extends SavableGameState
 {
+	private static final long serialVersionUID = 1L;
+	
 	// Sample dynamic renderers
-	SampleRenderer sr;
-	SampleRenderer sr_2;
+	private SampleRenderer sr;
+	private SampleRenderer sr_2;
 	// Sample static renderers
-	SampleRenderer2 sr2;
-	SampleRenderer2 sr2_2;
+	private SampleRenderer2 sr2;
+	private SampleRenderer2 sr2_2;
 	// Sample player controlled and renderer
-	SamplePlayerControlled spc;
-	CtrlRenderer controls;
+	private SamplePlayerControlled spc;
+	private transient CtrlRenderer controls;
 	// Animation testing
-	TestAnimator ta;
+	private transient TestAnimator ta;
 	
 	public SamplePlay()
 	{
@@ -37,29 +38,40 @@ public class SamplePlay extends GameState
 		sr2 = new SampleRenderer2();
 		sr2_2 = new SampleRenderer2(0,0,80,270,Color.cyan,3);
 		spc = new SamplePlayerControlled();
-		ta = new TestAnimator(9,"test");
 	}
 	
 	@Override
 	public void setup()
 	{
-		String[] cL = new String[3];
+		String[] cL = new String[4];
 		cL[0] = "WASD to move";
-		cL[1] = "click to return to main menu";
-		cL[2] = "space to reset BGM track";
+		cL[1] = "Escape to return to main menu";
+		cL[2] = "Hold space to move player character in front of everything";
+		cL[3] = "Enter to test save-ability";
 		controls = new CtrlRenderer(cL);
+		ta = new TestAnimator(9,"test");
+		SoundManager.playBGM("Into_the_Unknown", SoundManager.BGMTransition.IMMEDIATE);
 	}
 
 	@Override
 	public void cycle()
 	{
-		if (InputManager.getMS().justClicked(BUTTON1))
+		if (InputManager.getKB().justPressed(VK_ESCAPE))
 		{
-			this.changeState(GameStates.MAIN_MENU);
+			changeState(GameStates.MAIN_MENU);
+			return;
 		}
-		if (InputManager.getKB().justPressed(VK_SPACE))
+		if (InputManager.getKB().justPressed(VK_ENTER))
 		{
-			SoundManager.playBGM("Into_the_Unknown", SoundManager.BGMTransition.IMMEDIATE);
+			// TODO save/serialize this object here
+		}
+		if (InputManager.getKB().isDown(VK_SPACE))
+		{
+			spc.changeLayer(9);
+		}
+		else
+		{
+			spc.changeLayer(4);
 		}
 		sr.update();
 		sr_2.update();
@@ -69,6 +81,13 @@ public class SamplePlay extends GameState
 	@Override
 	public void cleanup()
 	{
-		GfxManager.clearAll();
+		SoundManager.stopBGM(SoundManager.BGMTransition.IMMEDIATE);
+		sr.destroy();
+		sr_2.destroy();
+		sr2.destroy();
+		sr2_2.destroy();
+		spc.destroy();
+		controls.destroy();
+		ta.destroy();
 	}
 }

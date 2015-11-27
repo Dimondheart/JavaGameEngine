@@ -3,6 +3,9 @@ package main;
 import main.graphics.GfxManager;
 import main.input.InputManager;
 import main.sound.SoundManager;
+
+import java.awt.event.KeyEvent;
+
 import main.gamestate.GameStateManager;
 
 //import static java.awt.event.KeyEvent.*;
@@ -50,7 +53,6 @@ public class Game
 	/** Play the game. */
 	private void play()
 	{
-		SoundManager.playBGM("Into_the_Unknown", SoundManager.BGMTransition.IMMEDIATE);
 		while(true)
 		{
 			clock.nextCycle();
@@ -59,6 +61,11 @@ public class Game
 			{
 				InputManager.poll();
 				gsm.cycle();
+				// Test of saving setup
+				if (InputManager.getKB().justPressed(KeyEvent.VK_ENTER))
+				{
+					gsm.saveState();
+				}
 			}
 			// Quit
 			else if (InputManager.getState() == InputManager.State.QUIT)

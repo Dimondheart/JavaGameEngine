@@ -1,10 +1,14 @@
 package main.gamestate;
 
+import java.io.Serializable;
+
 import main.gamestate.GameStateManager.GameStates;
 
 /** Base Class for a game state. */
-public abstract class GameState
+public abstract class GameState implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	private GameStates state;
 	private GameStates newState;
 	

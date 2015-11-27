@@ -1,15 +1,13 @@
 package main.sound;
 
-public class SFXEvent implements SoundEvent
+public class SFXEvent extends BaseSoundEvent
 {
-	/** What type of sound event this is. */
-	private Type type;
 	/** The sound effect to play. */
 	private String sfx;
 	
 	public SFXEvent(String sfx)
 	{
-		type = Type.PLAY_SFX;
+		super(Type.PLAY_SFX);
 		this.sfx = sfx;
 	}
 	
@@ -17,11 +15,5 @@ public class SFXEvent implements SoundEvent
 	public String getSFX()
 	{
 		return sfx;
-	}
-
-	@Override
-	public Type getType()
-	{
-		return type;
 	}
 }

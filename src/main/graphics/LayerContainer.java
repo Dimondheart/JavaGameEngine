@@ -5,13 +5,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Window;
-import java.util.LinkedList;
 import javax.swing.JComponent;
 
 /** Handles multiple layers of rendering for a window.
  * Gets the drawing surface for the specified window layer.
  * <br>For the primary window, there are 10 layers.
- * They should be used as follows:
+ * They could be used as follows:
  * <br>
  * <br>0-2: Background Layers
  * <br>3-6: Main Content Layers
@@ -39,10 +38,6 @@ public class LayerContainer extends JComponent
 	private double horizScale = 1.0;
 	/** The vertical scale factor. */
 	private double vertScale = 1.0;
-	/** The list of new renderers to add. */
-	private LinkedList<Renderer> addRenderers;
-	/** The list of renderers to be removed. */
-	private LinkedList<Renderer> remRenderers;
 	
 	/** Standard layer container for the specified window.
 	 * @param window the window this LayerContainer is part of
@@ -52,8 +47,6 @@ public class LayerContainer extends JComponent
 	public LayerContainer(Window window, Dimension dims, int numLayers)
 	{
 		myWin = window;
-		addRenderers = new LinkedList<Renderer>();
-		remRenderers = new LinkedList<Renderer>();
 		this.numLayers = numLayers;
 		initDims = dims;
 		// Setup the layers
@@ -97,14 +90,23 @@ public class LayerContainer extends JComponent
 		return vertScale;
 	}
 	
+	/** Add specified renderer to its layer. */
 	public synchronized void addRenderer(Renderer obj)
 	{
-		addRenderers.addLast(obj);
+		layers[obj.getLayer()].addRenderer(obj);
 	}
 	
+	/** Remove specified renderer from its layer. */
 	public synchronized void removeRenderer(Renderer obj)
 	{
-		remRenderers.addLast(obj);
+		layers[obj.getLayer()].removeRenderer(obj);
+	}
+	
+	/** Move the specified renderer to a new layer. */
+	public synchronized void moveRenderer(Renderer obj, int oldLayer, int newLayer)
+	{
+		layers[oldLayer].removeRenderer(obj);
+		layers[newLayer].addRenderer(obj);
 	}
 	
 	@Override
@@ -114,35 +116,7 @@ public class LayerContainer extends JComponent
 		// Clear the graphics context
 		g2.setBackground(Color.black);
 		g2.clearRect(0, 0, myWin.getWidth(), myWin.getHeight());
-		// Add new renderers
-		while (true)
-		{
-			if (addRenderers.isEmpty())
-			{
-				break;
-			}
-			Renderer newObj = addRenderers.poll();
-			if (newObj == null)
-			{
-				continue;
-			}
-			layers[newObj.getLayer()].addRenderer(newObj);
-		}
-		// Remove destroyed renderers
-		while (true)
-		{
-			if (remRenderers.isEmpty())
-			{
-				break;
-			}
-			Renderer newObj = remRenderers.poll();
-			if (newObj == null)
-			{
-				continue;
-			}
-			layers[newObj.getLayer()].removeRenderer(newObj);
-		}
-		// Render the layers
+		// Update and render the layers
 		for (int i = 0; i < numLayers; ++i)
 		{
 			layers[i].flip(g2);
@@ -163,9 +137,6 @@ public class LayerContainer extends JComponent
 	/** Removes all Renderer(s) from all layers. */
 	public synchronized void clearAllLayers()
 	{
-		// Remove any renderers queued for adding/removal
-		addRenderers.clear();
-		remRenderers.clear();
 		// Clear each layer
 		for (int i = 0; i < numLayers; ++i)
 		{

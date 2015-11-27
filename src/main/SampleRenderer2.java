@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 
 public class SampleRenderer2 extends main.graphics.Renderer
 {
+	private static final long serialVersionUID = 1L;
+	
 	private int x;
 	private int y;
 	private int width;
