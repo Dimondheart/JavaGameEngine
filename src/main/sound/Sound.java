@@ -22,6 +22,10 @@ public abstract class Sound
 	protected boolean started = false;
 	/** The volume control for this sound. */
 	protected FloatControl volumeCtrl;
+	/** The time at which this sound started playing. */
+	private long start;
+	/** The length of this sound's clip in milliseconds. */
+	private long clipLength;
 	
 	public Sound(String sound, Volume volume)
 	{
@@ -56,9 +60,11 @@ public abstract class Sound
 	/** Start playing this sound. */
 	private void play()
 	{
+		start = main.ProgramTimer.getTime();
 		try
 		{
 			clip.start();
+			clipLength = clip.getMicrosecondLength() / 1000;
 		}
 		catch(Exception e)
 		{
@@ -70,15 +76,13 @@ public abstract class Sound
 	/**  If this sound has finished playing. */
 	public boolean isDone()
 	{
-		if (!started)
+		long elapsed = main.ProgramTimer.getTime() - start;
+		if ( elapsed >= clipLength*1.5)
 		{
-			if (clip.isRunning())
-			{
-				started = true;
-			}
-			return false;
+			cleanup();
+			return true;
 		}
-		return !clip.isRunning();
+		return false;
 	}
 	
 	/** Adjust the volume of this sound. */
@@ -87,5 +91,12 @@ public abstract class Sound
 		// Convert the units of the volume
 		float vol = (float)(100 - volume.getFinalVolume(Setting.SFX))/100.0f * -80.0f;
 		volumeCtrl.setValue(vol);
+	}
+	
+	private void cleanup()
+	{
+		clip.stop();
+		clip.flush();
+		clip.close();
 	}
 }

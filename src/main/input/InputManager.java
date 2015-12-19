@@ -254,7 +254,6 @@ public class InputManager implements main.CustomRunnable
 	private void doPause()
 	{
 		doClear();
-		System.out.println("Paused");
 		setState(State.PAUSED);
 		main.ProgramTimer.pause();
 	}
@@ -262,7 +261,6 @@ public class InputManager implements main.CustomRunnable
 	/** Resume the game to normal operation. */
 	private void doResume()
 	{
-		System.out.println("Resumed");
 		setState(State.NORMAL);
 		main.ProgramTimer.resume();
 	}
@@ -271,7 +269,6 @@ public class InputManager implements main.CustomRunnable
 	private void doQuit()
 	{
 		doClear();
-		System.out.println("'Quitted'");
 		setState(State.QUIT);
 	}
 }
