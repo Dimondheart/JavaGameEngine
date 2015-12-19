@@ -43,11 +43,10 @@ public class SamplePlay extends SavableGameState
 	@Override
 	public void setup()
 	{
-		String[] cL = new String[4];
+		String[] cL = new String[3];
 		cL[0] = "WASD to move";
 		cL[1] = "Escape to return to main menu";
 		cL[2] = "Hold space to move player character in front of everything";
-		cL[3] = "Enter to test save-ability";
 		controls = new CtrlRenderer(cL);
 		ta = new TestAnimator(9,"test");
 		SoundManager.playBGM("Into_the_Unknown", SoundManager.BGMTransition.IMMEDIATE);
@@ -67,11 +66,11 @@ public class SamplePlay extends SavableGameState
 		}
 		if (InputManager.getKB().isDown(VK_SPACE))
 		{
-			spc.changeLayer(9);
+			spc.showOnly(9);
 		}
 		else
 		{
-			spc.changeLayer(4);
+			spc.showOnly(4);
 		}
 		sr.update();
 		sr_2.update();

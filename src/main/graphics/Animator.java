@@ -2,10 +2,9 @@ package main.graphics;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.LinkedList;
 
 /** Handles cyclic/looped animations. */
-public abstract class Animator extends Renderer
+public abstract class Animator implements Renderer
 {
 	/** The directory all of an instances images are located in. */
 	private String location;
@@ -29,14 +28,11 @@ public abstract class Animator extends Renderer
 	/** Constructor which takes a non-'default' animation path. */
 	public Animator(int layer, String location, String startPath)
 	{
-		super(layer);
+		this.show(layer);
 		this.location = location;
 		setAnimationPath(startPath);
 		setInterval(100);
 	}
-
-	@Override
-	public abstract void render(Graphics2D g);
 	
 	/** Selects and sets what the next rendered frame is. */
 	private void autoSelectFrame()

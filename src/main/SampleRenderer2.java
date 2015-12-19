@@ -1,12 +1,11 @@
 package main;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 
-public class SampleRenderer2 extends main.graphics.Renderer
+import main.graphics.RenderEvent;
+
+public class SampleRenderer2 implements main.graphics.Renderer
 {
-	private static final long serialVersionUID = 1L;
-	
 	private int x;
 	private int y;
 	private int width;
@@ -20,19 +19,19 @@ public class SampleRenderer2 extends main.graphics.Renderer
 	
 	public SampleRenderer2(int x, int y, int width, int height, Color color, int layer)
 	{
-		super(layer);
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.renderColor = color;
+		this.show(layer);
 	}
 
 	@Override
-	public void render(Graphics2D g)
+	public void render(RenderEvent e)
 	{
-		g.setColor(renderColor);
-		g.fillRect(x, y, width, height);
+		e.getContext().setColor(renderColor);
+		e.getContext().fillRect(x, y, width, height);
 	}
 
 }

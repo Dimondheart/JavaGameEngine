@@ -1,29 +1,27 @@
 package main;
 
+import main.graphics.RenderEvent;
 import main.input.InputManager;
 
 import static java.awt.event.KeyEvent.*;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 
-public class SamplePlayerControlled extends main.graphics.Renderer
+public class SamplePlayerControlled implements main.graphics.Renderer
 {
-	private static final long serialVersionUID = 1L;
-	
 	private int x = 200;
 	private int y = 135;
 	
 	public SamplePlayerControlled()
 	{
-		super(4);
+		this.show(4);
 	}
 	
 	@Override
-	public void render(Graphics2D g)
+	public void render(RenderEvent e)
 	{
-		g.setColor(Color.red);
-		g.fillOval(x-5, y-5, 10, 10);
+		e.getContext().setColor(Color.red);
+		e.getContext().fillOval(x-5, y-5, 10, 10);
 	}
 	
 	public synchronized void update()

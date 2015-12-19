@@ -9,6 +9,8 @@ import static java.awt.event.MouseEvent.*;
 /** The main menu and default game state. */
 public class MainMenu extends GameState
 {
+	private static final long serialVersionUID = 1L;
+	
 	private CtrlRenderer controls;
 	
 	public MainMenu()
@@ -19,9 +21,8 @@ public class MainMenu extends GameState
 	@Override
 	public void setup()
 	{
-		String[] cL = new String[2];
+		String[] cL = new String[1];
 		cL[0] = "Click to start.";
-		cL[1] = "Enter to test save-ability";
 		controls = new CtrlRenderer(cL);
 	}
 

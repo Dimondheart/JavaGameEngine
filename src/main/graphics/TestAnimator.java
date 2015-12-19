@@ -1,18 +1,15 @@
 package main.graphics;
 
-import java.awt.Graphics2D;
-
 public class TestAnimator extends Animator
 {
-
 	public TestAnimator(int layer, String location)
 	{
 		super(layer, location);
 	}
 
 	@Override
-	public void render(Graphics2D g)
+	public void render(RenderEvent e)
 	{
-		this.renderAnimation(g, 100, 100);
+		this.renderAnimation(e.getContext(), 100, 100);
 	}
 }

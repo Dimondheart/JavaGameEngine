@@ -80,7 +80,6 @@ public class WindowManager implements InputDevice, WindowListener, ComponentList
 	@Override
 	public void windowDeactivated(WindowEvent e)
 	{
-		focusLost();
 	}
 
 	@Override

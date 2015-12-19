@@ -3,7 +3,9 @@ package main;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-public class SampleRenderer extends main.graphics.Renderer
+import main.graphics.RenderEvent;
+
+public class SampleRenderer implements main.graphics.Renderer
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -19,20 +21,20 @@ public class SampleRenderer extends main.graphics.Renderer
 	
 	public SampleRenderer(int x, int y, int vectorx, int vectory, Color color)
 	{
-		super(4);
 		vector = new int[2];
 		this.x = x;
 		this.y = y;
 		vector[0] = vectorx;
 		vector[1] = vectory;
 		renderColor = color;
+		this.show(4);
 	}
 	
 	@Override
-	public synchronized void render(Graphics2D g)
+	public synchronized void render(RenderEvent e)
 	{
-		g.setColor(renderColor);
-		g.fillOval(x-5, y-5, 10, 10);
+		e.getContext().setColor(renderColor);
+		e.getContext().fillOval(x-5, y-5, 10, 10);
 	}
 	
 	public synchronized void update()

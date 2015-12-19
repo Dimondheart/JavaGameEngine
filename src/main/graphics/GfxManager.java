@@ -39,6 +39,7 @@ public class GfxManager implements main.CustomRunnable
 		mainWin.add(mainLayers);
 		// Draw the average FPS to the screen
 		fpsR = new FPSRenderer();
+		fpsR.show(9);
 		// Create the graphics resource manager
 		grm = new GfxResourceManager();
 		// Run at about 60 FPS
@@ -84,25 +85,22 @@ public class GfxManager implements main.CustomRunnable
 		return grm;
 	}
 	
-	/** Adds the specified Renderer to be rendered. */
-	public static synchronized void addRenderer(Renderer obj)
+	/** Shows the specified Renderer on the specified layer. */
+	public static synchronized void showRenderer(Renderer obj, int layer)
 	{
-		mainLayers.addRenderer(obj);
+		mainLayers.showRenderer(obj, layer);
 	}
 	
-	/** Remove the specified renderer from being rendered. */
-	public static synchronized void removeRenderer(Renderer obj)
+	/** Hide (remove) the specified renderer from the specified layer. */
+	public static synchronized void hideRenderer(Renderer obj, int layer)
 	{
-		mainLayers.removeRenderer(obj);
+		mainLayers.hideRenderer(obj, layer);
 	}
 	
-	/** Moves the layer of the specified renderer. <br>
-	 * <b>Important:</b> Use this sparingly, as any intra-layer
-	 * ordering of the specified object will be lost when moved.
-	 */
-	public static synchronized void moveRenderer(Renderer obj, int oldLayer, int newLayer)
+	/** Hide (remove) the specified renderer from all layers. */
+	public static synchronized void hideRenderer(Renderer obj)
 	{
-		mainLayers.moveRenderer(obj, oldLayer, newLayer);
+		mainLayers.hideRenderer(obj);
 	}
 	
 	/** Clears all graphics data, like renderers, etc. */
@@ -110,7 +108,7 @@ public class GfxManager implements main.CustomRunnable
 	{
 		mainLayers.clearAllLayers();
 		// Re-add the FPS text renderer
-		addRenderer(fpsR);
+		showRenderer(fpsR,9);
 	}
 	
 	/** Handles any changes needed because of a resized window. */

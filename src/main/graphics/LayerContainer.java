@@ -90,23 +90,25 @@ public class LayerContainer extends JComponent
 		return vertScale;
 	}
 	
-	/** Add specified renderer to its layer. */
-	public synchronized void addRenderer(Renderer obj)
+	/** Add specified renderer to specified layer. */
+	public synchronized void showRenderer(Renderer obj, int layer)
 	{
-		layers[obj.getLayer()].addRenderer(obj);
+		layers[layer].addRenderer(obj);
 	}
 	
-	/** Remove specified renderer from its layer. */
-	public synchronized void removeRenderer(Renderer obj)
+	/** Remove specified renderer from specified layer. */
+	public synchronized void hideRenderer(Renderer obj, int layer)
 	{
-		layers[obj.getLayer()].removeRenderer(obj);
+		layers[layer].removeRenderer(obj);
 	}
 	
-	/** Move the specified renderer to a new layer. */
-	public synchronized void moveRenderer(Renderer obj, int oldLayer, int newLayer)
+	/** Remove specified renderer from all layers. */
+	public synchronized void hideRenderer(Renderer obj)
 	{
-		layers[oldLayer].removeRenderer(obj);
-		layers[newLayer].addRenderer(obj);
+		for (Layer l : layers)
+		{
+			l.removeRenderer(obj);
+		}
 	}
 	
 	@Override
@@ -119,7 +121,8 @@ public class LayerContainer extends JComponent
 		// Update and render the layers
 		for (int i = 0; i < numLayers; ++i)
 		{
-			layers[i].flip(g2);
+			RenderEvent e = new RenderEvent(g2, i);
+			layers[i].flip(e);
 		}
 	}
 	

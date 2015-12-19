@@ -1,54 +1,54 @@
 package main.graphics;
 
-import java.awt.Graphics2D;
-import java.io.Serializable;
-
 /** The base class for any object that will be rendered to the screen. */
-public abstract class Renderer implements Serializable
+public interface Renderer
 {
-	private static final long serialVersionUID = 1L;
+	/** Called to draw a renderer to the window. */
+	public abstract void render(RenderEvent event);
 	
-	/** What layer this renderer is drawing to. */
-	private int layer;
-	
-	/** Basic constructor. */
-	public Renderer(int layer)
-	{
-		setLayer(layer);
-		GfxManager.addRenderer(this);
-	}
-	
-	/** Called in the render loop to draw this renderer to the screen. */
-	public abstract void render(Graphics2D g);
-	
-	/** Removes an references to a renderer so it can be completely
-	 * removed.
+	/** Show the renderer.
+	 * @param layer the layer to show in
 	 */
-	public void destroy()
+	public default void show(int layer)
 	{
-		GfxManager.removeRenderer(this);
+		main.graphics.GfxManager.showRenderer(this, layer);
 	}
 	
-	/** Change the layer that this renderer is in. */
-	public void changeLayer(int newLayer)
+	/** Shows the renderer in only the specified layer, hides it in all
+	 * other layers.
+	 * @param layer the only layer to show in
+	 */
+	public default void showOnly(int layer)
 	{
-		if (layer == newLayer)
-		{
-			return;
-		}
-		GfxManager.moveRenderer(this, layer, newLayer);
-		setLayer(newLayer);
+		main.graphics.GfxManager.hideRenderer(this);
+		main.graphics.GfxManager.showRenderer(this, layer);
 	}
 	
-	/** Set what layer this renderer is in. */
-	private void setLayer(int newLayer)
+	/** Hides a renderer in all layers. */
+	public default void hide()
 	{
-		layer = newLayer;
+		main.graphics.GfxManager.hideRenderer(this);
 	}
 	
-	/** Get what layer this renderer is in. */
-	public int getLayer()
+	/** Hides a renderer in only the specified layer.
+	 * @param layer the layer to hide this renderer in
+	 */
+	public default void hide (int layer)
 	{
-		return layer;
+		main.graphics.GfxManager.hideRenderer(this, layer);
+	}
+	
+	/** Get what layer(s) a renderer is in. */
+	public default int[] getLayers()
+	{
+		// TODO implement
+		int[] layers = {};
+		return layers;
+	}
+	
+	/** Cleans up a renderer before it is no longer used. */
+	public default void destroy()
+	{
+		GfxManager.hideRenderer(this);
 	}
 }
