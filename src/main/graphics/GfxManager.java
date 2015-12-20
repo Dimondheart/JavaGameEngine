@@ -1,10 +1,11 @@
 package main.graphics;
 
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Insets;
-import javax.swing.JFrame;
+import java.awt.image.BufferedImage;
 
-import main.graphics.resources.GfxResourceManager;
+import javax.swing.JFrame;
 
 /** Handles the rendering thread. */
 public class GfxManager implements main.CustomRunnable
@@ -19,7 +20,7 @@ public class GfxManager implements main.CustomRunnable
 	/** The layer container for the main window. */
 	private static LayerContainer mainLayers;
 	/** Manages graphics loaded from files. */
-	private static GfxResourceManager grm;
+	private static GraphicsResourceManager grm;
 	/** The current average FPS. */
 	private static double FPS;
 	/** Renders the FPS to the screen. */
@@ -41,7 +42,7 @@ public class GfxManager implements main.CustomRunnable
 		fpsR = new FPSRenderer();
 		fpsR.show(9);
 		// Create the graphics resource manager
-		grm = new GfxResourceManager();
+		grm = new GraphicsResourceManager();
 		// Run at about 60 FPS
 		clock = new main.ThreadClock(16);
 	}
@@ -80,9 +81,14 @@ public class GfxManager implements main.CustomRunnable
 	}
 	
 	/** Gets the object that stores loaded graphics. */
-	public static synchronized GfxResourceManager getResManager()
+	public static synchronized GraphicsResourceManager getResManager()
 	{
 		return grm;
+	}
+	
+	public static synchronized void drawGraphic(Graphics2D g, BufferedImage i, int x, int y, int width, int height)
+	{
+		g.drawImage(i,x,y,width,height,null);
 	}
 	
 	/** Shows the specified Renderer on the specified layer. */

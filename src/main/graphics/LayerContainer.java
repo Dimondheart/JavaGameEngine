@@ -102,7 +102,7 @@ public class LayerContainer extends JComponent
 		layers[layer].removeRenderer(obj);
 	}
 	
-	/** Remove specified renderer from all layers. */
+	/** Remove the specified renderer from all layers. */
 	public synchronized void hideRenderer(Renderer obj)
 	{
 		for (Layer l : layers)

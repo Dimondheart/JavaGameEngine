@@ -1,11 +1,12 @@
 package main;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+
 import main.graphics.RenderEvent;
 import main.input.InputManager;
 
 import static java.awt.event.KeyEvent.*;
-
-import java.awt.Color;
 
 public class SamplePlayerControlled implements main.graphics.Renderer
 {
@@ -18,10 +19,15 @@ public class SamplePlayerControlled implements main.graphics.Renderer
 	}
 	
 	@Override
-	public void render(RenderEvent e)
+	public synchronized void render(RenderEvent e)
 	{
 		e.getContext().setColor(Color.red);
 		e.getContext().fillOval(x-5, y-5, 10, 10);
+		// TODO Debug this
+//		BufferedImage img = 
+//				main.graphics.GfxManager.getResManager().getGraphic("asteroid.png");
+//		main.graphics.GfxManager.drawGraphic(e.getContext(),img,x-5,y-5,10,10);
+//		e.getContext().drawImage(img, x-5, y-5, 10, 10, null);
 	}
 	
 	public synchronized void update()
