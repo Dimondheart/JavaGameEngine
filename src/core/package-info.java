@@ -1,4 +1,5 @@
-/** All core engine files that are independent of a specific game.
+/** Contains all the game engine classes and files that are independent
+ * from any specific game.
  * @author Bryan Bettis
  */
 package core;

@@ -1,11 +1,11 @@
 package game.gamestate;
 
-import main.input.InputManager;
-import main.gamestate.GameState;
-import main.gamestate.GameStateManager.GameStates;
-
 import static java.awt.event.KeyEvent.*;
 import static java.awt.event.MouseEvent.*;
+
+import core.gamestate.GameState;
+import core.gamestate.GameStateManager.GameStates;
+import core.input.InputManager;
 
 /** The main menu and default game state.
  * @author Bryan Bettis
@@ -28,7 +28,7 @@ public class MainMenuTest extends GameState
 		cL[0] = "Click to start.";
 		controls = new CtrlRenderer(cL);
 		// Display the FPS on the highest layer
-		fpsRenderer.show(main.graphics.GfxManager.NUM_MAIN_LAYERS-1);
+		fpsRenderer.show(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
 	}
 
 	@Override

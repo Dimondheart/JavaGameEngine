@@ -1,10 +1,7 @@
 package game;
 
-/** A test of the basic frame-based animation.
-* @author Bryan Bettis
-*/
-import main.graphics.Animator;
-import main.graphics.RenderEvent;
+import core.graphics.Animator;
+import core.graphics.RenderEvent;
 
 public class TestAnimator extends Animator
 {

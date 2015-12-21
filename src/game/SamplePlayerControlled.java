@@ -3,15 +3,15 @@ package game;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-import main.graphics.RenderEvent;
-import main.input.InputManager;
+import core.graphics.RenderEvent;
+import core.input.InputManager;
 
 import static java.awt.event.KeyEvent.*;
 
 /** Sample player-controlled entity.
 * @author Bryan Bettis
 */
-public class SamplePlayerControlled implements main.graphics.Renderer
+public class SamplePlayerControlled implements core.graphics.Renderer
 {
 	private int x = 200;
 	private int y = 135;
@@ -55,22 +55,22 @@ public class SamplePlayerControlled implements main.graphics.Renderer
 		}
 		if (x <= 0)
 		{
-			main.sound.SoundManager.playSFX("bounce");
+			core.sound.SoundManager.playSFX("bounce");
 			moveX = 1;
 		}
 		else if (x >= 480)
 		{
-			main.sound.SoundManager.playSFX("bounce");
+			core.sound.SoundManager.playSFX("bounce");
 			moveX = -1;
 		}
 		if (y <= 0)
 		{
-			main.sound.SoundManager.playSFX("bounce");
+			core.sound.SoundManager.playSFX("bounce");
 			moveY = 1;
 		}
 		else if (y >= 270)
 		{
-			main.sound.SoundManager.playSFX("bounce");
+			core.sound.SoundManager.playSFX("bounce");
 			moveY = -1;
 		}
 		x += moveX;

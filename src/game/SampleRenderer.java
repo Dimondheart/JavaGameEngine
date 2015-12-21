@@ -3,12 +3,12 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import main.graphics.RenderEvent;
+import core.graphics.RenderEvent;
 
 /** A sample Renderer implementation.
 * @author Bryan Bettis
 */
-public class SampleRenderer implements main.graphics.Renderer
+public class SampleRenderer implements core.graphics.Renderer
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -44,12 +44,12 @@ public class SampleRenderer implements main.graphics.Renderer
 	{
 		if (x <= 0 || x >= 480)
 		{
-			main.sound.SoundManager.playSFX("bounce");
+			core.sound.SoundManager.playSFX("bounce");
 			vector[0] *= -1;
 		}
 		if (y <= 0 || y >= 270)
 		{
-			main.sound.SoundManager.playSFX("bounce");
+			core.sound.SoundManager.playSFX("bounce");
 			vector[1] *= -1;
 		}
 		x += vector[0];

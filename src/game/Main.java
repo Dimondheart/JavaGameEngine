@@ -1,6 +1,6 @@
 package game;
 
-import main.Game;
+import core.Game;
 
 /** The main entry point for this program. */
 public class Main

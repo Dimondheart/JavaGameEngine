@@ -5,14 +5,14 @@ import static java.awt.event.KeyEvent.*;
 
 import java.awt.Color;
 
+import core.gamestate.SavableGameState;
+import core.gamestate.GameStateManager.GameStates;
+import core.input.InputManager;
+import core.sound.SoundManager;
 import game.SamplePlayerControlled;
 import game.SampleRenderer;
 import game.SampleRenderer2;
 import game.TestAnimator;
-import main.gamestate.SavableGameState;
-import main.gamestate.GameStateManager.GameStates;
-import main.input.InputManager;
-import main.sound.SoundManager;
 
 /** A sample game state with sample stuff.
  * @author Bryan Bettis
@@ -42,7 +42,7 @@ public class SamplePlay extends SavableGameState
 		sr2_2 = new SampleRenderer2(0,0,80,270,Color.cyan,3);
 		spc = new SamplePlayerControlled();
 		// Display the FPS on the highest layer
-		fpsRenderer.show(main.graphics.GfxManager.NUM_MAIN_LAYERS-1);
+		fpsRenderer.show(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
 	}
 	
 	@Override
