@@ -1,19 +1,22 @@
-package main.gamestate;
+package game.gamestate;
 
 import main.input.InputManager;
+import main.gamestate.GameState;
 import main.gamestate.GameStateManager.GameStates;
 
 import static java.awt.event.KeyEvent.*;
 import static java.awt.event.MouseEvent.*;
 
-/** The main menu and default game state. */
-public class MainMenu extends GameState
+/** The main menu and default game state.
+ * @author Bryan Bettis
+ */
+public class MainMenuTest extends GameState
 {
 	private static final long serialVersionUID = 1L;
 	
 	private CtrlRenderer controls;
 	
-	public MainMenu()
+	public MainMenuTest()
 	{
 		super(GameStates.MAIN_MENU);
 	}
@@ -24,6 +27,8 @@ public class MainMenu extends GameState
 		String[] cL = new String[1];
 		cL[0] = "Click to start.";
 		controls = new CtrlRenderer(cL);
+		// Display the FPS on the highest layer
+		fpsRenderer.show(main.graphics.GfxManager.NUM_MAIN_LAYERS-1);
 	}
 
 	@Override
@@ -36,7 +41,7 @@ public class MainMenu extends GameState
 	}
 
 	@Override
-	public void cleanup()
+	public void cleanupState()
 	{
 		controls.destroy();
 	}

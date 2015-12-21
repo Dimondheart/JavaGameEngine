@@ -5,7 +5,9 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static main.input.InputManagerEvent.Type;
 
-/** Manages all input devices (keyboard, etc.) for the main window. */
+/** Manages all input devices (keyboard, etc.) for the main window.
+ * @author Bryan Bettis
+ */
 public class InputManager implements main.CustomRunnable
 {
 	/** Thread for this object. */

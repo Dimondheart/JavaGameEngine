@@ -1,6 +1,8 @@
 package main.input;
 
-/** An event for the InputManager class. */
+/** An event for the InputManager class.
+ * @author Bryan Bettis
+ */
 public class InputManagerEvent
 {
 	/** What type of event this is. */

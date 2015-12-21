@@ -10,6 +10,9 @@ import javax.sound.sampled.FloatControl;
 
 import main.sound.Volume.Setting;
 
+/** A base class used to control the play-back of a sound.
+ * @author Bryan Bettis
+ */
 public abstract class Sound
 {
 	/** The audio stream for this sound. */
@@ -32,7 +35,7 @@ public abstract class Sound
 		this.volume = volume;
 		// Get an input stream for the sound effect
 		InputStream is = this.getClass().getResourceAsStream(
-				"/main/sound/" + sound + ".wav"
+				"/game/resources/" + sound + ".wav"
 				);
 		// Must be converted to a buffered input stream to work is a JAR
 		is = new BufferedInputStream(is);

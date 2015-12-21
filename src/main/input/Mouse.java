@@ -3,7 +3,9 @@ package main.input;
 import java.awt.Window;
 import java.awt.event.*;
 
-/** Handles mouse input events. */
+/** Handles mouse input events.
+ * @author Bryan Bettis
+ */
 public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 {
 	/** Number of key values to be used. */

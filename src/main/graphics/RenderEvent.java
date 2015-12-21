@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 
 /** An event class that contains information for a Renderer to draw itself
  * to the screen.
+ * @author Bryan Bettis
  */
 public class RenderEvent
 {

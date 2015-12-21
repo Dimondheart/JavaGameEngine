@@ -1,9 +1,12 @@
-package main;
+package game;
 
 import java.awt.Color;
 
 import main.graphics.RenderEvent;
 
+/** Another sample Renderer implementation.
+* @author Bryan Bettis
+*/
 public class SampleRenderer2 implements main.graphics.Renderer
 {
 	private int x;

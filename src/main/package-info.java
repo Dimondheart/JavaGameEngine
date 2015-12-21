@@ -1,2 +1,4 @@
-/** The main package, containing all other packages and classes. */
+/** TODO Transfer this into the core package.
+ * @author Bryan Bettis
+ */
 package main;

@@ -9,7 +9,9 @@ import java.awt.event.WindowListener;
 import main.graphics.GfxManager;
 import main.input.InputDevice;
 
-/** Event listener for window-related events. */
+/** Event listener for window-related events.
+ * @author Bryan Bettis
+ */
 public class WindowManager implements InputDevice, WindowListener, ComponentListener
 {
 	/** The window this manager is listening to. */

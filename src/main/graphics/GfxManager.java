@@ -7,7 +7,9 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
-/** Handles the rendering thread. */
+/** Handles the rendering thread.
+ * @author Bryan Bettis
+ */
 public class GfxManager implements main.CustomRunnable
 {
 	/** Default dimensions for a new window. */
@@ -23,8 +25,6 @@ public class GfxManager implements main.CustomRunnable
 	private static GraphicsResourceManager grm;
 	/** The current average FPS. */
 	private static double FPS;
-	/** Renders the FPS to the screen. */
-	private static FPSRenderer fpsR;
 	
 	/** Thread for this system. */
 	private Thread thread;
@@ -38,9 +38,6 @@ public class GfxManager implements main.CustomRunnable
 		mainWin = new JFrame("My Game Framework");
 		mainLayers = new LayerContainer(mainWin, DEF_DIMS, NUM_MAIN_LAYERS);
 		mainWin.add(mainLayers);
-		// Draw the average FPS to the screen
-		fpsR = new FPSRenderer();
-		fpsR.show(9);
 		// Create the graphics resource manager
 		grm = new GraphicsResourceManager();
 		// Run at about 60 FPS
@@ -113,8 +110,6 @@ public class GfxManager implements main.CustomRunnable
 	public static synchronized void clearAll()
 	{
 		mainLayers.clearAllLayers();
-		// Re-add the FPS text renderer
-		showRenderer(fpsR,9);
 	}
 	
 	/** Handles any changes needed because of a resized window. */

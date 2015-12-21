@@ -5,6 +5,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import main.input.InputManager;
 
+/** Manages the sound system.
+* @author Bryan Bettis
+*/
 public class SoundManager implements main.CustomRunnable
 {
 	/** Thread for this object. */

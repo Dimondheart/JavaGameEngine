@@ -1,5 +1,8 @@
 package main.sound;
 
+/** Handles volume settings.
+* @author Bryan Bettis
+*/
 public class Volume
 {
 	private int master = 100;

@@ -10,14 +10,15 @@ import javax.swing.JComponent;
 /** Handles multiple layers of rendering for a window.
  * Gets the drawing surface for the specified window layer.
  * <br>For the primary window, there are 10 layers.
- * They could be used as follows:
+ * They "could" be used as follows:
  * <br>
  * <br>0-2: Background Layers
  * <br>3-6: Main Content Layers
  * <br>7-9: GUI Layers
  * <br>
- * <br> Using "sub-layers" (first drawn on a layer = lowest sub-layer)
- * should be preferred where possible.
+ * <br>What you use each layer for is up to you, but setting your own
+ * standard usage for a game, like the example above, is recommended.
+ * @author Bryan Bettis
  */
 public class LayerContainer extends JComponent
 {

@@ -2,6 +2,9 @@ package main.sound;
 
 import static main.sound.SoundManager.BGMTransition;
 
+/** An event used to change/transition the playing background music track.
+* @author Bryan Bettis
+*/
 public class BGMEvent extends BaseSoundEvent
 {
 	/** The background music to play. */

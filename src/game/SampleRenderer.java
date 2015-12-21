@@ -1,10 +1,13 @@
-package main;
+package game;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 
 import main.graphics.RenderEvent;
 
+/** A sample Renderer implementation.
+* @author Bryan Bettis
+*/
 public class SampleRenderer implements main.graphics.Renderer
 {
 	private static final long serialVersionUID = 1L;

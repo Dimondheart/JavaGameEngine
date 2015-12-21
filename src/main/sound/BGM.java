@@ -2,6 +2,9 @@ package main.sound;
 
 import javax.sound.sampled.Clip;
 
+/** Handles play-back of a background music track.
+ * @author Bryan Bettis
+ */
 public class BGM extends Sound
 {
 	public BGM(String track, Volume volume)

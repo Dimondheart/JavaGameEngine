@@ -1,6 +1,8 @@
 package main.graphics;
 
-/** The base class for any object that will be rendered to the screen. */
+/** The base class for any object that can be rendered to the screen.
+ * @author Bryan Bettis
+ */
 public interface Renderer
 {
 	/** Called to draw a renderer to the window. */

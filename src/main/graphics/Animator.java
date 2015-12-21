@@ -3,7 +3,9 @@ package main.graphics;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-/** Handles cyclic/looped animations. */
+/** Handles cyclic/looped animations using frames.
+ * @author Bryan Bettis
+ */
 public abstract class Animator implements Renderer
 {
 	/** The directory all of an instances images are located in. */

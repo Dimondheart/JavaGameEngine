@@ -1,2 +1,4 @@
-/** Contains all classes and files that deal with sounds. */
+/** Contains all classes that deal with sounds.
+ * @author Bryan Bettis
+ */
 package main.sound;

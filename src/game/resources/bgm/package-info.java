@@ -1,2 +1,2 @@
 /** All background music tracks. */
-package main.sound.bgm;
+package game.resources.bgm;

@@ -2,8 +2,7 @@ package main;
 
 /** A timing class used to pause time-based events when the game is
  * completely paused (i.e. InputManager is paused).
- * @author Bryan
- *
+ * @author Bryan Bettis
  */
 public class ProgramTimer
 {

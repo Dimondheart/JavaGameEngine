@@ -3,6 +3,9 @@ package main.graphics;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
+/** Contains a bunch of methods used to draw text to a graphics context.
+ * @author Bryan Bettis
+ */
 public class TextDrawer
 {
 	/** The default font. */

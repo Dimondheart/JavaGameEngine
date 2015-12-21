@@ -1,6 +1,8 @@
 package main.input;
 
-/** Interface for all input devices. */
+/** Interface for all input devices.
+ * @author Bryan Bettis
+ */
 public interface InputDevice
 {
 	/** Update processed input data. */

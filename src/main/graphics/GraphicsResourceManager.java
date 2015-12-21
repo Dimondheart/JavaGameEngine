@@ -1,6 +1,5 @@
 package main.graphics;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -9,7 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 
-/** Manages all graphics/image files and relevant data. */
+/** Manages all graphics/image files and relevant data.
+ * @author Bryan Bettis
+ */
 public class GraphicsResourceManager
 {
 	
@@ -80,7 +81,7 @@ public class GraphicsResourceManager
 		public void loadGraphic(String filePath) throws IOException
 		{
 			InputStream is = this.getClass().getResourceAsStream(
-					"/main/graphics/resources/" + filePath
+					"/game/resources/graphics/" + filePath
 					);
 			// Convert to a buffered input stream
 			is = new BufferedInputStream(is);

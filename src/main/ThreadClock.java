@@ -1,6 +1,8 @@
 package main;
 
-/** Manages timing for the thread of an object that instantiates it. */
+/** Manages timing for the thread of an object that instantiates it.
+ * @author Bryan Bettis
+ */
 public class ThreadClock
 {
 	/** Preset, low speed cycling. */

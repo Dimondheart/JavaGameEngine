@@ -1,5 +1,8 @@
 package main.sound;
 
+/** An event used to play a sound effect.
+* @author Bryan Bettis
+*/
 public class SFXEvent extends BaseSoundEvent
 {
 	/** The sound effect to play. */

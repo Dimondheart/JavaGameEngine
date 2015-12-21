@@ -1,4 +1,4 @@
-package main.gamestate;
+package game.gamestate;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -7,6 +7,9 @@ import main.graphics.RenderEvent;
 import main.graphics.Renderer;
 import main.graphics.TextDrawer;
 
+/** Renders controls text to the screen for testing purposes.
+* @author Bryan Bettis
+*/
 public class CtrlRenderer implements Renderer
 {
 	private String[] displayText;
@@ -14,7 +17,8 @@ public class CtrlRenderer implements Renderer
 	public CtrlRenderer(String[] text)
 	{
 		displayText = text;
-		this.show(9);
+		// Show it on the highest layer
+		show(main.graphics.GfxManager.NUM_MAIN_LAYERS-1);
 	}
 	
 	@Override

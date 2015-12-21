@@ -1,4 +1,4 @@
-package main;
+package game;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -8,6 +8,9 @@ import main.input.InputManager;
 
 import static java.awt.event.KeyEvent.*;
 
+/** Sample player-controlled entity.
+* @author Bryan Bettis
+*/
 public class SamplePlayerControlled implements main.graphics.Renderer
 {
 	private int x = 200;

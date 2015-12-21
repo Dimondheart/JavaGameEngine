@@ -2,7 +2,11 @@ package main.graphics;
 
 import java.util.LinkedList;
 
-/** One layer in a LayerContainer. */
+/** A single layer used for organizing screen drawing.
+ * Each layer holds Renderer(s) that will be called in order once the layer
+ * has been told to render itself to the specified graphics context.
+ * @author Bryan Bettis
+ */
 public class Layer
 {
 	/** The Renderer(s) rendering to this layer. */

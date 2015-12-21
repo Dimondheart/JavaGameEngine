@@ -1,6 +1,8 @@
 package main.sound;
 
-/** Used to represent all general sound events on a queue. */
+/** Used to represent all general sound events on a queue.
+ * @author Bryan Bettis
+ */
 public abstract class BaseSoundEvent
 {
 	/** The type specifier for a child class instance. */

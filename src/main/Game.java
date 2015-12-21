@@ -11,7 +11,9 @@ import main.gamestate.GameStateManager;
 //import static java.awt.event.KeyEvent.*;
 //import static java.awt.event.MouseEvent.*;
 
-/** Represents a game session. Handles game cycling. */
+/** Represents a game session. Handles game cycling.
+ * @author Bryan Bettis
+ */
 public class Game
 {
 	/** The graphics renderer. */

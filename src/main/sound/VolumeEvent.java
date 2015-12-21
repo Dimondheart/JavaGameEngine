@@ -1,6 +1,8 @@
 package main.sound;
 
-/** Event used to change one of the volume settings. */
+/** Event used to change one of the volume settings.
+ * @author Bryan Bettis
+ */
 public class VolumeEvent extends BaseSoundEvent
 {
 	/** What volume setting is being changed. */

@@ -1,19 +1,22 @@
-package main.gamestate;
+package game.gamestate;
 
 import static java.awt.event.MouseEvent.*;
 import static java.awt.event.KeyEvent.*;
 
 import java.awt.Color;
 
-import main.SamplePlayerControlled;
-import main.SampleRenderer;
-import main.SampleRenderer2;
+import game.SamplePlayerControlled;
+import game.SampleRenderer;
+import game.SampleRenderer2;
+import game.TestAnimator;
+import main.gamestate.SavableGameState;
 import main.gamestate.GameStateManager.GameStates;
 import main.input.InputManager;
 import main.sound.SoundManager;
-import main.graphics.TestAnimator;
 
-/** A sample game state with sample stuff. */
+/** A sample game state with sample stuff.
+ * @author Bryan Bettis
+ */
 public class SamplePlay extends SavableGameState
 {
 	private static final long serialVersionUID = 1L;
@@ -38,6 +41,8 @@ public class SamplePlay extends SavableGameState
 		sr2 = new SampleRenderer2();
 		sr2_2 = new SampleRenderer2(0,0,80,270,Color.cyan,3);
 		spc = new SamplePlayerControlled();
+		// Display the FPS on the highest layer
+		fpsRenderer.show(main.graphics.GfxManager.NUM_MAIN_LAYERS-1);
 	}
 	
 	@Override
@@ -78,7 +83,7 @@ public class SamplePlay extends SavableGameState
 	}
 
 	@Override
-	public void cleanup()
+	public void cleanupState()
 	{
 		SoundManager.stopBGM(SoundManager.BGMTransition.IMMEDIATE);
 		sr.destroy();

@@ -1,5 +1,12 @@
 package main.gamestate;
 
+import game.gamestate.MainMenuTest;
+import game.gamestate.SamplePlay;
+
+/** Manages the game states, including handling cycling and transition
+ * between game states.
+* @author Bryan Bettis
+*/
 public class GameStateManager
 {
 	private GameState currGS;
@@ -89,7 +96,7 @@ public class GameStateManager
 			
 			// Default to the main menu
 			default:
-				currGS = new MainMenu();
+				currGS = new MainMenuTest();
 		}
 		// Setup the new game state
 		currGS.setup();
