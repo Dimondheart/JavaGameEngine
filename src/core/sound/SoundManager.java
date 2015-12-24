@@ -3,7 +3,7 @@ package core.sound;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import core.input.InputManager;
+import core.userinput.InputManager;
 
 /** Manages the sound system.
 * @author Bryan Bettis

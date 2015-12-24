@@ -1,4 +1,4 @@
-package core.input;
+package core.userinput;
 
 /** Interface for all input devices.
  * @author Bryan Bettis

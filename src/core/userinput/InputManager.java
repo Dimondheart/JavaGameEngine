@@ -1,6 +1,6 @@
-package core.input;
+package core.userinput;
 
-import static core.input.InputManagerEvent.Type;
+import static core.userinput.InputManagerEvent.Type;
 
 import java.awt.Window;
 import java.util.concurrent.ConcurrentLinkedDeque;

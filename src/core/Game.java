@@ -4,8 +4,8 @@ import java.awt.event.KeyEvent;
 
 import core.gamestate.GameStateManager;
 import core.graphics.GfxManager;
-import core.input.InputManager;
 import core.sound.SoundManager;
+import core.userinput.InputManager;
 
 //import static java.awt.event.KeyEvent.*;
 //import static java.awt.event.MouseEvent.*;

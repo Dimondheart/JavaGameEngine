@@ -5,7 +5,7 @@ import static java.awt.event.MouseEvent.*;
 
 import core.gamestate.GameState;
 import core.gamestate.GameStateManager.GameStates;
-import core.input.InputManager;
+import core.userinput.InputManager;
 
 /** The main menu and default game state.
  * @author Bryan Bettis

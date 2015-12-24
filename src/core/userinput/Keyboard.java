@@ -1,4 +1,4 @@
-package core.input;
+package core.userinput;
 
 import java.awt.Component;
 import java.awt.event.KeyEvent;

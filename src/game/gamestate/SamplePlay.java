@@ -7,8 +7,8 @@ import java.awt.Color;
 
 import core.gamestate.SavableGameState;
 import core.gamestate.GameStateManager.GameStates;
-import core.input.InputManager;
 import core.sound.SoundManager;
+import core.userinput.InputManager;
 import game.SamplePlayerControlled;
 import game.SampleRenderer;
 import game.SampleRenderer2;

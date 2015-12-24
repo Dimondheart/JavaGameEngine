@@ -1,4 +1,4 @@
-package core.input;
+package core.userinput;
 
 /** An event for the InputManager class.
  * @author Bryan Bettis

@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import core.graphics.RenderEvent;
-import core.input.InputManager;
+import core.userinput.InputManager;
 
 import static java.awt.event.KeyEvent.*;
 
