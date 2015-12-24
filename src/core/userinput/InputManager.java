@@ -36,6 +36,7 @@ public class InputManager implements core.CustomRunnable
 	/** Normal input setup. */
 	public InputManager(Window window)
 	{
+		System.out.println("Setting Up User Input System...");
 		queue = new ConcurrentLinkedDeque<InputManagerEvent>();
 		keyboard = new Keyboard(window);
 		mouse = new Mouse(window);
@@ -46,6 +47,7 @@ public class InputManager implements core.CustomRunnable
 	@Override
 	public void start()
 	{
+		System.out.println("Starting User Input System...");
 		thread = new Thread(this);
 		thread.start();
 	}

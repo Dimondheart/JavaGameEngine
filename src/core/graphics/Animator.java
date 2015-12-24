@@ -30,7 +30,7 @@ public abstract class Animator implements Renderer
 	/** Constructor which takes a non-'default' animation path. */
 	public Animator(int layer, String location, String startPath)
 	{
-		this.show(layer);
+		this.showOnLayer(layer);
 		this.location = location;
 		setAnimationPath(startPath);
 		setInterval(100);

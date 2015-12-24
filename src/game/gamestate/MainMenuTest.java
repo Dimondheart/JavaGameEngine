@@ -28,7 +28,7 @@ public class MainMenuTest extends GameState
 		cL[0] = "Click to start.";
 		controls = new CtrlRenderer(cL);
 		// Display the FPS on the highest layer
-		fpsRenderer.show(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
+		fpsRenderer.showOnLayer(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
 	}
 
 	@Override

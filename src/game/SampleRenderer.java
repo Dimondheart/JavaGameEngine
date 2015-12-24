@@ -30,7 +30,7 @@ public class SampleRenderer implements core.graphics.Renderer
 		vector[0] = vectorx;
 		vector[1] = vectory;
 		renderColor = color;
-		this.show(4);
+		this.showOnLayer(4);
 	}
 	
 	@Override

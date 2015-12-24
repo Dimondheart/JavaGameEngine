@@ -27,7 +27,7 @@ public class SampleRenderer2 implements core.graphics.Renderer
 		this.width = width;
 		this.height = height;
 		this.renderColor = color;
-		this.show(layer);
+		this.showOnLayer(layer);
 	}
 
 	@Override

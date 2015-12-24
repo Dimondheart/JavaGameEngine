@@ -18,7 +18,7 @@ public class SamplePlayerControlled implements core.graphics.Renderer
 	
 	public SamplePlayerControlled()
 	{
-		this.show(4);
+		this.showOnLayer(4);
 	}
 	
 	@Override

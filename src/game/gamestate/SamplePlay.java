@@ -42,7 +42,7 @@ public class SamplePlay extends SavableGameState
 		sr2_2 = new SampleRenderer2(0,0,80,270,Color.cyan,3);
 		spc = new SamplePlayerControlled();
 		// Display the FPS on the highest layer
-		fpsRenderer.show(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
+		fpsRenderer.showOnLayer(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
 	}
 	
 	@Override
@@ -71,11 +71,11 @@ public class SamplePlay extends SavableGameState
 		}
 		if (InputManager.getKB().isDown(VK_SPACE))
 		{
-			spc.showOnly(9);
+			spc.showOnlyOnLayer(9);
 		}
 		else
 		{
-			spc.showOnly(4);
+			spc.showOnlyOnLayer(4);
 		}
 		sr.update();
 		sr_2.update();

@@ -18,7 +18,7 @@ public class CtrlRenderer implements Renderer
 	{
 		displayText = text;
 		// Show it on the highest layer
-		show(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
+		showOnLayer(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
 	}
 	
 	@Override

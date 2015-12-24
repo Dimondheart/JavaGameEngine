@@ -5,13 +5,18 @@ package core.graphics;
  */
 public interface Renderer
 {
-	/** Called to draw a renderer to the window. */
+	/** Called to draw a renderer to the window.
+	 * @param event the context information used to render
+	 * @see RenderEvent
+	 */
 	public abstract void render(RenderEvent event);
 	
-	/** Show the renderer.
-	 * @param layer the layer to show in
+	/** Add this Renderer to the specified layer. A renderer can be added
+	 * to multiple layers, and when its render function is called it
+	 * is told what layer is being rendered at that time.
+	 * @param layer the layer to add this renderer to
 	 */
-	public default void show(int layer)
+	public default void showOnLayer(int layer)
 	{
 		core.graphics.GfxManager.showRenderer(this, layer);
 	}
@@ -20,14 +25,14 @@ public interface Renderer
 	 * other layers.
 	 * @param layer the only layer to show in
 	 */
-	public default void showOnly(int layer)
+	public default void showOnlyOnLayer(int layer)
 	{
 		core.graphics.GfxManager.hideRenderer(this);
 		core.graphics.GfxManager.showRenderer(this, layer);
 	}
 	
 	/** Hides a renderer in all layers. */
-	public default void hide()
+	public default void hideOnAllLayers()
 	{
 		core.graphics.GfxManager.hideRenderer(this);
 	}
@@ -35,13 +40,15 @@ public interface Renderer
 	/** Hides a renderer in only the specified layer.
 	 * @param layer the layer to hide this renderer in
 	 */
-	public default void hide (int layer)
+	public default void hideOnLayer(int layer)
 	{
 		core.graphics.GfxManager.hideRenderer(this, layer);
 	}
 	
-	/** Get what layer(s) a renderer is in. */
-	public default int[] getLayers()
+	/** The layer(s) this Renderer is currently shown on.
+	 * @return array of integers corresponding to layer indexes
+	 */
+	public default int[] getCurrentLayers()
 	{
 		// TODO implement
 		int[] layers = {};

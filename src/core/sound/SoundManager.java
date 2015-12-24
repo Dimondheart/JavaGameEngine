@@ -36,6 +36,7 @@ public class SoundManager implements core.CustomRunnable
 	/** Normal sound manager setup. */
 	public SoundManager()
 	{
+		System.out.println("Setting Up Sound System...");
 		// Setup queues
 		sfxQueue = new ConcurrentLinkedDeque<SFXEvent>();
 		genQueue = new ConcurrentLinkedDeque<BaseSoundEvent>();
@@ -48,6 +49,7 @@ public class SoundManager implements core.CustomRunnable
 	@Override
 	public void start()
 	{
+		System.out.println("Starting Sound System...");
 		thread = new Thread(this);
 		thread.start();
 	}
