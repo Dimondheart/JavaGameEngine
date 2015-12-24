@@ -2,6 +2,8 @@ package core.graphics;
 
 import java.util.LinkedList;
 
+import core.userinput.gui.GUIObject;
+
 /** A single layer used for organizing screen drawing.
  * Each layer holds Renderer(s) that will be called in order once the layer
  * has been told to render itself to the specified graphics context.
@@ -11,23 +13,40 @@ public class Layer
 {
 	/** The Renderer(s) rendering to this layer. */
 	private LinkedList<Renderer> renderers;
+	private LinkedList<GUIObject> guiObjects;
 	
 	/** The normal constructor for a Layer. */
 	public Layer()
 	{
 		renderers = new LinkedList<Renderer>();
+		guiObjects = new LinkedList<GUIObject>();
 	}
 	
 	/** Add specified renderer to this layer. */
 	public synchronized void addRenderer(Renderer obj)
 	{
+		// Don't add the same renderer more than once
+		if (renderers.contains(obj))
+		{
+			return;
+		}
 		renderers.addLast(obj);
+		// Add GUI elements also to the list of GUI objects
+		if (obj instanceof GUIObject)
+		{
+			guiObjects.add((GUIObject) obj);
+		}
 	}
 	
 	/** Remove specified renderer from this layer. */
 	public synchronized void removeRenderer(Renderer obj)
 	{
 		renderers.remove(obj);
+		// Remove any GUI elements from the GUI object list
+		if (obj instanceof GUIObject)
+		{
+			guiObjects.remove((GUIObject) obj);
+		}
 	}
 	
 	/** Update and draw this layer to the specified surface.
@@ -35,7 +54,7 @@ public class Layer
 	 */
 	public synchronized void flip(RenderEvent e)
 	{
-		// Draw all renderers
+		// Draw each Renderer
 		for (Renderer r : renderers)
 		{
 			r.render(e);
@@ -46,5 +65,6 @@ public class Layer
 	public synchronized void clear()
 	{
 		renderers.clear();
+		guiObjects.clear();
 	}
 }

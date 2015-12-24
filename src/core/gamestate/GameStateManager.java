@@ -11,6 +11,7 @@ public class GameStateManager
 {
 	private GameState currGS;
 	
+	// TODO Replace this with class instanceof checking, etc.
 	public enum GameStates
 	{
 		MAIN_MENU,
@@ -53,10 +54,11 @@ public class GameStateManager
 		}
 	}
 	
-	/** Cleans up the current game state and destroys it. */
+	/** Cleans up the current game state. */
 	public void cleanup()
 	{
 		currGS.cleanup();
+		core.userinput.InputManager.clear();
 		currGS = null;
 	}
 	
@@ -77,10 +79,10 @@ public class GameStateManager
 	/** Selects and sets the new game state object. */
 	private void setNewGameState(GameStates newState)
 	{
-		// Cleanup a previous game state
+		// Cleanup after previous game state (if any)
 		if (currGS != null)
 		{
-			currGS.cleanup();
+			cleanup();
 		}
 		// Create the new game state
 		switch (newState)

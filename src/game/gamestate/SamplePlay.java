@@ -4,6 +4,7 @@ import static java.awt.event.MouseEvent.*;
 import static java.awt.event.KeyEvent.*;
 
 import java.awt.Color;
+import java.awt.event.MouseEvent;
 
 import core.gamestate.SavableGameState;
 import core.gamestate.GameStateManager.GameStates;
@@ -13,6 +14,7 @@ import game.SamplePlayerControlled;
 import game.SampleRenderer;
 import game.SampleRenderer2;
 import game.TestAnimator;
+import core.userinput.gui.Button;
 
 /** A sample game state with sample stuff.
  * @author Bryan Bettis
@@ -32,6 +34,7 @@ public class SamplePlay extends SavableGameState
 	private transient CtrlRenderer controls;
 	// Animation testing
 	private transient TestAnimator ta;
+	private Button mainMenuBtn;
 	
 	public SamplePlay()
 	{
@@ -43,6 +46,8 @@ public class SamplePlay extends SavableGameState
 		spc = new SamplePlayerControlled();
 		// Display the FPS on the highest layer
 		fpsRenderer.showOnLayer(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
+		mainMenuBtn = new Button(150,0,100,20,"Main Menu");
+		mainMenuBtn.setText("Main Menu");
 	}
 	
 	@Override
@@ -50,7 +55,7 @@ public class SamplePlay extends SavableGameState
 	{
 		String[] cL = new String[3];
 		cL[0] = "WASD to move";
-		cL[1] = "Escape to return to main menu";
+		cL[1] = "Escape + left click to return to main menu";
 		cL[2] = "Hold space to move player character in front of everything";
 		controls = new CtrlRenderer(cL);
 		ta = new TestAnimator(9,"test");
@@ -60,14 +65,23 @@ public class SamplePlay extends SavableGameState
 	@Override
 	public void cycle()
 	{
-		if (InputManager.getKB().justPressed(VK_ESCAPE))
+		if (InputManager.getKB().isDown(VK_ESCAPE))
 		{
-			changeState(GameStates.MAIN_MENU);
-			return;
+			mainMenuBtn.showOnLayer(9);
+			if (InputManager.getMS().isDown(MouseEvent.BUTTON1))
+			{
+				changeState(GameStates.MAIN_MENU);
+				return;
+			}
+		}
+		else
+		{
+			mainMenuBtn.hideOnLayer(9);
 		}
 		if (InputManager.getKB().justPressed(VK_ENTER))
 		{
-			// TODO save/serialize this object here
+			changeState(GameStates.MAIN_MENU);
+			return;
 		}
 		if (InputManager.getKB().isDown(VK_SPACE))
 		{
@@ -93,5 +107,6 @@ public class SamplePlay extends SavableGameState
 		spc.destroy();
 		controls.destroy();
 		ta.destroy();
+		mainMenuBtn.destroy();
 	}
 }
