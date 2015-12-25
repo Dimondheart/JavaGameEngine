@@ -1,4 +1,4 @@
-package core.userinput;
+package core.userinput.inputdevice;
 
 import java.awt.Window;
 import java.awt.event.ComponentEvent;
@@ -7,11 +7,12 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import core.graphics.GfxManager;
+import core.userinput.InputManager;
 
 /** Event listener for window-related events.
  * @author Bryan Bettis
  */
-public class WindowManager implements InputDevice, WindowListener, ComponentListener
+public class WindowMonitor implements InputDevice, WindowListener, ComponentListener
 {
 	/** The window this manager is listening to. */
 	private Window myWin;
@@ -19,7 +20,7 @@ public class WindowManager implements InputDevice, WindowListener, ComponentList
 	/** Constructor which takes a reference to the frame it will
 	 * manage events for.
 	 */
-	public WindowManager(Window window)
+	public WindowMonitor(Window window)
 	{
 		myWin = window;
 		myWin.addWindowListener(this);

@@ -1,6 +1,6 @@
-package core.userinput;
+package core.userinput.inputdevice;
 
-/** Interface for all input devices.
+/** Interface for input devices.
  * @author Bryan Bettis
  */
 public interface InputDevice

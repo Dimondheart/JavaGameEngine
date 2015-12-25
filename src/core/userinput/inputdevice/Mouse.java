@@ -1,4 +1,4 @@
-package core.userinput;
+package core.userinput.inputdevice;
 
 import java.awt.Window;
 import java.awt.event.*;

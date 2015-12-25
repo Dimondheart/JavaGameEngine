@@ -22,7 +22,7 @@ public class GfxManager implements core.CustomRunnable
 	/** The layer container for the main window. */
 	private static LayerContainer mainLayers;
 	/** Manages graphics loaded from files. */
-	private static GraphicsResourceManager grm;
+	private static GraphicsResources grm;
 	/** The current average FPS. */
 	private static double FPS;
 	
@@ -39,7 +39,7 @@ public class GfxManager implements core.CustomRunnable
 		mainLayers = new LayerContainer(mainWin, DEF_DIMS, NUM_MAIN_LAYERS);
 		mainWin.add(mainLayers);
 		// Create the graphics resource manager
-		grm = new GraphicsResourceManager();
+		grm = new GraphicsResources();
 		// Run at about 60 FPS
 		clock = new core.ThreadClock(16);
 	}
@@ -78,7 +78,7 @@ public class GfxManager implements core.CustomRunnable
 	}
 	
 	/** Gets the object that stores loaded graphics. */
-	public static synchronized GraphicsResourceManager getResManager()
+	public static synchronized GraphicsResources getResManager()
 	{
 		return grm;
 	}

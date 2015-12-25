@@ -73,6 +73,11 @@ public class SamplePlay extends SavableGameState
 				changeState(GameStates.MAIN_MENU);
 				return;
 			}
+			if (mainMenuBtn.getState() == Button.ButtonState.CLICKED)
+			{
+				changeState(GameStates.MAIN_MENU);
+				return;
+			}
 		}
 		else
 		{

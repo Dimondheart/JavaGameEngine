@@ -11,13 +11,13 @@ import javax.imageio.ImageIO;
 /** Manages all graphics/image files and relevant data.
  * @author Bryan Bettis
  */
-public class GraphicsResourceManager
+public class GraphicsResources
 {
 	
 	private static ConcurrentHashMap<String, Graphic> graphics;
 	
 	/** Basic constructor. */
-	public GraphicsResourceManager()
+	public GraphicsResources()
 	{
 		graphics = new ConcurrentHashMap<String, Graphic>();
 		try

@@ -46,7 +46,7 @@ public interface Renderer
 		core.graphics.GfxManager.hideRenderer(this, layer);
 	}
 	
-	/** The layer(s) this Renderer is currently shown on.
+	/** The layer(s) this Renderer is currently showing on.
 	 * @return array of integers corresponding to layer indexes
 	 */
 	public default int[] getCurrentLayers()

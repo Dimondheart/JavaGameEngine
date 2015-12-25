@@ -5,6 +5,10 @@ import static core.userinput.InputManagerEvent.Type;
 import java.awt.Window;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import core.userinput.inputdevice.Keyboard;
+import core.userinput.inputdevice.Mouse;
+import core.userinput.inputdevice.WindowMonitor;
+
 /** Manages all input devices (keyboard, etc.) for the main window.
  * @author Bryan Bettis
  */
@@ -23,7 +27,7 @@ public class InputManager implements core.CustomRunnable
 	/** The mouse. */
 	private static Mouse mouse;
 	/** The main window event manager. */
-	private static WindowManager win;
+	private static WindowMonitor win;
 	
 	/** Different basic states the game can be in. */
 	public enum State
@@ -40,7 +44,7 @@ public class InputManager implements core.CustomRunnable
 		queue = new ConcurrentLinkedDeque<InputManagerEvent>();
 		keyboard = new Keyboard(window);
 		mouse = new Mouse(window);
-		win = new WindowManager(window);
+		win = new WindowMonitor(window);
 		clock = new core.ThreadClock(8);
 	}
 	
