@@ -12,6 +12,8 @@ import javax.swing.JFrame;
  */
 public class GfxManager implements core.CustomRunnable
 {
+	/** The default interval for rendering. */
+	public static final int DEFAULT_RENDER_INTERVAL = 16;
 	/** Default dimensions for a new window. */
 	public static final Dimension DEF_DIMS = new Dimension(480,270);
 	/** Number of layers to create for the main window. */
@@ -35,13 +37,15 @@ public class GfxManager implements core.CustomRunnable
 	public GfxManager()
 	{
 		System.out.println("Setting Up Graphics System...");
-		mainWin = new JFrame("My Game Framework");
+		// Setup the main window
+		mainWin = new JFrame("Unnamed Java Game Engine");
+		// Setup the main layer container
 		mainLayers = new LayerContainer(mainWin, DEF_DIMS, NUM_MAIN_LAYERS);
 		mainWin.add(mainLayers);
 		// Create the graphics resource manager
 		grm = new GraphicsResources();
-		// Run at about 60 FPS
-		clock = new core.ThreadClock(16);
+		// Run at 62.5 FPS
+		clock = new core.ThreadClock(DEFAULT_RENDER_INTERVAL);
 	}
 	
 	@Override
@@ -51,6 +55,7 @@ public class GfxManager implements core.CustomRunnable
 		mainWin.pack();
 		mainWin.setVisible(true);
 		thread = new Thread(this);
+		thread.setName("Graphics Manager Render Loop");
 		thread.start();
 	}
 
@@ -60,7 +65,7 @@ public class GfxManager implements core.CustomRunnable
 		while (true)
 		{
 			FPS = clock.getAvgCPS();
-			mainWin.repaint();
+			mainWin.repaint(16);
 			clock.nextCycle();
 		}
 	}
@@ -71,19 +76,23 @@ public class GfxManager implements core.CustomRunnable
 		return FPS;
 	}
 	
-	/** Get the JFrame for the primary window. */
+	/** Get the JFrame for the primary window.
+	 * @return the JFrame of the main window
+	 */
 	public static synchronized JFrame getMainWin()
 	{
 		return mainWin;
 	}
 	
-	/** Gets the object that stores loaded graphics. */
-	public static synchronized GraphicsResources getResManager()
+	/** Gets the object that stores loaded graphics.
+	 * @return the object for accessing graphics files
+	 */
+	public static GraphicsResources getResManager()
 	{
 		return grm;
 	}
 	
-	public static synchronized void drawGraphic(Graphics2D g, BufferedImage i, int x, int y, int width, int height)
+	public static void drawGraphic(Graphics2D g, BufferedImage i, int x, int y, int width, int height)
 	{
 		g.drawImage(i,x,y,width,height,null);
 	}

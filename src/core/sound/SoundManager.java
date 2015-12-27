@@ -51,6 +51,7 @@ public class SoundManager implements core.CustomRunnable
 	{
 		System.out.println("Starting Sound System...");
 		thread = new Thread(this);
+		thread.setName("Sound Manager Event Queue");
 		thread.start();
 	}
 

@@ -53,6 +53,7 @@ public class InputManager implements core.CustomRunnable
 	{
 		System.out.println("Starting User Input System...");
 		thread = new Thread(this);
+		thread.setName("Input Manager Event Queue");
 		thread.start();
 	}
 	

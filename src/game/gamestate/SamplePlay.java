@@ -10,6 +10,7 @@ import core.gamestate.SavableGameState;
 import core.gamestate.GameStateManager.GameStates;
 import core.sound.SoundManager;
 import core.userinput.InputManager;
+import game.CtrlRenderer;
 import game.SamplePlayerControlled;
 import game.SampleRenderer;
 import game.SampleRenderer2;

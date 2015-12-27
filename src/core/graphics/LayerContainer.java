@@ -113,6 +113,11 @@ public class LayerContainer extends JComponent
 	}
 	
 	@Override
+	public synchronized void update(Graphics g)
+	{
+	}
+	
+	@Override
 	protected synchronized void paintComponent(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D)g;
