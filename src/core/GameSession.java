@@ -9,7 +9,7 @@ import core.userinput.InputManager;
  * the main game loop (calls the game state manager).
  * @author Bryan Bettis
  */
-public class GameManager
+public class GameSession
 {
 	/** The graphics system. */
 	private GfxManager gfx;
@@ -23,7 +23,7 @@ public class GameManager
 	private ThreadClock clock;
 	
 	/** Normal game constructor. Also sets up the subsystems. */
-	public GameManager()
+	public GameSession()
 	{
 		// Setup graphics system
 		gfx = new GfxManager();
