@@ -1,6 +1,6 @@
 package game.gamestate;
 
-import static java.awt.event.MouseEvent.*;
+//import static java.awt.event.MouseEvent.*;
 import static java.awt.event.KeyEvent.*;
 
 import java.awt.Color;

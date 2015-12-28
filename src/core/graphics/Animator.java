@@ -8,12 +8,12 @@ import java.awt.Graphics2D;
  */
 public abstract class Animator implements Renderer
 {
-	/** The directory all of an instances images are located in. */
-	private String location;
-	/** The current animation path used to draw to (directly mapped to
-	 * sub-directories).
-	 */
-	private String currPath;
+//	/** The directory all of an instances images are located in. */
+//	private String location;
+//	/** The current animation path used to draw to (directly mapped to
+//	 * sub-directories).
+//	 */
+//	private String currPath;
 	/** The interval at which the animation frame changes. */
 	private long interval;
 	/** The current frame of the animation. */
@@ -31,7 +31,7 @@ public abstract class Animator implements Renderer
 	public Animator(int layer, String location, String startPath)
 	{
 		this.showOnLayer(layer);
-		this.location = location;
+//		this.location = location;
 		setAnimationPath(startPath);
 		setInterval(100);
 	}
@@ -44,10 +44,13 @@ public abstract class Animator implements Renderer
 		{
 			setFrame(currFrame+1);
 		}
-		// End of animation, reset to beginning
-		String framePath = location + currPath + "frame"
-				+ Integer.toString(currFrame) + ".png";
-//		if (main.graphics.GfxManager.getResManager().resExists(framePath))
+//		// End of animation, reset to beginning
+//		String framePath = location + currPath + "frame"
+//				+ Integer.toString(currFrame) + ".png";
+//		if (core.graphics.GfxManager.getResManager().graphicExists(framePath))
+//		{
+//			
+//		}
 		if (currFrame >= 4)
 		{
 			setFrame(0);
@@ -92,7 +95,7 @@ public abstract class Animator implements Renderer
 	 */
 	protected void setAnimationPath(String pathName)
 	{
-		currPath = pathName;
+//		currPath = pathName;
 	}
 	
 	/** Set how many milliseconds should elapse between each animation

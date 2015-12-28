@@ -1,6 +1,5 @@
 package game;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import core.graphics.RenderEvent;
@@ -24,13 +23,11 @@ public class SamplePlayerControlled implements core.graphics.Renderer
 	@Override
 	public synchronized void render(RenderEvent e)
 	{
-		e.getContext().setColor(Color.red);
-		e.getContext().fillOval(x-5, y-5, 10, 10);
-		// TODO Debug this
+//		e.getContext().setColor(java.awt.Color.red);
+//		e.getContext().fillOval(x-5, y-5, 10, 10);
 		BufferedImage img = 
-				core.graphics.GfxManager.getResManager().getGraphic("asteroid.png");
+				core.graphics.GfxManager.getResManager().getGraphic("lowqualityship.png");
 		core.graphics.GfxManager.drawGraphic(e.getContext(),img,x-5,y-5,10,10);
-//		e.getContext().drawImage(img, x-5, y-5, 10, 10, null);
 	}
 	
 	public synchronized void update()

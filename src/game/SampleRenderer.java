@@ -1,7 +1,7 @@
 package game;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 import core.graphics.RenderEvent;
 
@@ -10,8 +10,6 @@ import core.graphics.RenderEvent;
 */
 public class SampleRenderer implements core.graphics.Renderer
 {
-	private static final long serialVersionUID = 1L;
-	
 	private int x = 20;
 	private int y = 40;
 	private int[] vector;
@@ -36,8 +34,19 @@ public class SampleRenderer implements core.graphics.Renderer
 	@Override
 	public synchronized void render(RenderEvent e)
 	{
-		e.getContext().setColor(renderColor);
-		e.getContext().fillOval(x-5, y-5, 10, 10);
+//		e.getContext().setColor(renderColor);
+//		e.getContext().fillOval(x-5, y-5, 10, 10);
+		BufferedImage img;
+		if (renderColor.equals(Color.blue))
+		{
+			img = core.graphics.GfxManager.getResManager().getGraphic("testfolder/bullet.png");
+			core.graphics.GfxManager.drawGraphic(e.getContext(),img,x-3,y-6,6,12);
+		}
+		else
+		{
+			img = core.graphics.GfxManager.getResManager().getGraphic("asteroid.png");
+			core.graphics.GfxManager.drawGraphic(e.getContext(),img,x-6,y-6,12,12);
+		}
 	}
 	
 	public synchronized void update()
