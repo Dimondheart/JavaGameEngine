@@ -5,9 +5,9 @@ import core.graphics.RenderEvent;
 
 public class TestAnimator extends Animator
 {
-	public TestAnimator(int layer, String location)
+	public TestAnimator(String location, String startingSet)
 	{
-		super(layer, location);
+		super(location, startingSet);
 	}
 
 	@Override

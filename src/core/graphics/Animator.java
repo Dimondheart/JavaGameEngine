@@ -1,101 +1,74 @@
 package core.graphics;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
-/** Handles cyclic/looped animations using frames.
+import core.graphics.GfxManager;
+
+/** Handles animations using images as frames.
  * @author Bryan Bettis
  */
 public abstract class Animator implements Renderer
 {
-//	/** The directory all of an instances images are located in. */
-//	private String location;
-//	/** The current animation path used to draw to (directly mapped to
-//	 * sub-directories).
-//	 */
-//	private String currPath;
+	/** The directory all animation sets are located in. */
+	private String location;
+	/** The current set of animation frames being drawn. */
+	private String currentSet;
 	/** The interval at which the animation frame changes. */
 	private long interval;
 	/** The current frame of the animation. */
-	private int currFrame = 0;
+	private int currFrame;
+	/** The path to the current frame image. */
+	private String currFramePath;
 	/** The start time of the current frame. */
 	private long frameStart;
 	
-	/** Constructor, uses the 'default' animation path. */
-	public Animator(int layer, String location)
+	/** Defaults to the "basic" animation set.
+	 * @param location the root folder for all the animation sets
+	 */
+	public Animator(String location)
 	{
-		this(layer, location, "default");
+		this(location, "basic");
 	}
 	
-	/** Constructor which takes a non-'default' animation path. */
-	public Animator(int layer, String location, String startPath)
+	/** Set an initial animation set other than the default "basic".
+	 * @param location the root folder for all the animation sets
+	 * @param startSet the frame set to start with
+	 */
+	public Animator(String location, String startingSet)
 	{
-		this.showOnLayer(layer);
-//		this.location = location;
-		setAnimationPath(startPath);
-		setInterval(100);
-	}
-	
-	/** Selects and sets what the next rendered frame is. */
-	private void autoSelectFrame()
-	{
-		// Increment the animation frame
-		if (core.ProgramTimer.getTime() - frameStart >= interval)
-		{
-			setFrame(currFrame+1);
-		}
-//		// End of animation, reset to beginning
-//		String framePath = location + currPath + "frame"
-//				+ Integer.toString(currFrame) + ".png";
-//		if (core.graphics.GfxManager.getResManager().graphicExists(framePath))
-//		{
-//			
-//		}
-		if (currFrame >= 4)
-		{
-			setFrame(0);
-		}
+		this.location = location;
+		setAnimationSet(startingSet);
+		setInterval(50);
+		setFrame(1);
 	}
 	
 	/** Render the current frame of this animation at the specified
 	 * coordinates.
 	 * @param g the surface to draw to
-	 * @param x the centered x coordinate to draw at
-	 * @param y the centered y coordinate to draw at
+	 * @param x the x coordinate to draw at
+	 * @param y the y coordinate to draw at
 	 */
 	protected void renderAnimation(Graphics2D g, int x, int y)
 	{
-		autoSelectFrame();
-		// Test animation
-		switch (currFrame)
-		{
-			case 0:
-				g.setColor(Color.blue);
-				break;
-			case 1:
-				g.setColor(Color.cyan);
-				break;
-			case 2:
-				g.setColor(Color.lightGray);
-				break;
-			case 3:
-				g.setColor(Color.gray);
-				break;
-			default:
-				break;
-		}
-		g.fillRect(x-25, y-25, 50, 50);
+		// Update the current frame
+		selectFrame();
+		// Get the actual image
+		BufferedImage img =
+				GfxManager.getResManager().getGraphic(currFramePath);
+		// Draw the current frame
+		GfxManager.drawGraphic(g, img, x, y, img.getWidth(), img.getHeight());
 	}
 	
-	/** Changes the animation path to use for this animator.
-	 * An "animator path" is a set of frames of an animation in the same
-	 * sub-folder of the root folder of a set of animation frames. For example
-	 * you might have separate animation paths for when a character is walking
-	 * and when it is jumping.
+	/** Changes the animation set to use for this animator.
+	 * An "animator set" is a set of frames of an animation in a
+	 * sub-folder of where all the animation's frames are stored. For example
+	 * you might have separate animation sets for when a character is walking
+	 * verses when it is jumping.
 	 */
-	protected void setAnimationPath(String pathName)
+	protected void setAnimationSet(String setName)
 	{
-//		currPath = pathName;
+		currentSet = setName;
 	}
 	
 	/** Set how many milliseconds should elapse between each animation
@@ -107,12 +80,41 @@ public abstract class Animator implements Renderer
 		this.interval = (long) interval;
 	}
 	
-	/** Change the current frame to render of this animation.
-	 * @param frame the integer portion of the frame name (0,1,2,...)
+	/** Set what frame number should render next. This updates on its own,
+	 * so no need to worry about it unless you want to adjust the current
+	 * animation (e.g. when you change animation sets).
+	 * @param frame the integer portion of the frame name
 	 */
 	protected void setFrame(int frame)
 	{
 		currFrame = frame;
 		frameStart = core.ProgramTimer.getTime();
+	}
+	
+	/** Selects and updates what the next rendered frame is. */
+	private void selectFrame()
+	{
+		// Increment the animation frame
+		if (core.ProgramTimer.getTime() - frameStart >= interval)
+		{
+			setFrame(currFrame+1);
+		}
+		// Get the path to the current frame's image
+		setFramePath();
+		// If the image frame doesn't exist, reset to the beginning
+		if (!GfxManager.getResManager().graphicExists(currFramePath))
+		{
+			setFrame(1);
+			setFramePath();
+		}
+	}
+	
+	/** Sets the string representing the relative path to the
+	 * image file of the current frame.
+	 */
+	private void setFramePath()
+	{
+		currFramePath = location + "/" + currentSet + "/" + "frame"
+				+ Integer.toString(currFrame) + ".png";
 	}
 }

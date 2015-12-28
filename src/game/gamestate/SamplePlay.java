@@ -59,7 +59,8 @@ public class SamplePlay extends SavableGameState
 		cL[1] = "Escape + left click to return to main menu";
 		cL[2] = "Hold space to move player character in front of everything";
 		controls = new CtrlRenderer(cL);
-		ta = new TestAnimator(9,"test");
+		ta = new TestAnimator("testanimate", "basic");
+		ta.showOnLayer(9);
 		SoundManager.playBGM("Into_the_Unknown", SoundManager.BGMTransition.IMMEDIATE);
 	}
 
