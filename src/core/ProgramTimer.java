@@ -29,7 +29,9 @@ public class ProgramTimer
 		}
 	}
 
-	/** Get the current program time. */
+	/** Get the current program time.
+	 * @return the current program time in milliseconds
+	 */
 	public static synchronized long getTime()
 	{
 		if (paused)

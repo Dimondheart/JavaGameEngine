@@ -35,9 +35,6 @@ public class GraphicsResources extends core.GameResourcesBuffer
 		loadAll();
 	}
 	
-	/** Loads all graphics from the game graphics resources folder, including
-	 * any sub-directories.
-	 */
 	@Override
 	public void loadAll()
 	{
@@ -46,7 +43,6 @@ public class GraphicsResources extends core.GameResourcesBuffer
 	
 	/** Loads an image given the path relative to GraphicsResources.ROOT_DIR.
 	 * @param imagePath the relative path to the image file
-	 * @throws IOException if the specified file path was not a valid image
 	 */
 	@Override
 	public void load(String imagePath)

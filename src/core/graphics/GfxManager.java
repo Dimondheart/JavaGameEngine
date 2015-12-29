@@ -70,7 +70,9 @@ public class GfxManager implements core.CustomRunnable
 		}
 	}
 	
-	/** Get the average FPS. */
+	/** Get the average FPS.
+	 * @return the average FPS for rendering
+	 */
 	public static double getAvgFPS()
 	{
 		return FPS;
@@ -92,30 +94,46 @@ public class GfxManager implements core.CustomRunnable
 		return grm;
 	}
 	
+	/** Draws a BufferedImage to the specified context.
+	 * @param g the Graphics2D to draw the image to
+	 * @param i the image to draw
+	 * @param x the x coordinate of the left side
+	 * @param y the y coordinate of the top side
+	 * @param width the width to draw the image as
+	 * @param height the height to draw the image as
+	 */
 	public static void drawGraphic(Graphics2D g, BufferedImage i, int x, int y, int width, int height)
 	{
 		g.drawImage(i,x,y,width,height,null);
 	}
 	
-	/** Shows the specified Renderer on the specified layer. */
+	/** Shows the specified Renderer on the specified layer.
+	 * @param obj the Renderer to show
+	 * @param layer the layer to show on
+	 */
 	public static synchronized void showRenderer(Renderer obj, int layer)
 	{
 		mainLayers.showRenderer(obj, layer);
 	}
 	
-	/** Hide (remove) the specified renderer from the specified layer. */
+	/** Hide (remove) the specified renderer from the specified layer.
+	 * @param obj the Renderer to hide
+	 * @param layer the layer to hide on
+	 */
 	public static synchronized void hideRenderer(Renderer obj, int layer)
 	{
 		mainLayers.hideRenderer(obj, layer);
 	}
 	
-	/** Hide (remove) the specified renderer from all layers. */
+	/** Hide (remove) the specified renderer from all layers.
+	 * @param obj the Renderer to hide
+	 */
 	public static synchronized void hideRenderer(Renderer obj)
 	{
 		mainLayers.hideRenderer(obj);
 	}
 	
-	/** Clears all graphics data, like renderers, etc. */
+	/** Clears all graphics data, like each Renderer, etc. */
 	public static synchronized void clearAll()
 	{
 		mainLayers.clearAllLayers();

@@ -5,11 +5,14 @@ import javax.sound.sampled.Clip;
 /** Handles play-back of a background music track.
  * @author Bryan Bettis
  */
-public class BGM extends Sound
+class BGM extends Sound
 {
+	/** Basic constructor.
+	 * @param event the event object for this track
+	 */
 	public BGM(BGMEvent event)
 	{
-		super("bgm/" + event.getBGM(), SoundManager.volume);
+		super("bgm/" + event.getBGM());
 		// Resume the track with the proper loop settings
 		resume();
 	}

@@ -14,7 +14,10 @@ public class RenderEvent
 	/** The Layer currently being drawn. */
 	private final int layer;
 	
-	/** Basic render event constructor. */
+	/** Basic render event constructor.
+	 * @param g2 the graphics context
+	 * @param layer the layer currently being rendered
+	 */
 	public RenderEvent (Graphics2D g2, int layer)
 	{
 		this.g2 = g2;

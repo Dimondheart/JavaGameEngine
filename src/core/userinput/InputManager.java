@@ -29,7 +29,9 @@ public class InputManager implements core.CustomRunnable
 	/** The main window event manager. */
 	private static WindowMonitor win;
 	
-	/** Different basic states the game can be in. */
+	/** Different basic states the game can be in.
+	 * @author Bryan Bettis
+	 */
 	public enum State
 	{
 		NORMAL,
@@ -37,7 +39,9 @@ public class InputManager implements core.CustomRunnable
 		QUIT
 	}
 	
-	/** Normal input setup. */
+	/** Normal input setup.
+	 * @param window the window to monitor
+	 */
 	public InputManager(Window window)
 	{
 		System.out.println("Setting Up User Input System...");
@@ -102,19 +106,25 @@ public class InputManager implements core.CustomRunnable
 		}
 	}
 	
-	/** Get the current general state of the game. */
+	/** Get the current general state of the game.
+	 * @return the State of the game
+	 */
 	public static synchronized State getState()
 	{
 		return state;
 	}
 	
-	/** Get the keyboard object. */
+	/** Get the keyboard object.
+	 * @return the Keyboard object
+	 */
 	public static Keyboard getKB()
 	{
 		return keyboard;
 	}
 	
-	/** Get the mouse object. */
+	/** Get the mouse object.
+	 * @return the Mouse object
+	 */
 	public static Mouse getMS()
 	{
 		return mouse;
@@ -158,7 +168,9 @@ public class InputManager implements core.CustomRunnable
 		queueEventOnce(new InputManagerEvent(Type.QUIT));
 	}
 	
-	/** Change the current state in a synchronized way. */
+	/** Change the current state.
+	 * @param newState the new general game state State
+	 */
 	private static synchronized void setState(State newState)
 	{
 		state = newState;
@@ -229,6 +241,10 @@ public class InputManager implements core.CustomRunnable
 		queueEvent(e);
 	}
 	
+	/** Queue the specified event unless it is the same type as the previous
+	 * queued event.
+	 * @param e the event to queue
+	 */
 	private static synchronized void queueEventUnlessPrev(InputManagerEvent e)
 	{
 		// Return if the current last element in queue is the same type
@@ -248,9 +264,7 @@ public class InputManager implements core.CustomRunnable
 		win.poll();
 	}
 	
-	/** Does the clearing of input devices and any miscellaneous things to
-	 * clear.
-	 */
+	/** Does the clearing of input devices, etc. */
 	private synchronized void doClear()
 	{
 		queue.clear();

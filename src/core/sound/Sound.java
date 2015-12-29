@@ -13,7 +13,7 @@ import core.sound.Volume.VolumeSetting;
 /** A base class used to control the play-back of a sound.
  * @author Bryan Bettis
  */
-public abstract class Sound
+abstract class Sound
 {
 	/** The audio stream for this sound. */
 	protected AudioInputStream ais;
@@ -30,9 +30,12 @@ public abstract class Sound
 	/** The length of this sound's clip in milliseconds. */
 	private long clipLength;
 	
-	public Sound(String sound, Volume volume)
+	/** Basic constructor.
+	 * @param sound the relative path to the sound file
+	 */
+	public Sound(String sound)
 	{
-		this.volume = volume;
+		this.volume = SoundManager.volume;
 		// Get an input stream for the sound effect
 		InputStream is = this.getClass().getResourceAsStream(
 				"/game/resources/" + sound + ".wav"
@@ -63,12 +66,14 @@ public abstract class Sound
 	/** Start playing this sound. */
 	private void play()
 	{
+		// The start time of this sound
 		start = core.ProgramTimer.getTime();
 		try
 		{
 			clip.start();
 			clipLength = clip.getMicrosecondLength() / 1000;
 		}
+		// Sound could not be played
 		catch(Exception e)
 		{
 			System.out.println("Unable to play sound");
@@ -76,7 +81,9 @@ public abstract class Sound
 		}
 	}
 	
-	/**  If this sound has finished playing. */
+	/**  If this sound has finished playing.
+	 * @return true if done playing
+	 */
 	public boolean isDone()
 	{
 		long elapsed = core.ProgramTimer.getTime() - start;
@@ -96,6 +103,7 @@ public abstract class Sound
 		volumeCtrl.setValue(vol);
 	}
 	
+	/** Releases system resources used by this sound. */
 	private void cleanup()
 	{
 		clip.stop();

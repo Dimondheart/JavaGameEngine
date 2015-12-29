@@ -11,7 +11,9 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	/** Number of key values to be used. */
 	private static final int NUM_BTNS = 4;
 	
-	/** States each button can be in. */
+	/** States each button can be in.
+	 * @author Bryan Bettis
+	 */
 	private enum BtnState
 		{
 			RELEASED,  // Not down
@@ -26,7 +28,9 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	/** Polled mouse state. */
 	private static volatile BtnState[] processedStates = null;
 	
-	/** Constructor, takes a reference to the frame it should be added to. */
+	/** Constructor, takes a reference to the frame it should be added to.
+	 * @param win the window to listen to
+	 */
 	public Mouse(Window win)
 	{
 		win.addMouseListener(this);
@@ -35,7 +39,9 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	}
 	
 	/** Checks if the specified button is pressed down.
+	 * @param btnCode the integer representing the button
 	 * @return True if the button is pressed
+	 * @see java.awt.event.MouseEvent
 	 */
 	public boolean isDown(int btnCode)
 	{
@@ -47,7 +53,9 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	
 	/** Checks if the specified button is pressed down for the first time
 	 * since the last poll.
+	 * @param btnCode the integer representing the button
 	 * @return True if the button was first pressed during the last poll.
+	 * @see java.awt.event.MouseEvent
 	 */
 	public boolean justPressed(int btnCode)
 	{
@@ -56,7 +64,9 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	
 	/** Checks if the specified button was clicked (pressed and released)
 	 * and the release was during the last poll.
+	 * @param btnCode the integer representing the button
 	 * @return True if the button was released first during the last poll
+	 * @see java.awt.event.MouseEvent
 	 */
 	public boolean justClicked(int btnCode)
 	{

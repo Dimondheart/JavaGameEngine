@@ -3,7 +3,7 @@ package core.userinput.inputdevice;
 /** Interface for input devices.
  * @author Bryan Bettis
  */
-public interface InputDevice
+interface InputDevice
 {
 	/** Update processed input data. */
 	void poll();

@@ -6,6 +6,6 @@ package core;
  */
 public interface CustomRunnable extends Runnable
 {
-	/** Starts this custom runnable.  Create and start any threads in here. */
+	/** Starts this custom runnable.  Create and start a thread in here. */
 	public void start();
 }

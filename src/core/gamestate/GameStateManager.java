@@ -9,9 +9,13 @@ import game.gamestate.SamplePlay;
 */
 public class GameStateManager
 {
+	/** The current game state object. */
 	private GameState currGS;
 	
-	// TODO Replace this with class instanceof checking, etc.
+	/** Represent the different possible game states.
+	 * TODO Replace this with class instanceof checking, etc.
+	 * @author Bryan Bettis
+	 */
 	public enum GameStates
 	{
 		MAIN_MENU,
@@ -24,7 +28,9 @@ public class GameStateManager
 		this(GameStates.MAIN_MENU);
 	}
 	
-	/** Takes an argument to specify the starting GameState. */
+	/** Takes an argument to specify the starting GameState.
+	 * @param initState the initial GameStates
+	 */
 	public GameStateManager(GameStates initState)
 	{
 		setNewGameState(initState);
@@ -76,7 +82,9 @@ public class GameStateManager
 		}
 	}
 	
-	/** Selects and sets the new game state object. */
+	/** Selects and sets the new game state object.
+	 * @param newState the new GameStates to setup
+	 */
 	private void setNewGameState(GameStates newState)
 	{
 		// Cleanup after previous game state (if any)

@@ -19,6 +19,7 @@ public class WindowMonitor implements InputDevice, WindowListener, ComponentList
 	
 	/** Constructor which takes a reference to the frame it will
 	 * manage events for.
+	 * @param window the window to monitor
 	 */
 	public WindowMonitor(Window window)
 	{

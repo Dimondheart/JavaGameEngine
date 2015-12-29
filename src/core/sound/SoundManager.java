@@ -24,10 +24,13 @@ public class SoundManager implements core.CustomRunnable
 	private static ConcurrentLinkedQueue<SFX> playingSFX;
 	/** Queued BGM tracks. */
 	private static BGM currTrack;
-	/** The volume settings. */
+	/** The sound volume settings. */
 	public static Volume volume;
 	
-	/** Different ways to transition BGM. */
+	/** Different ways to transition BGM.  Currently only IMMEDIATE is
+	 * implemented.
+	 * @author Bryan Bettis
+	 */
 	public enum BGMTransition
 	{
 		IMMEDIATE,  // Stop the previous track and start the new track
@@ -126,19 +129,27 @@ public class SoundManager implements core.CustomRunnable
 		}
 	}
 	
-	/** Play a sound effect. */
+	/** Play a sound effect.
+	 * @param sfx the sound effect to play
+	 */
 	public static void playSFX(String sfx)
 	{
 		queueSFXEvent(new SFXEvent(sfx));
 	}
 	
-	/** Change a volume setting. */
+	/** Change a volume setting.
+	 * @param setting the volume setting to change
+	 * @param newVolume the new volume setting
+	 */
 	public static void changeVolume(Volume.VolumeSetting setting, int newVolume)
 	{
 		queueGenEvent(new VolumeEvent(setting, newVolume));
 	}
 	
-	/** Change/play a background music track. */
+	/** Change/play a background music track.
+	 * @param track the track to play
+	 * @param effect the transition effect for fading in the new track
+	 */
 	public static void playBGM(String track, BGMTransition effect)
 	{
 		queueGenEvent(new BGMEvent(track, effect));
@@ -146,6 +157,7 @@ public class SoundManager implements core.CustomRunnable
 	
 	/** Stop the current BGM and remove any queued tracks, fades out the
 	 * current track using the specified transition effect.
+	 * @param effect the effect used to fade out the track
 	 */
 	public static void stopBGM(BGMTransition effect)
 	{
@@ -174,13 +186,17 @@ public class SoundManager implements core.CustomRunnable
 		genQueue.add(e);
 	}
 	
-	/** Play the specified sound effect. */
+	/** Play the specified sound effect.
+	 * @param sfx the sound effect event
+	 */
 	private void doPlaySFX(SFXEvent sfx)
 	{
 		playingSFX.add(new SFX(sfx));
 	}
 	
-	/** Actually change the volume setting. */
+	/** Actually change the volume setting.
+	 * @param ve the volume change event
+	 */
 	private void doChangeVolume(VolumeEvent ve)
 	{
 		if (volume.getVolume(ve.getSetting()) != ve.getNewVolume())
@@ -193,7 +209,9 @@ public class SoundManager implements core.CustomRunnable
 		}
 	}
 	
-	/** Actually play/change the BGM track. */
+	/** Actually play/change the BGM track.
+	 * @param bgme the background music play event
+	 */
 	private void doPlayBGM(BGMEvent bgme)
 	{
 		if (currTrack != null)
@@ -203,7 +221,9 @@ public class SoundManager implements core.CustomRunnable
 		currTrack = new BGM(bgme);
 	}
 	
-	/** Stops the current BGM and clears any queued ones. */
+	/** Stops the current BGM and clears any queued ones.
+	 * @param sbgme the stop background music event
+	 */
 	private void doStopBGM(StopBGMEvent sbgme)
 	{
 		currTrack.stop();

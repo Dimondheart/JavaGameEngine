@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
+/** Manages all sound files and relevant data.
+ * @author Bryan Bettis
+ */
 public class SoundResources extends core.GameResourcesBuffer
 {
 	/** The root directory of all sound resources. */
@@ -42,19 +45,25 @@ public class SoundResources extends core.GameResourcesBuffer
 		{
 			return;
 		}
+		// Get the file input stream
 		InputStream is = getInputStream("/" + ROOT_DIR + filePath);
+		// TODO optimize the following
 		while (true)
 		{
+			// Bytes loaded from the input stream
 			LinkedList<Byte> bytes = new LinkedList<Byte>();
+			// Get the next byte
 			int next;
 			try
 			{
 				next = is.read();
 			}
+			// Read failed, stop loading this file
 			catch (IOException e)
 			{
 				return;
 			}
+			// End of buffer, turn linked list into array of bytes and stop reading
 			if (next <= -1)
 			{
 				data = new byte[bytes.size()];
@@ -64,18 +73,22 @@ public class SoundResources extends core.GameResourcesBuffer
 				}
 				break;
 			}
+			// Add the next byte to the linked list
 			bytes.add((byte) next);
 		}
+		// Store the data in the map
 		sounds.put(filePath, data);
 	}
 	
 	@Override
 	public InputStream getRes(String sound)
 	{
+		// If the resource exists, return an input stream for reading it
 		if (resExists(sound))
 		{
 			return new ByteArrayInputStream(sounds.get(sound));
 		}
+		// Resource doesn't exist, return null
 		else
 		{
 			return null;

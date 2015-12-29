@@ -17,6 +17,9 @@ public abstract class GameState implements Serializable
 	private GameStates state;
 	private GameStates newState;
 	
+	/** Basic constructor.
+	 * @param state the GameStates for the subclass
+	 */
 	public GameState(GameStates state)
 	{
 		fpsRenderer = new FPSRenderer();
@@ -40,19 +43,25 @@ public abstract class GameState implements Serializable
 		cleanupState();
 	}
 	
-	/** Determines if this game state should be transitioned. */
+	/** Determines if this game state should be transitioned.
+	 * @return true if the state needs to be  changed
+	 */
 	public boolean isChangeStateIndicated()
 	{
 		return (state != newState);
 	}
 	
-	/** Get the new game state to transition to. */
+	/** Get the new game state to transition to.
+	 * @return the GameStates for the new state
+	 */
 	public GameStates getNewState()
 	{
 		return newState;
 	}
 	
-	/** Indicate changing to a new game state and set the new state. */
+	/** Indicate changing to a new game state and set the new state.
+	 * @param newState what GameStates to change to next
+	 */
 	protected void changeState(GameStates newState)
 	{
 		this.newState = newState;

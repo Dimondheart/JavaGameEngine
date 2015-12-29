@@ -17,7 +17,9 @@ public class Keyboard implements InputDevice, KeyListener
 	/** Processed key states (KeyState). */
 	private static volatile KeyState[] processedStates;
 	
-	/** States each key can be in. */
+	/** States each key can be in.
+	 * @author Bryan Bettis
+	 */
 	private enum KeyState
 	{
 		RELEASED,  // Not down
@@ -25,7 +27,9 @@ public class Keyboard implements InputDevice, KeyListener
 		ONCE  // Down for the first time
 	}
 	
-	/** Basic keyboard setup, takes argument for component to listen to. */
+	/** Basic keyboard setup, takes argument for component to listen to.
+	 * @param comp the awt/swing component to listen to
+	 */
 	public Keyboard(Component comp)
 	{
 		// Don't add if null was specified as the dispatcher
@@ -37,7 +41,9 @@ public class Keyboard implements InputDevice, KeyListener
 	}
 	
 	/** Checks if the specified key is pressed down.
+	 * @param keyCode the integer representing the key
 	 * @return True if the key is pressed
+	 * @see java.awt.event.KeyEvent
 	 */
 	public boolean isDown(int keyCode)
 	{
@@ -49,7 +55,9 @@ public class Keyboard implements InputDevice, KeyListener
 	
 	/** Checks if the specified key is pressed down for the first time
 	 * since the last poll.
-	 * @return True if the key was first pressed during the last poll.
+	 * @param keyCode the integer representing the key
+	 * @return True if the key was first pressed this cycle
+	 * @see java.awt.event.KeyEvent
 	 */
 	public boolean justPressed(int keyCode)
 	{

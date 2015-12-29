@@ -1,2 +1,2 @@
-/** Sound effects files. */
+/** All sound effect files. */
 package game.resources.sounds.sfx;

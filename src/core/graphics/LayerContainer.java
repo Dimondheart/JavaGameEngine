@@ -23,6 +23,7 @@ import javax.swing.JComponent;
 public class LayerContainer extends JComponent
 {
 	private static final long serialVersionUID = 1L;
+	
 	/** Window this layer container is part of. */
 	private Window myWin;
 	/** Initial container dimensions. */
@@ -75,7 +76,8 @@ public class LayerContainer extends JComponent
 		return height;
 	}
 	
-	/** Return the horizontal scale factor.
+	/** Return the horizontal scale factor of the layers compared to the
+	 * initial dimensions.
 	 * @return the horizontal scale factor
 	 */
 	public double getHorizScale()
@@ -83,7 +85,8 @@ public class LayerContainer extends JComponent
 		return horizScale;
 	}
 	
-	/** Return the vertical scale factor.
+	/** Return the vertical scale factor of the layers compared to the
+	 * initial dimensions.
 	 * @return the vertical scale factor
 	 */
 	public double getVertScale()
@@ -91,19 +94,27 @@ public class LayerContainer extends JComponent
 		return vertScale;
 	}
 	
-	/** Add specified renderer to specified layer. */
+	/** Add specified renderer to specified layer.
+	 * @param obj the Renderer to add
+	 * @param layer the layer to add the Renderer to
+	 */
 	public synchronized void showRenderer(Renderer obj, int layer)
 	{
 		layers[layer].addRenderer(obj);
 	}
 	
-	/** Remove specified renderer from specified layer. */
+	/** Remove specified renderer from specified layer.
+	 * @param obj the Renderer to remove
+	 * @param layer the layer to remove the Renderer from
+	 */
 	public synchronized void hideRenderer(Renderer obj, int layer)
 	{
 		layers[layer].removeRenderer(obj);
 	}
 	
-	/** Remove the specified renderer from all layers. */
+	/** Remove the specified renderer from all layers.
+	 * @param obj the Renderer to hide
+	 */
 	public synchronized void hideRenderer(Renderer obj)
 	{
 		for (Layer l : layers)

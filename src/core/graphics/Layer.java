@@ -13,6 +13,7 @@ public class Layer
 {
 	/** The Renderer(s) rendering to this layer. */
 	private LinkedList<Renderer> renderers;
+	/** The GUI objects on this layer. */
 	private LinkedList<GUIObject> guiObjects;
 	
 	/** The normal constructor for a Layer. */
@@ -22,7 +23,9 @@ public class Layer
 		guiObjects = new LinkedList<GUIObject>();
 	}
 	
-	/** Add specified renderer to this layer. */
+	/** Add specified renderer to this layer.
+	 * @param obj the Renderer to add
+	 */
 	public synchronized void addRenderer(Renderer obj)
 	{
 		// Don't add the same renderer more than once
@@ -38,7 +41,9 @@ public class Layer
 		}
 	}
 	
-	/** Remove specified renderer from this layer. */
+	/** Remove specified renderer from this layer.
+	 * @param obj the Renderer to remove
+	 */
 	public synchronized void removeRenderer(Renderer obj)
 	{
 		renderers.remove(obj);
@@ -50,7 +55,7 @@ public class Layer
 	}
 	
 	/** Update and draw this layer to the specified surface.
-	 * @param g2 the graphics context to draw to
+	 * @param e the event object to pass to each Renderer
 	 */
 	public synchronized void flip(RenderEvent e)
 	{

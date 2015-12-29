@@ -6,9 +6,13 @@ package core.userinput.gui;
  */
 public abstract class GUIObject implements core.graphics.Renderer
 {
+	/** The x coordinate of this object. */
 	protected int x;
+	/** The y coordinate of this object. */
 	protected int y;
+	/** The width of this object. */
 	protected int width;
+	/** The height of this object. */
 	protected int height;
 	
 	/** Update the state-related information of a GUI element. */

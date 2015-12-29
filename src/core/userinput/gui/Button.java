@@ -16,6 +16,9 @@ public class Button extends GUIObject
 	/** The text to display on the button. */
 	private String text;
 	
+	/** The different states a button can be in.
+	 * @author Bryan Bettis
+	 */
 	public enum ButtonState
 	{
 		IDLE,

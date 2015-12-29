@@ -33,7 +33,7 @@ public abstract class Animator implements Renderer
 	
 	/** Set an initial animation set other than the default "basic".
 	 * @param location the root folder for all the animation sets
-	 * @param startSet the frame set to start with
+	 * @param startingSet the frame set to start with
 	 */
 	public Animator(String location, String startingSet)
 	{
@@ -65,6 +65,7 @@ public abstract class Animator implements Renderer
 	 * sub-folder of where all the animation's frames are stored. For example
 	 * you might have separate animation sets for when a character is walking
 	 * verses when it is jumping.
+	 * @param setName the name of the new animation set
 	 */
 	protected void setAnimationSet(String setName)
 	{

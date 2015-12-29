@@ -10,6 +10,10 @@ import java.util.LinkedList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/** A base class for loading game resources (images, sounds, etc.)
+ * into memory instead of reloading them from a file before every use.
+ * @author Bryan Bettis
+ */
 public abstract class GameResourcesBuffer
 {
 	/** Where all game resources are stored. */
@@ -152,7 +156,7 @@ public abstract class GameResourcesBuffer
 	/** Checks if the given file path or file name contains a supported
 	 * format/extension.
 	 * @param supported the list of supported extensions
-	 * @param file the path to or name of the file to be checked
+	 * @param filePath the path to or name of the file to be checked
 	 * @return true if the extension is supported, false otherwise
 	 */
 	protected boolean extensionSupported(String[] supported, String filePath)
@@ -173,7 +177,7 @@ public abstract class GameResourcesBuffer
 	 * @param path the path to the file to load
 	 * @return an input stream that can work both inside and outside a jar
 	 */
-	protected InputStream getInputStream(String path)
+	protected final InputStream getInputStream(String path)
 	{
 		InputStream is = this.getClass().getResourceAsStream(path);
 		return new BufferedInputStream(is);
