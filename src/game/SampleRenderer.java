@@ -39,12 +39,12 @@ public class SampleRenderer implements core.graphics.Renderer
 		BufferedImage img;
 		if (renderColor.equals(Color.blue))
 		{
-			img = core.graphics.GfxManager.getResManager().getGraphic("testfolder/bullet.png");
+			img = core.graphics.GfxManager.getResManager().getRes("testfolder/bullet.png");
 			core.graphics.GfxManager.drawGraphic(e.getContext(),img,x-3,y-6,6,12);
 		}
 		else
 		{
-			img = core.graphics.GfxManager.getResManager().getGraphic("asteroid.png");
+			img = core.graphics.GfxManager.getResManager().getRes("asteroid.png");
 			core.graphics.GfxManager.drawGraphic(e.getContext(),img,x-6,y-6,12,12);
 		}
 	}

@@ -8,7 +8,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
-import core.sound.Volume.Setting;
+import core.sound.Volume.VolumeSetting;
 
 /** A base class used to control the play-back of a sound.
  * @author Bryan Bettis
@@ -37,7 +37,7 @@ public abstract class Sound
 		InputStream is = this.getClass().getResourceAsStream(
 				"/game/resources/" + sound + ".wav"
 				);
-		// Must be converted to a buffered input stream to work is a JAR
+		// Must be converted to a buffered input stream to work in a JAR
 		is = new BufferedInputStream(is);
 		try
 		{
@@ -92,7 +92,7 @@ public abstract class Sound
 	public void adjustVolume()
 	{
 		// Convert the units of the volume
-		float vol = (float)(100 - volume.getFinalVolume(Setting.SFX))/100.0f * -80.0f;
+		float vol = (float)(100 - volume.getVolume(VolumeSetting.SFX))/100.0f * -80.0f;
 		volumeCtrl.setValue(vol);
 	}
 	

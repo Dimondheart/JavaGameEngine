@@ -5,8 +5,8 @@ package core.sound;
  */
 public class SFX extends Sound
 {
-	public SFX(String sfx, Volume volume)
+	public SFX(SFXEvent event)
 	{
-		super("sfx/" + sfx, volume);
+		super("sfx/" + event.getSFX(), SoundManager.volume);
 	}
 }

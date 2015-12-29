@@ -9,14 +9,14 @@ public class Volume
 	private int sfx = 100;
 	private int bgm = 100;
 	
-	public enum Setting
+	public enum VolumeSetting
 	{
 		MASTER,
 		SFX,
 		BGM
 	}
 	
-	public void setVolume(Setting setting, int value)
+	public void setVolume(VolumeSetting setting, int value)
 	{
 		switch (setting)
 		{
@@ -34,7 +34,7 @@ public class Volume
 		}
 	}
 	
-	public int getVolume(Setting setting)
+	public int getVolume(VolumeSetting setting)
 	{
 		switch (setting)
 		{
@@ -45,27 +45,7 @@ public class Volume
 			case BGM:
 				return bgm;
 			default:
-				return 100;
+				return 0;
 		}
-	}
-	public int getFinalVolume(Setting setting)
-	{
-		int base;
-		switch (setting)
-		{
-			case MASTER:
-				return master;
-			case SFX:
-				base = sfx;
-				break;
-			case BGM:
-				base = bgm;
-				break;
-			default:
-				return 100;
-		}
-		
-		base *= ((double)master / 100.0);
-		return base;
 	}
 }

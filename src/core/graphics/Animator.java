@@ -55,7 +55,7 @@ public abstract class Animator implements Renderer
 		selectFrame();
 		// Get the actual image
 		BufferedImage img =
-				GfxManager.getResManager().getGraphic(currFramePath);
+				GfxManager.getResManager().getRes(currFramePath);
 		// Draw the current frame
 		GfxManager.drawGraphic(g, img, x, y, img.getWidth(), img.getHeight());
 	}
@@ -102,7 +102,7 @@ public abstract class Animator implements Renderer
 		// Get the path to the current frame's image
 		setFramePath();
 		// If the image frame doesn't exist, reset to the beginning
-		if (!GfxManager.getResManager().graphicExists(currFramePath))
+		if (!GfxManager.getResManager().resExists(currFramePath))
 		{
 			setFrame(1);
 			setFramePath();

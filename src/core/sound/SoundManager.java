@@ -14,6 +14,8 @@ public class SoundManager implements core.CustomRunnable
 	private Thread thread;
 	/** Thread controller for this object. */
 	private core.ThreadClock clock;
+	/** Manages sound data loaded from files. */
+	private static SoundResources srm;
 	/** Queue used only for sound effects. */
 	private static volatile ConcurrentLinkedDeque<SFXEvent> sfxQueue;
 	/** Queue used for general events. */
@@ -23,7 +25,7 @@ public class SoundManager implements core.CustomRunnable
 	/** Queued BGM tracks. */
 	private static BGM currTrack;
 	/** The volume settings. */
-	public Volume volume;
+	public static Volume volume;
 	
 	/** Different ways to transition BGM. */
 	public enum BGMTransition
@@ -37,6 +39,7 @@ public class SoundManager implements core.CustomRunnable
 	public SoundManager()
 	{
 		System.out.println("Setting Up Sound System...");
+		srm = new SoundResources();
 		// Setup queues
 		sfxQueue = new ConcurrentLinkedDeque<SFXEvent>();
 		genQueue = new ConcurrentLinkedDeque<BaseSoundEvent>();
@@ -130,7 +133,7 @@ public class SoundManager implements core.CustomRunnable
 	}
 	
 	/** Change a volume setting. */
-	public static void changeVolume(Volume.Setting setting, int newVolume)
+	public static void changeVolume(Volume.VolumeSetting setting, int newVolume)
 	{
 		queueGenEvent(new VolumeEvent(setting, newVolume));
 	}
@@ -174,13 +177,13 @@ public class SoundManager implements core.CustomRunnable
 	/** Play the specified sound effect. */
 	private void doPlaySFX(SFXEvent sfx)
 	{
-		playingSFX.add(new SFX(sfx.getSFX(), volume));
+		playingSFX.add(new SFX(sfx));
 	}
 	
 	/** Actually change the volume setting. */
 	private void doChangeVolume(VolumeEvent ve)
 	{
-		if (volume.getFinalVolume(ve.getSetting()) != ve.getNewVolume())
+		if (volume.getVolume(ve.getSetting()) != ve.getNewVolume())
 		{
 			volume.setVolume(ve.getSetting(), ve.getNewVolume());
 			for (SFX sfx : playingSFX)
@@ -197,7 +200,7 @@ public class SoundManager implements core.CustomRunnable
 		{
 			currTrack.stop();
 		}
-		currTrack = new BGM(bgme.getBGM(), volume);
+		currTrack = new BGM(bgme);
 	}
 	
 	/** Stops the current BGM and clears any queued ones. */

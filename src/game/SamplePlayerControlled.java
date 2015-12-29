@@ -26,7 +26,7 @@ public class SamplePlayerControlled implements core.graphics.Renderer
 //		e.getContext().setColor(java.awt.Color.red);
 //		e.getContext().fillOval(x-5, y-5, 10, 10);
 		BufferedImage img = 
-				core.graphics.GfxManager.getResManager().getGraphic("lowqualityship.png");
+				core.graphics.GfxManager.getResManager().getRes("lowqualityship.png");
 		core.graphics.GfxManager.drawGraphic(e.getContext(),img,x-5,y-5,10,10);
 	}
 	

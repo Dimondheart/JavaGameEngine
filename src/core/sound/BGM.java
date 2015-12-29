@@ -7,9 +7,9 @@ import javax.sound.sampled.Clip;
  */
 public class BGM extends Sound
 {
-	public BGM(String track, Volume volume)
+	public BGM(BGMEvent event)
 	{
-		super("bgm/" + track, volume);
+		super("bgm/" + event.getBGM(), SoundManager.volume);
 		// Resume the track with the proper loop settings
 		resume();
 	}
