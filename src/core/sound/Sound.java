@@ -1,19 +1,21 @@
 package core.sound;
 
-import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
-
-import core.sound.Volume.VolumeSetting;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /** A base class used to control the play-back of a sound.
  * @author Bryan Bettis
  */
-abstract class Sound
+class Sound implements LineListener
 {
 	/** The audio stream for this sound. */
 	protected AudioInputStream ais;
@@ -29,80 +31,148 @@ abstract class Sound
 	private long start;
 	/** The length of this sound's clip in milliseconds. */
 	private long clipLength;
+	public String name;
+	private boolean isDone = true;
 	
 	/** Basic constructor.
 	 * @param sound the relative path to the sound file
 	 */
 	public Sound(String sound)
 	{
-		this.volume = SoundManager.volume;
+		name = sound;
 		// Get an input stream for the sound effect
 		InputStream is = SoundManager.getResManager().getRes(sound);
+		// Get the audio input stream
 		try
 		{
-			// Setup the sound objects to be used for playing
 			ais = AudioSystem.getAudioInputStream(is);
-			clip = AudioSystem.getClip();
-			clip.open(ais);
-			// Get the volume controller
-			volumeCtrl = 
-					(FloatControl) clip.getControl(
-							FloatControl.Type.MASTER_GAIN
-							);
 		}
-		catch(Exception e)
+		catch (UnsupportedAudioFileException e)
 		{
-			System.out.println("Unable to play sound");
-			e.printStackTrace();
+			System.out.println("Unsupported audio file: " + sound);
+			return;
 		}
-		adjustVolume();
+		catch (IOException e)
+		{
+			System.out.println("Error reading sound file: " + sound);
+			return;
+		}
+		finally
+		{
+			try
+			{
+				if(ais == null)
+				{
+					is.close();
+				}
+			}
+			catch (IOException e)
+			{
+			}
+		}
+		// Get an audio clip
+		try
+		{
+			clip = AudioSystem.getClip();
+		}
+		catch (LineUnavailableException e)
+		{
+			System.out.println("Error acquiring audio line for: " + sound);
+			return;
+		}
+		finally
+		{
+			try
+			{
+				if (clip == null)
+				{
+					ais.close();
+				}
+			}
+			catch (IOException e)
+			{
+			}
+		}
+		clip.addLineListener(this);
+		// Open the audio clip
+		try
+		{
+			clip.open(ais);
+		}
+		catch (LineUnavailableException e)
+		{
+			System.out.println("Error opening audio line for: " + sound);
+			return;
+		}
+		catch (IOException e)
+		{
+			System.out.println("Error reading audio data for: " + sound);
+			return;
+		}
+		finally
+		{
+			if (!clip.isOpen())
+			{
+				cleanup();
+			}
+		}
+		// Play the sound
+		isDone = false;
 		play();
 	}
 	
 	/** Start playing this sound. */
-	private void play()
+	private synchronized void play()
 	{
+		// Start the clip
+		clip.start();
+		// The length of the playing sound
+		clipLength = clip.getMicrosecondLength() / 1000;
 		// The start time of this sound
 		start = core.ProgramTimer.getTime();
-		try
-		{
-			clip.start();
-			clipLength = clip.getMicrosecondLength() / 1000;
-		}
-		// Sound could not be played
-		catch(Exception e)
-		{
-			System.out.println("Unable to play sound");
-			e.printStackTrace();
-		}
 	}
 	
 	/**  If this sound has finished playing.
 	 * @return true if done playing
 	 */
-	public boolean isDone()
+	public synchronized boolean isDone()
 	{
-		long elapsed = core.ProgramTimer.getTime() - start;
-		// Give it a little lee-way time
-		if ( elapsed >= clipLength*1.1)
-		{
-			cleanup();
-			return true;
-		}
-		return false;
+		return isDone;
+//		long elapsed = core.ProgramTimer.getTime() - start;
+//		// Give it a little lee-way time
+//		if ( elapsed >= clipLength*1.1)
+//		{
+//			cleanup();
+//			return true;
+//		}
+//		return false;
 	}
 	
 	/** Adjust the volume of this sound. */
-	public void adjustVolume()
+	public synchronized void adjustVolume()
 	{
-		// Convert the units of the volume
-		float vol = (float)(100 - volume.getVolume(VolumeSetting.SFX))/100.0f * -80.0f;
-		volumeCtrl.setValue(vol);
+	}
+	
+	@Override
+	public synchronized void update(LineEvent e)
+	{
+		if (e.getType() == LineEvent.Type.STOP)
+		{
+			cleanup();
+		}
 	}
 	
 	/** Releases system resources used by this sound. */
-	private void cleanup()
+	private synchronized void cleanup()
 	{
 		clip.close();
+		try
+		{
+			ais.close();
+		}
+		catch (IOException e)
+		{
+		}
+		isDone = true;
 	}
 }
