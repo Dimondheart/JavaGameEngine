@@ -5,33 +5,22 @@ package core.sound;
  */
 abstract class BaseSoundEvent
 {
-	/** The type specifier for a child class instance. */
-	private Type type;
-	
-	/** The type specifiers for child classes.
-	 * @author Bryan Bettis
-	 */
-	public enum Type
-	{
-		PLAY_SFX,
-		PLAY_BGM,
-		STOP_BGM,
-		CHANGE_VOLUME
-	}
+	/** The time the sound effect was queued. */
+	private long queueTime;
 	
 	/** Basic constructor.
 	 * @param type the Type of this sound event
 	 */
-	public BaseSoundEvent(Type type)
+	public BaseSoundEvent()
 	{
-		this.type = type;
+		this.queueTime = core.ProgramTimer.getTime();
 	}
 	
-	/** Get what type of event this is.
-	 * @return the Type of this event
+	/** How long this event has been queued.
+	 * @return the ProgramTimer time that this event has been queued
 	 */
-	public Type getType()
+	public long getTimeQueued()
 	{
-		return type;
+		return queueTime - core.ProgramTimer.getTime();
 	}
 }

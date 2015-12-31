@@ -18,7 +18,6 @@ class BGMEvent extends BaseSoundEvent
 	 */
 	public BGMEvent(String bgm, BGMTransition effect)
 	{
-		super(Type.PLAY_BGM);
 		this.bgm = bgm;
 		this.effect = effect;
 	}

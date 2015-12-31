@@ -10,6 +10,10 @@ import core.userinput.InputManager;
 */
 public class SoundManager implements core.CustomRunnable
 {
+	/** Maximum number of sound effects to play at once. */
+	private static final int MAX_PLAYING_SFX = 25;
+	/** How long a sound effect can be queued before it is canceled. */
+	private static final long MAX_SFX_QUEUE_TIME = 250;
 	/** Thread for this object. */
 	private Thread thread;
 	/** Thread controller for this object. */
@@ -90,43 +94,51 @@ public class SoundManager implements core.CustomRunnable
 			}
 			// Get the next sound effect
 			SFXEvent nextSFX = sfxQueue.poll();
-			// Get the next general event
-			BaseSoundEvent nextGen = genQueue.poll();
 			// Play the next sound effect
 			if (nextSFX != null)
 			{
 				doPlaySFX(nextSFX);
 			}
+			// Get the next general event
+			BaseSoundEvent nextGen = genQueue.poll();
 			// Do the next general event
 			if (nextGen != null)
 			{
-				switch (nextGen.getType())
+				// Get the class of the next event
+				Class<? extends BaseSoundEvent> c = nextGen.getClass();
+				// Change BGM
+				if (c == BGMEvent.class)
 				{
-					case CHANGE_VOLUME:
-						doChangeVolume((VolumeEvent) nextGen);
-						break;
-					case PLAY_BGM:
-						doPlayBGM((BGMEvent) nextGen);
-						break;
-					case STOP_BGM:
-						doStopBGM((StopBGMEvent) nextGen);
-						break;
-					case PLAY_SFX:
-						System.out.println(
-								"WARNING: SFXEvent added to the general queue."
-								);
-						doPlaySFX((SFXEvent) nextGen);
-						break;
-					default:
-						System.out.println(
-								"Unrecognized SoundEvent Type: " +
-										nextGen.getType()
-								);
-						break;
-				
+					doPlayBGM((BGMEvent) nextGen);
+				}
+				// Change volume settings
+				else if (c == VolumeEvent.class)
+				{
+					doChangeVolume((VolumeEvent) nextGen);
+				}
+				// Stop current BGM
+				else if (c == StopBGMEvent.class)
+				{
+					doStopBGM((StopBGMEvent) nextGen);
+				}
+				// Unknown/unused general event
+				else
+				{
+					System.out.println(
+							"Non-General event on the general sound event queue: "
+									+ c
+							);
 				}
 			}
 		}
+	}
+	
+	/** TODO fill this out
+	 * @return TODO fill this
+	 */
+	public static SoundResources getResManager()
+	{
+		return srm;
 	}
 	
 	/** Play a sound effect.

@@ -16,7 +16,6 @@ class VolumeEvent extends BaseSoundEvent
 	 */
 	public VolumeEvent(Volume.VolumeSetting setting, int newVolume)
 	{
-		super(Type.CHANGE_VOLUME);
 		this.setting = setting;
 		this.newVolume = newVolume;
 	}

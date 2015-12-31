@@ -16,7 +16,6 @@ class StopBGMEvent extends BaseSoundEvent
 	 */
 	public StopBGMEvent(BGMTransition effect)
 	{
-		super(Type.STOP_BGM);
 		this.effect = effect;
 	}
 	

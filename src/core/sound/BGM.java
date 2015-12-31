@@ -12,7 +12,7 @@ class BGM extends Sound
 	 */
 	public BGM(BGMEvent event)
 	{
-		super("bgm/" + event.getBGM());
+		super(event.getBGM());
 		// Resume the track with the proper loop settings
 		resume();
 	}

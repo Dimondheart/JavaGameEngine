@@ -13,7 +13,6 @@ class SFXEvent extends BaseSoundEvent
 	 */
 	public SFXEvent(String sfx)
 	{
-		super(Type.PLAY_SFX);
 		this.sfx = sfx;
 	}
 	

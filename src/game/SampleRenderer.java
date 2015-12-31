@@ -53,12 +53,12 @@ public class SampleRenderer implements core.graphics.Renderer
 	{
 		if (x <= 0 || x >= 480)
 		{
-			core.sound.SoundManager.playSFX("bounce");
+			core.sound.SoundManager.playSFX("sfx/bounce.wav");
 			vector[0] *= -1;
 		}
 		if (y <= 0 || y >= 270)
 		{
-			core.sound.SoundManager.playSFX("bounce");
+			core.sound.SoundManager.playSFX("sfx/bounce.wav");
 			vector[1] *= -1;
 		}
 		x += vector[0];

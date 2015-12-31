@@ -10,6 +10,6 @@ class SFX extends Sound
 	 */
 	public SFX(SFXEvent event)
 	{
-		super("sfx/" + event.getSFX());
+		super(event.getSFX());
 	}
 }

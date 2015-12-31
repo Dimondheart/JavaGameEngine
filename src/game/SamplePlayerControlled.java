@@ -52,22 +52,22 @@ public class SamplePlayerControlled implements core.graphics.Renderer
 		}
 		if (x <= 0)
 		{
-			core.sound.SoundManager.playSFX("bounce");
+			core.sound.SoundManager.playSFX("sfx/bounce.wav");
 			moveX = 1;
 		}
 		else if (x >= 480)
 		{
-			core.sound.SoundManager.playSFX("bounce");
+			core.sound.SoundManager.playSFX("sfx/bounce.wav");
 			moveX = -1;
 		}
 		if (y <= 0)
 		{
-			core.sound.SoundManager.playSFX("bounce");
+			core.sound.SoundManager.playSFX("sfx/bounce.wav");
 			moveY = 1;
 		}
 		else if (y >= 270)
 		{
-			core.sound.SoundManager.playSFX("bounce");
+			core.sound.SoundManager.playSFX("sfx/bounce.wav");
 			moveY = -1;
 		}
 		x += moveX;

@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 
 import core.gamestate.SavableGameState;
 import core.gamestate.GameStateManager.GameStates;
+import core.graphics.gui.Button;
 import core.sound.SoundManager;
 import core.userinput.InputManager;
 import game.CtrlRenderer;
@@ -15,7 +16,6 @@ import game.SamplePlayerControlled;
 import game.SampleRenderer;
 import game.SampleRenderer2;
 import game.TestAnimator;
-import core.userinput.gui.Button;
 
 /** A sample game state with sample stuff.
  * @author Bryan Bettis
@@ -61,7 +61,7 @@ public class SamplePlay extends SavableGameState
 		controls = new CtrlRenderer(cL);
 		ta = new TestAnimator("testanimate", "basic");
 		ta.showOnLayer(9);
-		SoundManager.playBGM("Into_the_Unknown", SoundManager.BGMTransition.IMMEDIATE);
+		SoundManager.playBGM("bgm/Into_the_Unknown.wav", SoundManager.BGMTransition.IMMEDIATE);
 	}
 
 	@Override

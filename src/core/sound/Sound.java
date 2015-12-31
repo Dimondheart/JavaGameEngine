@@ -37,11 +37,7 @@ abstract class Sound
 	{
 		this.volume = SoundManager.volume;
 		// Get an input stream for the sound effect
-		InputStream is = this.getClass().getResourceAsStream(
-				"/game/resources/" + sound + ".wav"
-				);
-		// Must be converted to a buffered input stream to work in a JAR
-		is = new BufferedInputStream(is);
+		InputStream is = SoundManager.getResManager().getRes(sound);
 		try
 		{
 			// Setup the sound objects to be used for playing
@@ -87,7 +83,8 @@ abstract class Sound
 	public boolean isDone()
 	{
 		long elapsed = core.ProgramTimer.getTime() - start;
-		if ( elapsed >= clipLength*1.5)
+		// Give it a little lee-way time
+		if ( elapsed >= clipLength*1.1)
 		{
 			cleanup();
 			return true;
@@ -106,8 +103,6 @@ abstract class Sound
 	/** Releases system resources used by this sound. */
 	private void cleanup()
 	{
-		clip.stop();
-		clip.flush();
 		clip.close();
 	}
 }
