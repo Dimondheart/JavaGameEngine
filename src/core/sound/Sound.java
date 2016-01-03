@@ -15,7 +15,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 /** A base class used to control the play-back of a sound.
  * @author Bryan Bettis
  */
-class Sound implements LineListener
+abstract class Sound implements LineListener
 {
 	/** The audio stream for this sound. */
 	protected AudioInputStream ais;
@@ -27,11 +27,9 @@ class Sound implements LineListener
 	protected boolean started = false;
 	/** The volume control for this sound. */
 	protected FloatControl volumeCtrl;
-	/** The time at which this sound started playing. */
-	private long start;
-	/** The length of this sound's clip in milliseconds. */
-	private long clipLength;
-	public String name;
+	/** The name of this sound. */
+	public String sound;
+	/** Indicates when this sound is done playing. */
 	private boolean isDone = true;
 	
 	/** Basic constructor.
@@ -39,7 +37,10 @@ class Sound implements LineListener
 	 */
 	public Sound(String sound)
 	{
-		name = sound;
+		// The sound to be played
+		this.sound = sound;
+		// Set done as true to start, and change it after ready to play
+		isDone  = true;
 		// Get an input stream for the sound effect
 		InputStream is = SoundManager.getResManager().getRes(sound);
 		// Get the audio input stream
@@ -93,6 +94,7 @@ class Sound implements LineListener
 			{
 			}
 		}
+		// Add this Sound as a line listener for this clip
 		clip.addLineListener(this);
 		// Open the audio clip
 		try
@@ -126,10 +128,6 @@ class Sound implements LineListener
 	{
 		// Start the clip
 		clip.start();
-		// The length of the playing sound
-		clipLength = clip.getMicrosecondLength() / 1000;
-		// The start time of this sound
-		start = core.ProgramTimer.getTime();
 	}
 	
 	/**  If this sound has finished playing.
@@ -138,14 +136,6 @@ class Sound implements LineListener
 	public synchronized boolean isDone()
 	{
 		return isDone;
-//		long elapsed = core.ProgramTimer.getTime() - start;
-//		// Give it a little lee-way time
-//		if ( elapsed >= clipLength*1.1)
-//		{
-//			cleanup();
-//			return true;
-//		}
-//		return false;
 	}
 	
 	/** Adjust the volume of this sound. */

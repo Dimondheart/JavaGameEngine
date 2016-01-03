@@ -6,7 +6,7 @@ package core.sound;
 abstract class BaseSoundEvent
 {
 	/** The time the sound effect was queued. */
-	private long queueTime;
+	private final long queueTime;
 	
 	/** Basic constructor.
 	 * @param type the Type of this sound event
@@ -19,8 +19,17 @@ abstract class BaseSoundEvent
 	/** How long this event has been queued.
 	 * @return the ProgramTimer time that this event has been queued
 	 */
-	public long getTimeQueued()
+	public final long getTimeInQueue()
 	{
-		return queueTime - core.ProgramTimer.getTime();
+		return core.ProgramTimer.getTime() - queueTime;
+	}
+	
+	/** Determines if this event has met any conditions that make
+	 * it "stale"/old.
+	 * @return if this event is old/stale
+	 */
+	public boolean isStale()
+	{
+		return false;
 	}
 }

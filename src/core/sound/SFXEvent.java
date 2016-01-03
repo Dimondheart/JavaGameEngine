@@ -5,6 +5,9 @@ package core.sound;
 */
 class SFXEvent extends BaseSoundEvent
 {
+	/** How long a sound effect can be queued before it is stale/old. */
+	private static final long MAX_QUEUE_TIME = 200;
+	
 	/** The sound effect to play. */
 	private String sfx;
 	
@@ -22,5 +25,11 @@ class SFXEvent extends BaseSoundEvent
 	public String getSFX()
 	{
 		return sfx;
+	}
+	
+	@Override
+	public boolean isStale()
+	{
+		return getTimeInQueue() >= MAX_QUEUE_TIME;
 	}
 }

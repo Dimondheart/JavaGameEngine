@@ -11,9 +11,7 @@ import core.userinput.InputManager;
 public class SoundManager implements core.CustomRunnable
 {
 	/** Maximum number of sound effects to play at once. */
-	private static final int MAX_PLAYING_SFX = 25;
-	/** How long a sound effect can be queued before it is canceled. */
-	private static final long MAX_SFX_QUEUE_TIME = 250;
+	private static final int MAX_PLAYING_SFX = 50;
 	/** Thread for this object. */
 	private Thread thread;
 	/** Thread controller for this object. */
@@ -92,18 +90,32 @@ public class SoundManager implements core.CustomRunnable
 					playingSFX.remove(sfx);
 				}
 			}
-			// Get the next sound effect
-			SFXEvent nextSFX = sfxQueue.poll();
-			// Play the next sound effect
-			if (nextSFX != null)
+			// Clear any "stale" sound effects
+			for (SFXEvent e : sfxQueue)
 			{
+				if (e.isStale())
+				{
+					sfxQueue.remove(e);
+				}
+			}
+			// Start as many new sound effects as possible
+			while (playingSFX.size() < MAX_PLAYING_SFX)
+			{
+				// Get the next sound effect
+				SFXEvent nextSFX = sfxQueue.poll();
+				// No more sfx events
+				if (nextSFX == null)
+				{
+					break;
+				}
+				// Play the next sound effect
 				doPlaySFX(nextSFX);
 			}
-			// Get the next general event
-			BaseSoundEvent nextGen = genQueue.poll();
-			// Do the next general event
-			if (nextGen != null)
+			// Do as many general events as possible
+			while (genQueue.size() > 0)
 			{
+				// Get the next general event
+				BaseSoundEvent nextGen = genQueue.poll();
 				// Get the class of the next event
 				Class<? extends BaseSoundEvent> c = nextGen.getClass();
 				// Change BGM

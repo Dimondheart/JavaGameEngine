@@ -14,10 +14,6 @@ import core.userinput.inputdevice.WindowMonitor;
  */
 public class InputManager implements core.CustomRunnable
 {
-	/** Thread for this object. */
-	private Thread thread;
-	/** Thread controller for this object. */
-	private core.ThreadClock clock;
 	/** Event queue. */
 	private static volatile ConcurrentLinkedDeque<InputManagerEvent> queue;
 	/** The state the game is currently in. */
@@ -28,6 +24,11 @@ public class InputManager implements core.CustomRunnable
 	private static Mouse mouse;
 	/** The main window event manager. */
 	private static WindowMonitor win;
+	
+	/** Thread for this object. */
+	private Thread thread;
+	/** Thread controller for this object. */
+	private core.ThreadClock clock;
 	
 	/** Different basic states the game can be in.
 	 * @author Bryan Bettis
@@ -45,10 +46,13 @@ public class InputManager implements core.CustomRunnable
 	public InputManager(Window window)
 	{
 		System.out.println("Setting Up User Input System...");
+		// Setup the event queue
 		queue = new ConcurrentLinkedDeque<InputManagerEvent>();
+		// Setup the input devices
 		keyboard = new Keyboard(window);
 		mouse = new Mouse(window);
 		win = new WindowMonitor(window);
+		// The thread manager
 		clock = new core.ThreadClock(8);
 	}
 	
@@ -66,6 +70,7 @@ public class InputManager implements core.CustomRunnable
 	{
 		while(true)
 		{
+			clock.nextCycle();
 			// Stop processing new events if quitting soon
 			if (getState() == State.QUIT)
 			{
@@ -76,7 +81,7 @@ public class InputManager implements core.CustomRunnable
 			// If there is a next event, do it
 			if (next != null)
 			{
-				// Do the event
+				// Do the event event
 				switch(next.getType())
 				{
 					case POLL:
@@ -102,7 +107,6 @@ public class InputManager implements core.CustomRunnable
 						break;
 				}
 			}
-			clock.nextCycle();
 		}
 	}
 	

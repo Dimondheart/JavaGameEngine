@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.zip.ZipEntry;
@@ -51,23 +50,11 @@ public abstract class GameResourcesBuffer
 	 */
 	protected final void loadAll(String rootDir, String resType)
 	{
-		System.out.println("Preloading " + resType + "...");
+		System.out.println("Preloading/Checking " + resType + "...");
 		// The list of relative paths for files to try to load
 		LinkedList<String> toLoad = new LinkedList<String>();
-		// Get the URI scheme to see if we are in a jar or not
-		// TODO Move this to some other class as a constant?
-		String uriScheme = "";
-		try
-		{
-			uriScheme = core.GameSession.class.getResource("/core").toURI().getScheme();
-		}
-		catch (URISyntaxException e)
-		{
-			e.printStackTrace();
-			return;
-		}
 		// Loading resources from a jar
-		if (uriScheme.equals("jar"))
+		if (core.GameSession.getURIScheme().equals("jar"))
 		{
 			// Get the URL for the jar file
 			URL jarFile = getClass().getProtectionDomain().getCodeSource().getLocation();
@@ -146,11 +133,11 @@ public abstract class GameResourcesBuffer
 				}
 			}
 		}
-		// Try to load all possible files found
-		while (!toLoad.isEmpty())
+		// Try to load all possible resource files found
+		for (int i = 0; i < toLoad.size(); ++i)
 		{
-			load(toLoad.poll());
-			System.out.println("Preloading " + resType + "..." + toLoad.size());
+			load(toLoad.get(i));
+			System.out.println("Loading/Checking " + resType + "..." + (toLoad.size() - i));
 		}
 	}
 	/** Checks if the given file path or file name contains a supported

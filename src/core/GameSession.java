@@ -1,5 +1,7 @@
 package core;
 
+import java.net.URISyntaxException;
+
 import core.gamestate.GameStateManager;
 import core.graphics.GfxManager;
 import core.sound.SoundManager;
@@ -11,6 +13,9 @@ import core.userinput.InputManager;
  */
 public class GameSession
 {
+	/** The setup of the program files (jar, file, etc.). */
+	private static String URI_SCHEME;
+	
 	/** The graphics system. */
 	private GfxManager gfx;
 	/** The system that manages all user input. */
@@ -21,6 +26,20 @@ public class GameSession
 	private GameStateManager gsm;
 	/** Manages timing of the main thread. */
 	private ThreadClock clock;
+	
+	// Static variables setup
+	static
+	{
+		// Determine the URI scheme to see if we are running in a Jar, etc.
+		try
+		{
+			URI_SCHEME = core.GameSession.class.getResource("/core").toURI().getScheme();
+		}
+		catch (URISyntaxException e)
+		{
+			e.printStackTrace();
+		}
+	}
 	
 	/** Normal game constructor. Also sets up the subsystems. */
 	public GameSession()
@@ -35,6 +54,16 @@ public class GameSession
 		gsm = new GameStateManager(GameStateManager.GameStates.MAIN_MENU);
 		// Setup the time manager for the main game thread
 		clock = new ThreadClock(10);
+	}
+	
+	/** Gets the URI setup of this program; "jar" indicates we are running
+	 * inside a jar file, "file" means we are running from a basic file
+	 * system directory structure, etc.
+	 * @return the URI scheme
+	 */
+	public static String getURIScheme()
+	{
+		return URI_SCHEME;
 	}
 	
 	/** Start all subsystems then begins the main game loop. */
