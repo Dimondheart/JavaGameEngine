@@ -63,10 +63,9 @@ public class WindowMonitor implements InputDevice, WindowListener, ComponentList
 	@Override
 	public void windowClosed(WindowEvent e)
 	{
-		// Main window disposed (not preferred quitting), exit the program
+		// Main window closed
 		if (myWin == GfxManager.getMainWin())
 		{
-			System.exit(0);
 		}
 		else
 		{

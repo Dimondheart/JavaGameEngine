@@ -5,17 +5,13 @@ import static java.awt.event.KeyEvent.*;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
+import java.util.concurrent.ConcurrentHashMap;
 
 import core.gamestate.SavableGameState;
-import core.gamestate.GameStateManager.GameStates;
 import core.graphics.gui.Button;
 import core.sound.SoundManager;
 import core.userinput.InputManager;
-import game.CtrlRenderer;
-import game.SamplePlayerControlled;
-import game.SampleRenderer;
-import game.SampleRenderer2;
-import game.TestAnimator;
+import game.*;
 
 /** A sample game state with sample stuff.
  * @author Bryan Bettis
@@ -39,7 +35,6 @@ public class SamplePlay extends SavableGameState
 	
 	public SamplePlay()
 	{
-		super(GameStates.SAMPLE_PLAY);
 		sr = new SampleRenderer();
 		sr_2 = new SampleRenderer(40,200,1,-1,Color.green);
 		sr2 = new SampleRenderer2();
@@ -52,7 +47,7 @@ public class SamplePlay extends SavableGameState
 	}
 	
 	@Override
-	public void setup()
+	public void setup(ConcurrentHashMap<String, Object> args)
 	{
 		String[] cL = new String[3];
 		cL[0] = "WASD to move";
@@ -72,12 +67,12 @@ public class SamplePlay extends SavableGameState
 			mainMenuBtn.showOnLayer(9);
 			if (InputManager.getMS().isDown(MouseEvent.BUTTON1))
 			{
-				changeState(GameStates.MAIN_MENU);
+				changeState(MainMenuTest.class);
 				return;
 			}
 			if (mainMenuBtn.getState() == Button.ButtonState.CLICKED)
 			{
-				changeState(GameStates.MAIN_MENU);
+				changeState(MainMenuTest.class);
 				return;
 			}
 		}
@@ -87,7 +82,7 @@ public class SamplePlay extends SavableGameState
 		}
 		if (InputManager.getKB().justPressed(VK_ENTER))
 		{
-			changeState(GameStates.MAIN_MENU);
+			changeState(MainMenuTest.class);
 			return;
 		}
 		if (InputManager.getKB().isDown(VK_SPACE))

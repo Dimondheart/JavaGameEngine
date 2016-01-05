@@ -8,7 +8,7 @@ import core.graphics.RenderEvent;
 /** A sample Renderer implementation.
 * @author Bryan Bettis
 */
-public class SampleRenderer implements core.graphics.Renderer
+public class SampleRenderer implements core.graphics.PrimaryRenderer
 {
 	private int x = 20;
 	private int y = 40;

@@ -4,7 +4,7 @@ package core.graphics.gui;
  * interacts with using input devices (mouse, keyboard, etc.).
  * @author Bryan Bettis
  */
-public abstract class GUIObject implements core.graphics.Renderer
+public abstract class GUIObject implements core.graphics.PrimaryRenderer
 {
 	/** The x coordinate of this object. */
 	protected int x;

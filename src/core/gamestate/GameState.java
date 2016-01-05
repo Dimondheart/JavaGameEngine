@@ -1,8 +1,7 @@
 package core.gamestate;
 
 import java.io.Serializable;
-
-import core.gamestate.GameStateManager.GameStates;
+import java.util.concurrent.ConcurrentHashMap;
 
 /** Base Class for a game state.
  * @author Bryan Bettis
@@ -14,21 +13,25 @@ public abstract class GameState implements Serializable
 	/** Renders the FPS to the screen. */
 	protected FPSRenderer fpsRenderer;
 	
-	private GameStates state;
-	private GameStates newState;
+	/** The Class of the next game state to transition to. */
+	private Class<? extends GameState> newState;
+	/** The list of startup arguments for the next game state.
+	 * TODO wrap this with a custom object.
+	 */
+	protected ConcurrentHashMap<String, Object> newStateArgs;
 	
 	/** Basic constructor.
 	 * @param state the GameStates for the subclass
 	 */
-	public GameState(GameStates state)
+	public GameState()
 	{
 		fpsRenderer = new FPSRenderer();
-		this.state = state;
-		this.newState = state;
+		newState = this.getClass();
+		newStateArgs = new ConcurrentHashMap<String, Object>();
 	}
 	
 	/** Performs setup operations for a game state. */
-	public abstract void setup();
+	public abstract void setup(ConcurrentHashMap<String, Object> args);
 	/** State-specific processing operations. */
 	public abstract void cycle();
 	/** Cleanup operations specific to a game state. */
@@ -44,25 +47,34 @@ public abstract class GameState implements Serializable
 	}
 	
 	/** Determines if this game state should be transitioned.
-	 * @return true if the state needs to be  changed
+	 * @return true if the state needs to be changed
 	 */
 	public boolean isChangeStateIndicated()
 	{
-		return (state != newState);
+		return (!newState.equals(this.getClass()));
 	}
 	
 	/** Get the new game state to transition to.
-	 * @return the GameStates for the new state
+	 * @return the GameState class for the new state
 	 */
-	public GameStates getNewState()
+	public Class<? extends GameState> getNewState()
 	{
 		return newState;
 	}
 	
-	/** Indicate changing to a new game state and set the new state.
-	 * @param newState what GameStates to change to next
+	/** Gets the hash map of arguments to use for setting up the next
+	 * game state.
+	 * @return a ConcurrentHashMap<String, Object> of arguments
 	 */
-	protected void changeState(GameStates newState)
+	public ConcurrentHashMap<String, Object> getNewStateArgs()
+	{
+		return newStateArgs;
+	}
+	
+	/** Indicate changing to a new game state and set the new state.
+	 * @param newState what GameState class to change to next
+	 */
+	protected void changeState(Class<? extends GameState> newState)
 	{
 		this.newState = newState;
 	}

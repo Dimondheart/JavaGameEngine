@@ -98,7 +98,7 @@ public class LayerContainer extends JComponent
 	 * @param obj the Renderer to add
 	 * @param layer the layer to add the Renderer to
 	 */
-	public synchronized void showRenderer(Renderer obj, int layer)
+	public synchronized void showRenderer(PrimaryRenderer obj, int layer)
 	{
 		layers[layer].addRenderer(obj);
 	}
@@ -107,7 +107,7 @@ public class LayerContainer extends JComponent
 	 * @param obj the Renderer to remove
 	 * @param layer the layer to remove the Renderer from
 	 */
-	public synchronized void hideRenderer(Renderer obj, int layer)
+	public synchronized void hideRenderer(PrimaryRenderer obj, int layer)
 	{
 		layers[layer].removeRenderer(obj);
 	}
@@ -115,7 +115,7 @@ public class LayerContainer extends JComponent
 	/** Remove the specified renderer from all layers.
 	 * @param obj the Renderer to hide
 	 */
-	public synchronized void hideRenderer(Renderer obj)
+	public synchronized void hideRenderer(PrimaryRenderer obj)
 	{
 		for (Layer l : layers)
 		{

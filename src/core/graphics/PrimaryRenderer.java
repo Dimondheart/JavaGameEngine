@@ -1,9 +1,10 @@
 package core.graphics;
 
-/** The base class for any object that can be rendered to the screen.
+/** A type of Renderer that draws directly to the primary set of
+ * layers.
  * @author Bryan Bettis
  */
-public interface Renderer
+public interface PrimaryRenderer
 {
 	/** Called to draw a renderer to the window.
 	 * @param event the context information used to render
@@ -19,7 +20,7 @@ public interface Renderer
 	 */
 	public default void showOnLayer(int layer)
 	{
-		core.graphics.GfxManager.showRenderer(this, layer);
+		GfxManager.showRenderer(this, layer);
 	}
 	
 	/** Shows the renderer in only the specified layer, hides it in all
@@ -28,14 +29,14 @@ public interface Renderer
 	 */
 	public default void showOnlyOnLayer(int layer)
 	{
-		core.graphics.GfxManager.hideRenderer(this);
-		core.graphics.GfxManager.showRenderer(this, layer);
+		GfxManager.hideRenderer(this);
+		GfxManager.showRenderer(this, layer);
 	}
 	
 	/** Hides a renderer in all layers. */
 	public default void hideOnAllLayers()
 	{
-		core.graphics.GfxManager.hideRenderer(this);
+		GfxManager.hideRenderer(this);
 	}
 	
 	/** Hides a renderer in only the specified layer.
@@ -43,15 +44,15 @@ public interface Renderer
 	 */
 	public default void hideOnLayer(int layer)
 	{
-		core.graphics.GfxManager.hideRenderer(this, layer);
+		GfxManager.hideRenderer(this, layer);
 	}
 	
 	/** The layer(s) this Renderer is currently showing on.
+	 * TODO implement this, it currently only returns an empty array
 	 * @return array of integers corresponding to layer indexes
 	 */
 	public default int[] getCurrentLayers()
 	{
-		// TODO implement
 		int[] layers = {};
 		return layers;
 	}

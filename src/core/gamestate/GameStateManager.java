@@ -1,7 +1,6 @@
 package core.gamestate;
 
-import game.gamestate.MainMenuTest;
-import game.gamestate.SamplePlay;
+import java.util.concurrent.ConcurrentHashMap;
 
 /** Manages the game states, including handling cycling and transition
  * between game states.
@@ -12,28 +11,20 @@ public class GameStateManager
 	/** The current game state object. */
 	private GameState currGS;
 	
-	/** Represent the different possible game states.
-	 * TODO Replace this with class instanceof checking, etc.
-	 * @author Bryan Bettis
-	 */
-	public enum GameStates
-	{
-		MAIN_MENU,
-		SAMPLE_PLAY
-	}
-	
-	/** Basic constructor, default start GameState is MainMenu. */
 	public GameStateManager()
 	{
-		this(GameStates.MAIN_MENU);
+		// TODO make a way to specify this in the game or a game sub-package
+		this(game.gamestate.MainMenuTest.class);
 	}
 	
-	/** Takes an argument to specify the starting GameState.
-	 * @param initState the initial GameStates
-	 */
-	public GameStateManager(GameStates initState)
+	public GameStateManager(Class<? extends GameState> initialState)
 	{
-		setNewGameState(initState);
+		this(initialState, new ConcurrentHashMap<String, Object>());
+	}
+	
+	public GameStateManager(Class<? extends GameState> initialState, ConcurrentHashMap<String, Object> args)
+	{
+		setNewGameState(initialState, args);
 	}
 	
 	/** Cycle the current game state. */
@@ -42,15 +33,17 @@ public class GameStateManager
 		try
 		{
 			// Loop until the current state should be transitioned
-			if (!currGS.isChangeStateIndicated())
+			if (currGS.isChangeStateIndicated())
 			{
+				// Change the game state
+				setNewGameState(currGS.getNewState(), currGS.getNewStateArgs());
 				// Call one cycle of events for this game state
 				currGS.cycle();
 			}
 			else
 			{
-				// Change the game state
-				setNewGameState(currGS.getNewState());
+				// Call one cycle of events for this game state
+				currGS.cycle();
 			}
 		}
 		catch (NullPointerException e)
@@ -82,10 +75,12 @@ public class GameStateManager
 		}
 	}
 	
-	/** Selects and sets the new game state object.
-	 * @param newState the new GameStates to setup
+	/** Cleans up any previous game state and creates then sets up the
+	 * new game state.
+	 * @param newState the class of the new state
+	 * @param setupArgs the hash map of arguments to setup the new game state
 	 */
-	private void setNewGameState(GameStates newState)
+	private void setNewGameState(Class<? extends GameState> newState, ConcurrentHashMap<String, Object> setupArgs)
 	{
 		// Cleanup after previous game state (if any)
 		if (currGS != null)
@@ -93,22 +88,35 @@ public class GameStateManager
 			cleanup();
 		}
 		// Create the new game state
-		switch (newState)
+		try
 		{
-			// The classic space invaders mode
-			case SAMPLE_PLAY:
-				currGS = new SamplePlay();
-				break;
-			
-			// Contains things like options and loading/starting a level
-			case MAIN_MENU:
-				// Fall through
-			
-			// Default to the main menu
-			default:
-				currGS = new MainMenuTest();
+			currGS = newState.newInstance();
+		}
+		// Class cannot be instantiated
+		catch (InstantiationException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(
+					"ERROR: GameState \'" +
+							newState.getName() +
+							"\' cannot be instantiated"
+							);
+			return;
+		}
+		// Unable to access the class
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
+			System.out.println(
+					"ERROR: GameState \'" +
+							newState.getName() +
+							"\' is not accessable from " +
+							this.getClass().getPackage().getName()
+							);
+			return;
 		}
 		// Setup the new game state
-		currGS.setup();
+		currGS.setup(setupArgs);
 	}
 }

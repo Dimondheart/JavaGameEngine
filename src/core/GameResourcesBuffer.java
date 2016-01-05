@@ -160,7 +160,7 @@ public abstract class GameResourcesBuffer
 		return false;
 	}
 	
-	/** Gets an input stream, used for initially loading the resource.
+	/** Gets an input stream, usually used for initially loading the resource.
 	 * @param path the path to the file to load
 	 * @return an input stream that can work both inside and outside a jar
 	 */

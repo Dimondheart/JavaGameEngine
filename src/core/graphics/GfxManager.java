@@ -111,7 +111,7 @@ public class GfxManager implements core.CustomRunnable
 	 * @param obj the Renderer to show
 	 * @param layer the layer to show on
 	 */
-	public static synchronized void showRenderer(Renderer obj, int layer)
+	public static synchronized void showRenderer(PrimaryRenderer obj, int layer)
 	{
 		mainLayers.showRenderer(obj, layer);
 	}
@@ -120,7 +120,7 @@ public class GfxManager implements core.CustomRunnable
 	 * @param obj the Renderer to hide
 	 * @param layer the layer to hide on
 	 */
-	public static synchronized void hideRenderer(Renderer obj, int layer)
+	public static synchronized void hideRenderer(PrimaryRenderer obj, int layer)
 	{
 		mainLayers.hideRenderer(obj, layer);
 	}
@@ -128,7 +128,7 @@ public class GfxManager implements core.CustomRunnable
 	/** Hide (remove) the specified renderer from all layers.
 	 * @param obj the Renderer to hide
 	 */
-	public static synchronized void hideRenderer(Renderer obj)
+	public static synchronized void hideRenderer(PrimaryRenderer obj)
 	{
 		mainLayers.hideRenderer(obj);
 	}

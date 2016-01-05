@@ -12,21 +12,21 @@ import core.graphics.gui.GUIObject;
 public class Layer
 {
 	/** The Renderer(s) rendering to this layer. */
-	private LinkedList<Renderer> renderers;
+	private LinkedList<PrimaryRenderer> renderers;
 	/** The GUI objects on this layer. */
 	private LinkedList<GUIObject> guiObjects;
 	
 	/** The normal constructor for a Layer. */
 	public Layer()
 	{
-		renderers = new LinkedList<Renderer>();
+		renderers = new LinkedList<PrimaryRenderer>();
 		guiObjects = new LinkedList<GUIObject>();
 	}
 	
 	/** Add specified renderer to this layer.
 	 * @param obj the Renderer to add
 	 */
-	public synchronized void addRenderer(Renderer obj)
+	public synchronized void addRenderer(PrimaryRenderer obj)
 	{
 		// Don't add the same renderer more than once
 		if (renderers.contains(obj))
@@ -44,7 +44,7 @@ public class Layer
 	/** Remove specified renderer from this layer.
 	 * @param obj the Renderer to remove
 	 */
-	public synchronized void removeRenderer(Renderer obj)
+	public synchronized void removeRenderer(PrimaryRenderer obj)
 	{
 		renderers.remove(obj);
 		// Remove any GUI elements from the GUI object list
@@ -60,7 +60,7 @@ public class Layer
 	public synchronized void flip(RenderEvent e)
 	{
 		// Draw each Renderer
-		for (Renderer r : renderers)
+		for (PrimaryRenderer r : renderers)
 		{
 			r.render(e);
 		}

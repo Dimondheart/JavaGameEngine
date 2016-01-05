@@ -33,15 +33,24 @@ public class GameSession
 		// Determine the URI scheme to see if we are running in a Jar, etc.
 		try
 		{
-			URI_SCHEME = core.GameSession.class.getResource("/core").toURI().getScheme();
+			URI_SCHEME = core.GameSession.class.getResource(
+					"/core"
+					).toURI().getScheme();
 		}
+		// Unable to determine the URI scheme
 		catch (URISyntaxException e)
 		{
 			e.printStackTrace();
+			System.out.println(
+					"ERROR: Unable to determine the layout of the game files."
+					);
+			System.exit(0);
 		}
 	}
 	
-	/** Normal game constructor. Also sets up the subsystems. */
+	/** Normal game constructor. Sets up the subsystems (graphics,
+	 * sound, etc).
+	 */
 	public GameSession()
 	{
 		// Setup graphics system
@@ -51,7 +60,7 @@ public class GameSession
 		// Setup sound system
 		sound = new SoundManager();
 		// Setup the game state manager
-		gsm = new GameStateManager(GameStateManager.GameStates.MAIN_MENU);
+		gsm = new GameStateManager();
 		// Setup the time manager for the main game thread
 		clock = new ThreadClock(10);
 	}
@@ -63,17 +72,20 @@ public class GameSession
 	 */
 	public static String getURIScheme()
 	{
-		return URI_SCHEME;
+		// Return a copy of this string to prevent modification
+		return URI_SCHEME.substring(0);
 	}
 	
 	/** Start all subsystems then begins the main game loop. */
 	public void start()
 	{
+		// Start the subsystems
 		input.start();
 		gfx.start();
 		sound.start();
 		// Start the program timer
 		ProgramTimer.setup();
+		// Go to the main loop
 		play();
 	}
 

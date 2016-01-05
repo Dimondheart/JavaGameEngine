@@ -5,14 +5,14 @@ import java.awt.Graphics2D;
 
 import core.graphics.GfxManager;
 import core.graphics.RenderEvent;
-import core.graphics.Renderer;
+import core.graphics.PrimaryRenderer;
 import core.graphics.TextDrawer;
 
 /** A simple implementation of a Renderer, used to display the current average
  * FPS on the screen.
  * @author Bryan Bettis
  */
-public class FPSRenderer implements Renderer
+public class FPSRenderer implements PrimaryRenderer
 {
 	/** Basic constructor. */
 	public FPSRenderer()

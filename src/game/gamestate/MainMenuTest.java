@@ -3,8 +3,10 @@ package game.gamestate;
 //import static java.awt.event.KeyEvent.*;
 import static java.awt.event.MouseEvent.*;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import core.gamestate.GameState;
-import core.gamestate.GameStateManager.GameStates;
+import core.graphics.gui.Button;
 import core.userinput.InputManager;
 import game.CtrlRenderer;
 
@@ -16,20 +18,19 @@ public class MainMenuTest extends GameState
 	private static final long serialVersionUID = 1L;
 	
 	private CtrlRenderer controls;
-	
-	public MainMenuTest()
-	{
-		super(GameStates.MAIN_MENU);
-	}
+	private Button startBtn;
 	
 	@Override
-	public void setup()
+	public void setup(ConcurrentHashMap<String, Object> args)
 	{
+		startBtn = new Button(150, 100, 100, 100);
 		String[] cL = new String[1];
 		cL[0] = "Click to start.";
 		controls = new CtrlRenderer(cL);
 		// Display the FPS on the highest layer
 		fpsRenderer.showOnLayer(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
+		startBtn.showOnLayer(9);
+		startBtn.setText("Click to Start");
 	}
 
 	@Override
@@ -37,7 +38,7 @@ public class MainMenuTest extends GameState
 	{
 		if (InputManager.getMS().justClicked(BUTTON1))
 		{
-			this.changeState(GameStates.SAMPLE_PLAY);
+			this.changeState(SamplePlay.class);
 		}
 	}
 
@@ -45,5 +46,6 @@ public class MainMenuTest extends GameState
 	public void cleanupState()
 	{
 		controls.destroy();
+		startBtn.destroy();
 	}
 }

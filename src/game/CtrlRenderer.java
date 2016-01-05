@@ -4,13 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import core.graphics.RenderEvent;
-import core.graphics.Renderer;
+import core.graphics.PrimaryRenderer;
 import core.graphics.TextDrawer;
 
 /** Renders controls text to the screen for testing purposes.
 * @author Bryan Bettis
 */
-public class CtrlRenderer implements Renderer
+public class CtrlRenderer implements PrimaryRenderer
 {
 	private String[] displayText;
 	

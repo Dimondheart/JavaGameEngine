@@ -9,11 +9,11 @@ public class ProgramTimer
 	/** Used to make sure this timer is only initialized once. */
 	private static boolean isSetup = false;
 	/** The system time from when the timer was last resumed. */
-	private static long started;
+	private static long started = 0;
 	/** Elapsed time, not including when InputManager is paused. */
 	private static long elapsed = 0;
 	/** When the timer is paused and will not change until resumed. */
-	private static boolean paused = false;
+	private static boolean paused = true;
 
 	/** Setup this timer. Repeated calls will have no effect. */
 	public static synchronized void setup()
@@ -26,6 +26,7 @@ public class ProgramTimer
 		{
 			started = System.currentTimeMillis();
 			isSetup = true;
+			resume();
 		}
 	}
 
@@ -61,7 +62,7 @@ public class ProgramTimer
 	/** Resume this timer. Repeated calls have no effect. */
 	public static synchronized void resume()
 	{
-		if (paused)
+		if (paused && isSetup)
 		{
 			paused = false;
 			started = System.currentTimeMillis();

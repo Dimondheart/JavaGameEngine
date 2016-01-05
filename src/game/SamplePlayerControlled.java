@@ -10,7 +10,7 @@ import static java.awt.event.KeyEvent.*;
 /** Sample player-controlled entity.
 * @author Bryan Bettis
 */
-public class SamplePlayerControlled implements core.graphics.Renderer
+public class SamplePlayerControlled implements core.graphics.PrimaryRenderer
 {
 	private int x = 200;
 	private int y = 135;

@@ -8,7 +8,7 @@ import core.graphics.GfxManager;
 /** Handles animations using images as frames.
  * @author Bryan Bettis
  */
-public abstract class Animator implements Renderer
+public abstract class Animator implements PrimaryRenderer
 {
 	/** The directory all animation sets are located in. */
 	private String location;
