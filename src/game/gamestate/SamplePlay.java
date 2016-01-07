@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 import java.util.concurrent.ConcurrentHashMap;
 
 import core.gamestate.SavableGameState;
+import core.graphics.GfxManager;
+import core.graphics.LayerSet;
 import core.graphics.gui.Button;
 import core.sound.SoundManager;
 import core.userinput.InputManager;
@@ -32,18 +34,27 @@ public class SamplePlay extends SavableGameState
 	// Animation testing
 	private transient TestAnimator ta;
 	private Button mainMenuBtn;
+	private LayerSetTester ls;
+	private LayerSet entityLayers;
 	
 	public SamplePlay()
 	{
 		sr = new SampleRenderer();
-		sr_2 = new SampleRenderer(40,200,1,-1,Color.green);
+		sr_2 = new SampleRenderer(40,200,1,-1);
 		sr2 = new SampleRenderer2();
 		sr2_2 = new SampleRenderer2(0,0,80,270,Color.cyan,3);
 		spc = new SamplePlayerControlled();
+		// Always show the player in front of other active entities
+		entityLayers = new LayerSet(2);
+		entityLayers.addRenderer(spc, 1);
+		entityLayers.addRenderer(sr, 0);
+		entityLayers.addRenderer(sr_2, 0);
+		GfxManager.getMainLayerSet().addRenderer(entityLayers, 4);
 		// Display the FPS on the highest layer
 		fpsRenderer.showOnLayer(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
 		mainMenuBtn = new Button(150,0,100,20,"Main Menu");
 		mainMenuBtn.setText("Main Menu");
+		ls = new LayerSetTester();
 	}
 	
 	@Override
@@ -55,7 +66,7 @@ public class SamplePlay extends SavableGameState
 		cL[2] = "Hold space to move player character in front of everything";
 		controls = new CtrlRenderer(cL);
 		ta = new TestAnimator("testanimate", "basic");
-		ta.showOnLayer(9);
+		GfxManager.getMainLayerSet().addRenderer(ta, 9);
 		SoundManager.playBGM("bgm/Into_the_Unknown.wav", SoundManager.BGMTransition.IMMEDIATE);
 	}
 
@@ -87,11 +98,13 @@ public class SamplePlay extends SavableGameState
 		}
 		if (InputManager.getKB().isDown(VK_SPACE))
 		{
-			spc.showOnlyOnLayer(9);
+			entityLayers.removeRenderer(spc, 1);
+			GfxManager.getMainLayerSet().addRenderer(spc, 9);
 		}
 		else
 		{
-			spc.showOnlyOnLayer(4);
+			GfxManager.getMainLayerSet().removeRenderer(spc, 9);
+			entityLayers.addRenderer(spc, 1);
 		}
 		sr.update();
 		sr_2.update();
@@ -102,13 +115,13 @@ public class SamplePlay extends SavableGameState
 	public void cleanupState()
 	{
 		SoundManager.stopBGM(SoundManager.BGMTransition.IMMEDIATE);
-		sr.destroy();
-		sr_2.destroy();
 		sr2.destroy();
 		sr2_2.destroy();
 		spc.destroy();
 		controls.destroy();
 		ta.destroy();
 		mainMenuBtn.destroy();
+		entityLayers.destroy();
+		ls.layers.destroy();
 	}
 }

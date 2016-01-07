@@ -8,7 +8,7 @@ import core.graphics.GfxManager;
 /** Handles animations using images as frames.
  * @author Bryan Bettis
  */
-public abstract class Animator implements PrimaryRenderer
+public abstract class Animator implements Renderer
 {
 	/** The directory all animation sets are located in. */
 	private String location;
@@ -31,15 +31,29 @@ public abstract class Animator implements PrimaryRenderer
 		this(location, "basic");
 	}
 	
+	public Animator(String location, int interval)
+	{
+		this(location, "basic", interval);
+	}
+	
 	/** Set an initial animation set other than the default "basic".
 	 * @param location the root folder for all the animation sets
 	 * @param startingSet the frame set to start with
 	 */
 	public Animator(String location, String startingSet)
 	{
+		this(location, startingSet, 50);
+	}
+	
+	/** Set an initial animation set other than the default "basic".
+	 * @param location the root folder for all the animation sets
+	 * @param startingSet the frame set to start with
+	 */
+	public Animator(String location, String startingSet, int interval)
+	{
 		this.location = location;
 		setAnimationSet(startingSet);
-		setInterval(50);
+		setInterval(interval);
 		setFrame(1);
 	}
 	
@@ -83,7 +97,9 @@ public abstract class Animator implements PrimaryRenderer
 	
 	/** Set what frame number should render next. This updates on its own,
 	 * so no need to worry about it unless you want to adjust the current
-	 * animation (e.g. when you change animation sets).
+	 * animation (e.g. reset back to 1 when you change animation sets).
+	 * <br>
+	 * <br><b>Note</b> that the first frame is 1, not 0.
 	 * @param frame the integer portion of the frame name
 	 */
 	protected void setFrame(int frame)

@@ -9,8 +9,8 @@ import java.util.LinkedList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-/** A base class for loading game resources (images, sounds, etc.)
- * into memory instead of reloading them from a file before every use.
+/** A base class for loading and/or handling game resources (images, sounds,
+ * etc.) into memory, instead of reloading them from a file before every use.
  * @author Bryan Bettis
  */
 public abstract class GameResourcesBuffer

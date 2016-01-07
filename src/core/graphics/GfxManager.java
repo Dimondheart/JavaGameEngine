@@ -21,8 +21,8 @@ public class GfxManager implements core.CustomRunnable
 	
 	/** The main window frame. */
 	private static JFrame mainWin;
-	/** The layer container for the main window. */
-	private static LayerContainer mainLayers;
+	/** The layer container for the main set of layers. */
+	private static MainLayerSetContainer mainLayers;
 	/** Manages graphics loaded from files. */
 	private static GraphicsResources grm;
 	/** The current average FPS. */
@@ -40,7 +40,7 @@ public class GfxManager implements core.CustomRunnable
 		// Setup the main window
 		mainWin = new JFrame("Unnamed Java Game Engine");
 		// Setup the main layer container
-		mainLayers = new LayerContainer(mainWin, DEF_DIMS, NUM_MAIN_LAYERS);
+		mainLayers = new MainLayerSetContainer(mainWin, DEF_DIMS, NUM_MAIN_LAYERS);
 		mainWin.add(mainLayers);
 		// Create the graphics resource manager
 		grm = new GraphicsResources();
@@ -94,6 +94,28 @@ public class GfxManager implements core.CustomRunnable
 		return grm;
 	}
 	
+	/** Gets the main layer set, which is drawn to the screen. To be able to
+	 * draw to the screen, a subclass of Renderer (LayerSet, your own
+	 * subclasses, etc.) must be added to this layer set, or to a different
+	 * Renderer container (LayerSet, etc.) that has been/will be added to
+	 * this main layer set.
+	 * <br>
+	 * <br>For the primary window, there are 10 layers.
+	 * They "could" be used as follows:
+	 * <br>
+	 * <br>0-2: Background Layers
+	 * <br>3-6: Main Content Layers
+	 * <br>7-9: GUI Layers
+	 * <br>
+	 * <br>What you use each layer for is up to you, but setting your own
+	 * standard usage for a game, like above for example, is recommended.
+	 * @return the LayerSet for the main drawing layers
+	 */
+	public static LayerSet getMainLayerSet()
+	{
+		return mainLayers.getLayerSet();
+	}
+	
 	/** Draws a BufferedImage to the specified context.
 	 * @param g the Graphics2D to draw the image to
 	 * @param i the image to draw
@@ -107,13 +129,28 @@ public class GfxManager implements core.CustomRunnable
 		g.drawImage(i,x,y,width,height,null);
 	}
 	
+	/** Draws a pre-loaded image to the specified context.
+	 * @param g the Graphics2D to draw the image to
+	 * @param name the "pre-loaded name" of the image to draw
+	 * @param x the x coordinate of the left side
+	 * @param y the y coordinate of the top side
+	 * @param width the width to draw the image as
+	 * @param height the height to draw the image as
+	 */
+	public static void drawGraphic(Graphics2D g, String name, int x, int y, int width, int height)
+	{
+		BufferedImage img;
+		img = core.graphics.GfxManager.getResManager().getRes(name);
+		drawGraphic(g,img,x-6,y-6,12,12);
+	}
+	
 	/** Shows the specified Renderer on the specified layer.
 	 * @param obj the Renderer to show
 	 * @param layer the layer to show on
 	 */
 	public static synchronized void showRenderer(PrimaryRenderer obj, int layer)
 	{
-		mainLayers.showRenderer(obj, layer);
+		mainLayers.getLayerSet().addRenderer(obj, layer);
 	}
 	
 	/** Hide (remove) the specified renderer from the specified layer.
@@ -122,7 +159,7 @@ public class GfxManager implements core.CustomRunnable
 	 */
 	public static synchronized void hideRenderer(PrimaryRenderer obj, int layer)
 	{
-		mainLayers.hideRenderer(obj, layer);
+		mainLayers.getLayerSet().removeRenderer(obj, layer);
 	}
 	
 	/** Hide (remove) the specified renderer from all layers.
@@ -130,13 +167,13 @@ public class GfxManager implements core.CustomRunnable
 	 */
 	public static synchronized void hideRenderer(PrimaryRenderer obj)
 	{
-		mainLayers.hideRenderer(obj);
+		mainLayers.getLayerSet().removeRenderer(obj);
 	}
 	
 	/** Clears all graphics data, like each Renderer, etc. */
 	public static synchronized void clearAll()
 	{
-		mainLayers.clearAllLayers();
+		mainLayers.getLayerSet().clearAllLayers();
 	}
 	
 	/** Handles any changes needed because of a resized window. */
@@ -149,7 +186,7 @@ public class GfxManager implements core.CustomRunnable
 				newSize.getWidth()-mfi.right-mfi.left,
 				newSize.getHeight()-mfi.top-mfi.bottom
 				);
-		// Adjust the size of the layer container
+		// Adjust the size of the main layer set
 		mainLayers.adjustSize(newSize);
 		mainWin.revalidate();
 	}

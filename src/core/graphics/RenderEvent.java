@@ -32,8 +32,9 @@ public class RenderEvent
 		return g2;
 	}
 	
-	/** The layer currently drawing to.
+	/** The layer currently drawing to <b>in the most recent layer set.</b>
 	 * @return the number corresponding to the layer currently being rendered
+	 * @see LayerSet
 	 */
 	public int getLayer()
 	{

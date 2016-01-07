@@ -1,52 +1,34 @@
 package game;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-
 import core.graphics.RenderEvent;
 
 /** A sample Renderer implementation.
 * @author Bryan Bettis
 */
-public class SampleRenderer implements core.graphics.PrimaryRenderer
+public class SampleRenderer implements core.graphics.Renderer
 {
 	private int x = 20;
 	private int y = 40;
 	private int[] vector;
-	private Color renderColor;
 	
 	public SampleRenderer()
 	{
-		this(20, 40, -1, 1, Color.blue);
+		this(20, 40, -1, 1);
 	}
 	
-	public SampleRenderer(int x, int y, int vectorx, int vectory, Color color)
+	public SampleRenderer(int x, int y, int vectorx, int vectory)
 	{
 		vector = new int[2];
 		this.x = x;
 		this.y = y;
 		vector[0] = vectorx;
 		vector[1] = vectory;
-		renderColor = color;
-		this.showOnLayer(4);
 	}
 	
 	@Override
 	public synchronized void render(RenderEvent e)
 	{
-//		e.getContext().setColor(renderColor);
-//		e.getContext().fillOval(x-5, y-5, 10, 10);
-		BufferedImage img;
-		if (renderColor.equals(Color.blue))
-		{
-			img = core.graphics.GfxManager.getResManager().getRes("testfolder/bullet.png");
-			core.graphics.GfxManager.drawGraphic(e.getContext(),img,x-3,y-6,6,12);
-		}
-		else
-		{
-			img = core.graphics.GfxManager.getResManager().getRes("asteroid.png");
-			core.graphics.GfxManager.drawGraphic(e.getContext(),img,x-6,y-6,12,12);
-		}
+		core.graphics.GfxManager.drawGraphic(e.getContext(),"asteroid.png",x-6,y-6,12,12);
 	}
 	
 	public synchronized void update()
