@@ -36,6 +36,8 @@ public class SamplePlay extends SavableGameState
 	private Button mainMenuBtn;
 	private LayerSetTester ls;
 	private LayerSet entityLayers;
+	private boolean paused = false;
+	private ClockTester ct;
 	
 	public SamplePlay()
 	{
@@ -55,15 +57,18 @@ public class SamplePlay extends SavableGameState
 		mainMenuBtn = new Button(150,0,100,20,"Main Menu");
 		mainMenuBtn.setText("Main Menu");
 		ls = new LayerSetTester();
+		ct = new ClockTester();
+		entityLayers.addRenderer(ct, 0);
 	}
 	
 	@Override
-	public void setup(ConcurrentHashMap<String, Object> args)
+	public void setupState(ConcurrentHashMap<String, Object> args)
 	{
-		String[] cL = new String[3];
+		String[] cL = new String[4];
 		cL[0] = "WASD to move";
-		cL[1] = "Escape + left click to return to main menu";
+		cL[1] = "Escape to pause/resume, + left click while paused to return to main menu";
 		cL[2] = "Hold space to move player character in front of everything";
+		cL[3] = "The blue dot will only move when the game is paused";
 		controls = new CtrlRenderer(cL);
 		ta = new TestAnimator("testanimate", "basic");
 		GfxManager.getMainLayerSet().addRenderer(ta, 9);
@@ -71,9 +76,22 @@ public class SamplePlay extends SavableGameState
 	}
 
 	@Override
-	public void cycle()
+	public void cycleState()
 	{
-		if (InputManager.getKB().isDown(VK_ESCAPE))
+		ct.update();
+		if (InputManager.getKB().justPressed(VK_ESCAPE))
+		{
+			paused = !paused;
+			if (paused)
+			{
+				core.gamestate.GameStateManager.getClock().pause();
+			}
+			else
+			{
+				core.gamestate.GameStateManager.getClock().resume();
+			}
+		}
+		if (paused)
 		{
 			mainMenuBtn.showOnLayer(9);
 			if (InputManager.getMS().isDown(MouseEvent.BUTTON1))
@@ -90,25 +108,25 @@ public class SamplePlay extends SavableGameState
 		else
 		{
 			mainMenuBtn.hideOnLayer(9);
+			if (InputManager.getKB().isDown(VK_SPACE))
+			{
+				entityLayers.removeRenderer(spc, 1);
+				GfxManager.getMainLayerSet().addRenderer(spc, 9);
+			}
+			else
+			{
+				GfxManager.getMainLayerSet().removeRenderer(spc, 9);
+				entityLayers.addRenderer(spc, 1);
+			}
+			sr.update();
+			sr_2.update();
+			spc.update();
 		}
 		if (InputManager.getKB().justPressed(VK_ENTER))
 		{
 			changeState(MainMenuTest.class);
 			return;
 		}
-		if (InputManager.getKB().isDown(VK_SPACE))
-		{
-			entityLayers.removeRenderer(spc, 1);
-			GfxManager.getMainLayerSet().addRenderer(spc, 9);
-		}
-		else
-		{
-			GfxManager.getMainLayerSet().removeRenderer(spc, 9);
-			entityLayers.addRenderer(spc, 1);
-		}
-		sr.update();
-		sr_2.update();
-		spc.update();
 	}
 
 	@Override

@@ -30,12 +30,26 @@ public abstract class GameState implements Serializable
 		newStateArgs = new ConcurrentHashMap<String, Object>();
 	}
 	
-	/** Performs setup operations for a game state. */
-	public abstract void setup(ConcurrentHashMap<String, Object> args);
-	/** State-specific processing operations. */
-	public abstract void cycle();
+	/** Performs setup operations specific to each game state. */
+	protected abstract void setupState(ConcurrentHashMap<String, Object> args);
+	/** State-specific cycle operations. */
+	protected abstract void cycleState();
 	/** Cleanup operations specific to a game state. */
 	protected abstract void cleanupState();
+	
+	/** Performs setup operations for a game state. */
+	public void setup(ConcurrentHashMap<String, Object> args)
+	{
+		// Game-state-specific setup
+		setupState(args);
+	}
+	
+	/** Does one cycle of the game state. */
+	public void cycle()
+	{
+		// Game-state-specific cycling
+		cycleState();
+	}
 	
 	/** Do any important cleanup-related operations before stopping a game
 	 * state, like auto-saving, etc.
@@ -43,6 +57,7 @@ public abstract class GameState implements Serializable
 	public void cleanup()
 	{
 		fpsRenderer.destroy();
+		// Game-state-specific cleanup
 		cleanupState();
 	}
 	

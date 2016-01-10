@@ -9,7 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GameStateManager
 {
 	/** The current game state object. */
-	private GameState currGS;
+	protected static GameState currGS;
+	/** A clock for timing different things in a game state. */
+	protected static core.Clock clock;
 	
 	public GameStateManager()
 	{
@@ -53,12 +55,12 @@ public class GameStateManager
 		}
 	}
 	
-	/** Cleans up the current game state. */
-	public void cleanup()
+	/** Gets the game state's clock.
+	 * @return the core.Clock object for the current game state
+	 */
+	public static synchronized core.Clock getClock()
 	{
-		currGS.cleanup();
-		core.userinput.InputManager.clear();
-		currGS = null;
+		return clock;
 	}
 	
 	/** Save the current game state, if it is a save-able state. */
@@ -75,13 +77,22 @@ public class GameStateManager
 		}
 	}
 	
+	/** Cleans up the current game state. */
+	public void cleanup()
+	{
+		currGS.cleanup();
+		core.userinput.InputManager.clear();
+		currGS = null;
+	}
+	
 	/** Cleans up any previous game state and creates then sets up the
 	 * new game state.
 	 * @param newState the class of the new state
 	 * @param setupArgs the hash map of arguments to setup the new game state
 	 */
-	private void setNewGameState(Class<? extends GameState> newState, ConcurrentHashMap<String, Object> setupArgs)
+	private synchronized void setNewGameState(Class<? extends GameState> newState, ConcurrentHashMap<String, Object> setupArgs)
 	{
+		clock = new core.Clock();
 		// Cleanup after previous game state (if any)
 		if (currGS != null)
 		{
@@ -118,5 +129,7 @@ public class GameStateManager
 		}
 		// Setup the new game state
 		currGS.setup(setupArgs);
+		// Start the game state clock
+		clock.start();
 	}
 }

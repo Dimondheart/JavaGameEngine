@@ -282,14 +282,14 @@ public class InputManager implements core.CustomRunnable
 	{
 		doClear();
 		setState(State.PAUSED);
-		core.ProgramTimer.pause();
+		core.ProgramClock.pause();
 	}
 	
 	/** Resume the game to normal operation. */
 	private void doResume()
 	{
 		setState(State.NORMAL);
-		core.ProgramTimer.resume();
+		core.ProgramClock.resume();
 	}
 	
 	/** Quit the game. */

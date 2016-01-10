@@ -21,7 +21,7 @@ public class MainMenuTest extends GameState
 	private Button startBtn;
 	
 	@Override
-	public void setup(ConcurrentHashMap<String, Object> args)
+	public void setupState(ConcurrentHashMap<String, Object> args)
 	{
 		startBtn = new Button(150, 100, 100, 100);
 		String[] cL = new String[1];
@@ -34,7 +34,7 @@ public class MainMenuTest extends GameState
 	}
 
 	@Override
-	public void cycle()
+	public void cycleState()
 	{
 		if (InputManager.getMS().justClicked(BUTTON1))
 		{

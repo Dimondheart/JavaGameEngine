@@ -7,9 +7,9 @@ import core.graphics.RenderEvent;
 */
 public class SampleRenderer implements core.graphics.Renderer
 {
-	private int x = 20;
-	private int y = 40;
-	private int[] vector;
+	protected int x = 20;
+	protected int y = 40;
+	protected int[] vector;
 	
 	public SampleRenderer()
 	{

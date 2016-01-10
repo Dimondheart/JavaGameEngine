@@ -84,7 +84,7 @@ public class GameSession
 		gfx.start();
 		sound.start();
 		// Start the program timer
-		ProgramTimer.setup();
+		ProgramClock.setup();
 		// Go to the main loop
 		play();
 	}

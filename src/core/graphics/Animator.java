@@ -105,14 +105,14 @@ public abstract class Animator implements Renderer
 	protected void setFrame(int frame)
 	{
 		currFrame = frame;
-		frameStart = core.ProgramTimer.getTime();
+		frameStart = core.ProgramClock.getTime();
 	}
 	
 	/** Selects and updates what the next rendered frame is. */
 	private void selectFrame()
 	{
 		// Increment the animation frame
-		if (core.ProgramTimer.getTime() - frameStart >= interval)
+		if (core.ProgramClock.getTime() - frameStart >= interval)
 		{
 			setFrame(currFrame+1);
 		}

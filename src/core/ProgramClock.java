@@ -1,10 +1,10 @@
 package core;
 
-/** A timing class used to pause time-based events when the game is
+/** A class used to pause time-based events when the game is
  * completely paused (i.e. InputManager is paused).
  * @author Bryan Bettis
  */
-public class ProgramTimer
+public class ProgramClock
 {
 	/** Used to make sure this timer is only initialized once. */
 	private static boolean isSetup = false;
