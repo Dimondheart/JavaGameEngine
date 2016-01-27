@@ -53,7 +53,11 @@ public class SamplePlay extends SavableGameState
 		entityLayers.addRenderer(sr_2, 0);
 		GfxManager.getMainLayerSet().addRenderer(entityLayers, 4);
 		// Display the FPS on the highest layer
-		fpsRenderer.showOnLayer(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
+		int layer =
+				(int) core.DeveloperSettings.getSetting("NUM_MAIN_LAYERS")
+				- 1
+				;
+		fpsRenderer.showOnLayer(layer);
 		mainMenuBtn = new Button(150,0,100,20,"Main Menu");
 		mainMenuBtn.setText("Main Menu");
 		ls = new LayerSetTester();

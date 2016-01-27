@@ -14,10 +14,6 @@ public class GfxManager implements core.CustomRunnable
 {
 	/** The default interval for rendering. */
 	public static final int DEFAULT_RENDER_INTERVAL = 16;
-	/** Default dimensions for a new window. */
-	public static final Dimension DEF_DIMS = new Dimension(480,270);
-	/** Number of layers to create for the main window. */
-	public static final int NUM_MAIN_LAYERS = 10;
 	
 	/** The main window frame. */
 	private static JFrame mainWin;
@@ -40,7 +36,13 @@ public class GfxManager implements core.CustomRunnable
 		// Setup the main window
 		mainWin = new JFrame("Unnamed Java Game Engine");
 		// Setup the main layer container
-		mainLayers = new MainLayerSetContainer(mainWin, DEF_DIMS, NUM_MAIN_LAYERS);
+		Integer numMainLayers =
+				(Integer) core.DeveloperSettings.getSetting("NUM_MAIN_LAYERS");
+		Dimension mainWinDims =
+				(Dimension) core.DeveloperSettings.getSetting(
+						"INIT_MAIN_WIN_DIMS"
+						);
+		mainLayers = new MainLayerSetContainer(mainWin, mainWinDims, numMainLayers);
 		mainWin.add(mainLayers);
 		// Create the graphics resource manager
 		grm = new GraphicsResources();

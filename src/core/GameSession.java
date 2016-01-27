@@ -76,7 +76,7 @@ public class GameSession
 		return URI_SCHEME.substring(0);
 	}
 	
-	/** Start all subsystems then begins the main game loop. */
+	/** Start all subsystems then begin playing. */
 	public void start()
 	{
 		// Start the subsystems
@@ -89,9 +89,7 @@ public class GameSession
 		play();
 	}
 
-	/** The main game loop. Calls the game state manager to update the current
-	 * game state.
-	 */
+	/** Starts playing the game. */
 	private void play()
 	{
 		while(true)

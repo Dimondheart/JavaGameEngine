@@ -13,17 +13,25 @@ public class GameStateManager
 	/** A clock for timing different things in a game state. */
 	protected static core.Clock clock;
 	
+	/** Used by the cycle method to limit debug output when a game state
+	 * is not currently set.
+	 */
+	private boolean noGSSetIndicated = false;
+	
+	/** Basic constructor. */
 	public GameStateManager()
 	{
 		// TODO make a way to specify this in the game or a game sub-package
 		this(game.gamestate.MainMenuTest.class);
 	}
 	
+	/** TODO add javadoc. */
 	public GameStateManager(Class<? extends GameState> initialState)
 	{
 		this(initialState, new ConcurrentHashMap<String, Object>());
 	}
 	
+	/** TODO add javadoc. */
 	public GameStateManager(Class<? extends GameState> initialState, ConcurrentHashMap<String, Object> args)
 	{
 		setNewGameState(initialState, args);
@@ -51,7 +59,11 @@ public class GameStateManager
 		catch (NullPointerException e)
 		{
 			// The current game state is not set
-			System.out.println("No game state set.");
+			if (!noGSSetIndicated)
+			{
+				noGSSetIndicated = true;
+				System.out.println("No game state set.");
+			}
 		}
 	}
 	
@@ -83,6 +95,7 @@ public class GameStateManager
 		currGS.cleanup();
 		core.userinput.InputManager.clear();
 		currGS = null;
+		noGSSetIndicated = false;
 	}
 	
 	/** Cleans up any previous game state and creates then sets up the

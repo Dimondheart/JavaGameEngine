@@ -18,7 +18,11 @@ public class CtrlRenderer implements PrimaryRenderer
 	{
 		displayText = text;
 		// Show it on the highest layer
-		showOnLayer(core.graphics.GfxManager.NUM_MAIN_LAYERS-1);
+		int topLayer =
+				(int) core.DeveloperSettings.getSetting("NUM_MAIN_LAYERS")
+				- 1
+				;
+		showOnLayer(topLayer);
 	}
 	
 	@Override
