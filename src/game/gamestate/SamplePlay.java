@@ -83,7 +83,15 @@ public class SamplePlay extends SavableGameState
 	public void cycleState()
 	{
 		ct.update();
-		if (InputManager.getKB().justPressed(VK_ESCAPE))
+		if (InputManager.getKB().isDown(VK_SPACE))
+		{
+			SoundManager.stopAllSFX();
+		}
+		if (!InputManager.getWin().isActive())
+		{
+			paused = true;
+		}
+		else if (InputManager.getKB().justPressed(VK_ESCAPE))
 		{
 			paused = !paused;
 			if (paused)

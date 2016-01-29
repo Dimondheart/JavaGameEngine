@@ -23,7 +23,7 @@ public class InputManager implements core.CustomRunnable
 	/** The mouse. */
 	private static Mouse mouse;
 	/** The main window event manager. */
-	private static WindowMonitor win;
+	private static WindowMonitor window;
 	
 	/** Thread for this object. */
 	private Thread thread;
@@ -41,17 +41,17 @@ public class InputManager implements core.CustomRunnable
 	}
 	
 	/** Normal input setup.
-	 * @param window the window to monitor
+	 * @param win the main window
 	 */
-	public InputManager(Window window)
+	public InputManager(Window win)
 	{
 		System.out.println("Setting Up User Input System...");
 		// Setup the event queue
 		queue = new ConcurrentLinkedDeque<InputManagerEvent>();
 		// Setup the input devices
-		keyboard = new Keyboard(window);
-		mouse = new Mouse(window);
-		win = new WindowMonitor(window);
+		keyboard = new Keyboard(win);
+		mouse = new Mouse(win);
+		window = new WindowMonitor(win);
 		// The thread manager
 		clock = new core.ThreadClock(8);
 	}
@@ -132,6 +132,14 @@ public class InputManager implements core.CustomRunnable
 	public static Mouse getMS()
 	{
 		return mouse;
+	}
+	
+	/** Gets the object that monitors the main window.
+	 * @return the object that manages/monitors the main window
+	 */
+	public static WindowMonitor getWin()
+	{
+		return window;
 	}
 	
 	/** Update processed state information for all input devices. */
@@ -265,7 +273,7 @@ public class InputManager implements core.CustomRunnable
 	{
 		keyboard.poll();
 		mouse.poll();
-		win.poll();
+		window.poll();
 	}
 	
 	/** Does the clearing of input devices, etc. */
@@ -274,7 +282,7 @@ public class InputManager implements core.CustomRunnable
 		queue.clear();
 		keyboard.clear();
 		mouse.clear();
-		win.clear();
+		window.clear();
 	}
 	
 	/** Pause the game. */

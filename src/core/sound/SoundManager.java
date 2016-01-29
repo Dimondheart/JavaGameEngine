@@ -12,10 +12,6 @@ public class SoundManager implements core.CustomRunnable
 {
 	/** Maximum number of sound effects to play at once. */
 	private static final int MAX_PLAYING_SFX = 50;
-	/** Thread for this object. */
-	private Thread thread;
-	/** Thread controller for this object. */
-	private core.ThreadClock clock;
 	/** Manages sound data loaded from files. */
 	private static SoundResources srm;
 	/** Queue used only for sound effects. */
@@ -24,10 +20,16 @@ public class SoundManager implements core.CustomRunnable
 	private static volatile ConcurrentLinkedDeque<BaseSoundEvent> genQueue;
 	/** Currently playing sound effects. */
 	private static ConcurrentLinkedQueue<SFX> playingSFX;
-	/** Queued BGM tracks. */
+	/** Current BGM track. */
 	private static BGM currTrack;
-	/** The sound volume settings. */
-	public static Volume volume;
+	/** Thread for this object. */
+	private Thread thread;
+	/** Thread controller for this object. */
+	private core.ThreadClock clock;
+	/** The last volume settings used to update the volume of playing
+	 * sounds.
+	 */
+	private int[] currVolLvls;
 	
 	/** Different ways to transition BGM.  Currently only IMMEDIATE is
 	 * implemented.
@@ -40,6 +42,16 @@ public class SoundManager implements core.CustomRunnable
 		CROSSOVER  // Fade out old track as the new one is faded in (WIP)
 	}
 	
+	/** The different volume settings for the sound system.
+	 * @author Bryan Bettis
+	 */
+	public enum VolumeSetting
+	{
+		MASTER,
+		SFX,
+		BGM
+	}
+	
 	/** Normal sound manager setup. */
 	public SoundManager()
 	{
@@ -49,9 +61,15 @@ public class SoundManager implements core.CustomRunnable
 		sfxQueue = new ConcurrentLinkedDeque<SFXEvent>();
 		genQueue = new ConcurrentLinkedDeque<BaseSoundEvent>();
 		playingSFX = new ConcurrentLinkedQueue<SFX>();
-		volume = new Volume();
 		// Setup thread controller
 		clock = new core.ThreadClock(10);
+		currVolLvls = new int[3];
+		currVolLvls[0] = 
+				(int) core.DynamicSettings.getSetting("MASTER_VOLUME");
+		currVolLvls[1] = 
+				(int) core.DynamicSettings.getSetting("BGM_VOLUME");
+		currVolLvls[2] = 
+				(int) core.DynamicSettings.getSetting("SFX_VOLUME");
 	}
 	
 	@Override
@@ -98,8 +116,8 @@ public class SoundManager implements core.CustomRunnable
 					sfxQueue.remove(e);
 				}
 			}
-			// Start as many new sound effects as possible
-			while (playingSFX.size() < MAX_PLAYING_SFX)
+			// Start a few new sound effects
+			for (int i = 0; i < 7 && playingSFX.size() < MAX_PLAYING_SFX; ++i)
 			{
 				// Get the next sound effect
 				SFXEvent nextSFX = sfxQueue.poll();
@@ -111,11 +129,16 @@ public class SoundManager implements core.CustomRunnable
 				// Play the next sound effect
 				doPlaySFX(nextSFX);
 			}
-			// Do as many general events as possible
-			while (genQueue.size() > 0)
+			// Do a few general events
+			for (int i = 0; i < 5; ++i)
 			{
 				// Get the next general event
 				BaseSoundEvent nextGen = genQueue.poll();
+				// Stop if no gen events left
+				if (nextGen == null)
+				{
+					break;
+				}
 				// Get the class of the next event
 				Class<? extends BaseSoundEvent> c = nextGen.getClass();
 				// Change BGM
@@ -133,11 +156,17 @@ public class SoundManager implements core.CustomRunnable
 				{
 					doStopBGM((StopBGMEvent) nextGen);
 				}
+				// Stop all sfx
+				else if (c == StopAllSFXEvent.class)
+				{
+					doStopAllSFX((StopAllSFXEvent) nextGen);
+				}
 				// Unknown/unused general event
 				else
 				{
 					System.out.println(
-							"Non-General event on the general sound event queue: "
+							"WARNING: Non-General/Unused event on the "
+							+ "general sound event queue: "
 									+ c
 							);
 				}
@@ -165,7 +194,7 @@ public class SoundManager implements core.CustomRunnable
 	 * @param setting the volume setting to change
 	 * @param newVolume the new volume setting
 	 */
-	public static void changeVolume(Volume.VolumeSetting setting, int newVolume)
+	public static void changeVolume(VolumeSetting setting, int newVolume)
 	{
 		queueGenEvent(new VolumeEvent(setting, newVolume));
 	}
@@ -194,6 +223,12 @@ public class SoundManager implements core.CustomRunnable
 		stopBGM(BGMTransition.IMMEDIATE);
 	}
 	
+	/** Stop all sound effects and clear any queued ones. */
+	public static void stopAllSFX()
+	{
+		queueGenEventUnlessPrev(new StopAllSFXEvent());
+	}
+	
 	/** Add the specified event to the sound effect queue.
 	 * @param e the main.sound.SFXEvent object
 	 */
@@ -203,11 +238,33 @@ public class SoundManager implements core.CustomRunnable
 	}
 	
 	/** Add the specified event to the general queue.
-	 * @param e the main.sound.SoundEvent object
+	 * @param e the main.sound.BaseSoundEvent object
 	 */
 	private static synchronized void queueGenEvent(BaseSoundEvent e)
 	{
 		genQueue.add(e);
+	}
+	
+	/** Add the specified event to the general queue, unless it is the same
+	 * type as the previous event.
+	 * @param e the main.sound.BaseSoundEvent object
+	 */
+	private static synchronized void queueGenEventUnlessPrev(BaseSoundEvent e)
+	{
+		try
+		{
+			// Check if the previous queued event is the same type
+			if (genQueue.getLast().getClass().equals(e.getClass()))
+			{
+				return;
+			}
+		}
+		// Queue is empty, so yes this event should still be queued
+		catch (java.util.NoSuchElementException ex)
+		{
+		}
+		// Queue the event
+		queueGenEvent(e);
 	}
 	
 	/** Play the specified sound effect.
@@ -215,7 +272,9 @@ public class SoundManager implements core.CustomRunnable
 	 */
 	private void doPlaySFX(SFXEvent sfx)
 	{
-		playingSFX.add(new SFX(sfx));
+		SFX newSFX = new SFX(sfx);
+		newSFX.play();
+		playingSFX.add(newSFX);
 	}
 	
 	/** Actually change the volume setting.
@@ -223,14 +282,23 @@ public class SoundManager implements core.CustomRunnable
 	 */
 	private void doChangeVolume(VolumeEvent ve)
 	{
-		if (volume.getVolume(ve.getSetting()) != ve.getNewVolume())
+		String settingName = "";
+		switch (ve.getSetting())
 		{
-			volume.setVolume(ve.getSetting(), ve.getNewVolume());
-			for (SFX sfx : playingSFX)
-			{
-				sfx.adjustVolume();
-			}
+			case BGM:
+				settingName = "BGM_VOLUME";
+				break;
+			case MASTER:
+				settingName = "MASTER_VOLUME";
+				break;
+			case SFX:
+				settingName = "SFX_VOLUME";
+				break;
+			default:
+				return;
 		}
+		core.DynamicSettings.setSetting(settingName, ve.getNewVolume());
+		// TODO actually update sounds here? Or more to run()
 	}
 	
 	/** Actually play/change the BGM track.
@@ -252,5 +320,48 @@ public class SoundManager implements core.CustomRunnable
 	{
 		currTrack.stop();
 		currTrack = null;
+	}
+	
+	/** Stops all currently playing sound effects and clears any queued
+	 * ones.
+	 * @param se the stop all sound effects event object
+	 */
+	private void doStopAllSFX(StopAllSFXEvent se)
+	{
+		sfxQueue.clear();
+		for (SFX sfx : playingSFX)
+		{
+			sfx.stop();
+			
+		}
+		playingSFX.clear();
+	}
+	
+	/** Checks if the volume settings have been changed since they were last
+	 * used to update the volumes of playing sounds.
+	 * @return true if the dynamic volume settings have changed since the
+	 * 		the last time they were used to update playing sounds' volumes
+	 */
+	private boolean hasVolumeChanged()
+	{
+		int[] settings = {0,0,0};
+		settings[0] = (int) core.DynamicSettings.getSetting(
+				"MASTER_VOLUME"
+				);
+		settings[1] = (int) core.DynamicSettings.getSetting(
+				"BGM_VOLUME"
+				);
+		settings[2] = (int) core.DynamicSettings.getSetting(
+				"SFX_VOLUME"
+				);
+		if (
+				settings[0] != currVolLvls[0]
+				|| settings[1] != currVolLvls[1]
+				|| settings[2] != currVolLvls[2]
+			)
+		{
+			return true;
+		}
+		return false;
 	}
 }

@@ -28,6 +28,14 @@ public class WindowMonitor implements InputDevice, WindowListener, ComponentList
 		myWin.addComponentListener(this);
 	}
 	
+	/** Checks if this window is active/has input focus.
+	 * @return true if window is in focus, false otherwise
+	 */
+	public boolean isActive()
+	{
+		return myWin.isActive();
+	}
+	
 	@Override
 	public void poll()
 	{

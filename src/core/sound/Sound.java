@@ -21,8 +21,6 @@ abstract class Sound implements LineListener
 	protected AudioInputStream ais;
 	/** The clip for this sound. */
 	protected Clip clip;
-	/** The volume settings this sound will use. */
-	protected volatile Volume volume;
 	/** If this sound has started playing yet. */
 	protected boolean started = false;
 	/** The volume control for this sound. */
@@ -120,11 +118,10 @@ abstract class Sound implements LineListener
 		}
 		// Play the sound
 		isDone = false;
-		play();
 	}
 	
 	/** Start playing this sound. */
-	private synchronized void play()
+	public synchronized void play()
 	{
 		// Start the clip
 		clip.start();
@@ -138,9 +135,13 @@ abstract class Sound implements LineListener
 		return isDone;
 	}
 	
-	/** Adjust the volume of this sound. */
-	public synchronized void adjustVolume()
+	/** Completely stops this sound effect. After calling this method, the
+	 * current sound effect cannot be restarted.
+	 */
+	public synchronized void stop()
 	{
+		clip.stop();
+		cleanup();
 	}
 	
 	@Override

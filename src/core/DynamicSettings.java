@@ -33,6 +33,12 @@ public class DynamicSettings
 		// TODO load from a file, if fails then recreate settings
 		// How the core engine systems should utilize threading
 		settings.put("ENGINE_THREADING", ThreadingSetting.OPTIMIZE);
+		// Master volume setting %
+		settings.put("MASTER_VOLUME", 100);
+		// Background music volume setting %
+		settings.put("BGM_VOLUME", 100);
+		// Sound effects volume setting %
+		settings.put("SFX_VOLUME", 100);
 	}
 
 	/** Gets the specified dynamic setting, or returns null if the

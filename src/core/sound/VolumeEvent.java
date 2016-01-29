@@ -6,7 +6,7 @@ package core.sound;
 class VolumeEvent extends BaseSoundEvent
 {
 	/** What volume setting is being changed. */
-	private Volume.VolumeSetting setting;
+	private SoundManager.VolumeSetting setting;
 	/** The new value for the volume level. */
 	private int newVolume = 100;
 	
@@ -14,7 +14,7 @@ class VolumeEvent extends BaseSoundEvent
 	 * @param setting the setting to change
 	 * @param newVolume the new value of that setting
 	 */
-	public VolumeEvent(Volume.VolumeSetting setting, int newVolume)
+	public VolumeEvent(SoundManager.VolumeSetting setting, int newVolume)
 	{
 		this.setting = setting;
 		this.newVolume = newVolume;
@@ -23,7 +23,7 @@ class VolumeEvent extends BaseSoundEvent
 	/** Gets the setting to change.
 	 * @return the Volume.VolumeSetting to change
 	 */
-	public Volume.VolumeSetting getSetting()
+	public SoundManager.VolumeSetting getSetting()
 	{
 		return setting;
 	}

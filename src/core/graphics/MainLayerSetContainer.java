@@ -52,6 +52,7 @@ public class MainLayerSetContainer extends JComponent
 	@Override
 	public synchronized void paintComponent(Graphics g)
 	{
+		// TODO add a buffer or buffer flipping strategy
 		Graphics2D g2 = (Graphics2D)g;
 		// Clear the graphics context
 		g2.setBackground(Color.black);
