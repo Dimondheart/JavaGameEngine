@@ -1,6 +1,7 @@
 package core;
 
-/** A 
+/** A subsystem is a core system of this game engine that handles related
+ * tasks and information, such as graphics, sounds, or user inputs.
  * @author Bryan Bettis
  * @see Runnable
  */
