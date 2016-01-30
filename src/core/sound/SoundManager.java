@@ -8,7 +8,7 @@ import core.userinput.InputManager;
 /** Manages the sound system.
 * @author Bryan Bettis
 */
-public class SoundManager implements core.CustomRunnable
+public class SoundManager extends core.Subsystem
 {
 	/** Maximum number of sound effects to play at once. */
 	private static final int MAX_PLAYING_SFX = 50;
@@ -22,10 +22,6 @@ public class SoundManager implements core.CustomRunnable
 	private static ConcurrentLinkedQueue<SFX> playingSFX;
 	/** Current BGM track. */
 	private static BGM currTrack;
-	/** Thread for this object. */
-	private Thread thread;
-	/** Thread controller for this object. */
-	private core.ThreadClock clock;
 	/** The last volume settings used to update the volume of playing
 	 * sounds.
 	 */
@@ -55,14 +51,13 @@ public class SoundManager implements core.CustomRunnable
 	/** Normal sound manager setup. */
 	public SoundManager()
 	{
+		super(10, "Sound Manager Event Queue");
 		System.out.println("Setting Up Sound System...");
 		srm = new SoundResources();
 		// Setup queues
 		sfxQueue = new ConcurrentLinkedDeque<SFXEvent>();
 		genQueue = new ConcurrentLinkedDeque<BaseSoundEvent>();
 		playingSFX = new ConcurrentLinkedQueue<SFX>();
-		// Setup thread controller
-		clock = new core.ThreadClock(10);
 		currVolLvls = new int[3];
 		currVolLvls[0] = 
 				(int) core.DynamicSettings.getSetting("MASTER_VOLUME");
@@ -73,105 +68,99 @@ public class SoundManager implements core.CustomRunnable
 	}
 	
 	@Override
-	public void start()
+	public void startSystem()
 	{
 		System.out.println("Starting Sound System...");
-		thread = new Thread(this);
-		thread.setName("Sound Manager Event Queue");
-		thread.start();
 	}
 
 	@Override
-	public void run()
+	public boolean runCycle()
 	{
-		while (true)
+		// Pause/resume the current BGM based on program state
+		if (currTrack != null)
 		{
-			clock.nextCycle();
-			// Pause/resume the current BGM based on program state
-			if (currTrack != null)
+			if (InputManager.getState() == InputManager.State.PAUSED)
 			{
-				if (InputManager.getState() == InputManager.State.PAUSED)
-				{
-					currTrack.stop();
-					continue;
-				}
-				else
-				{
-					currTrack.resume();
-				}
+				currTrack.stop();
+				return true;
 			}
-			// Clear any finished sound effects
-			for (SFX sfx : playingSFX)
+			else
 			{
-				if (sfx.isDone())
-				{
-					playingSFX.remove(sfx);
-				}
-			}
-			// Clear any "stale" sound effects
-			for (SFXEvent e : sfxQueue)
-			{
-				if (e.isStale())
-				{
-					sfxQueue.remove(e);
-				}
-			}
-			// Start a few new sound effects
-			for (int i = 0; i < 7 && playingSFX.size() < MAX_PLAYING_SFX; ++i)
-			{
-				// Get the next sound effect
-				SFXEvent nextSFX = sfxQueue.poll();
-				// No more sfx events
-				if (nextSFX == null)
-				{
-					break;
-				}
-				// Play the next sound effect
-				doPlaySFX(nextSFX);
-			}
-			// Do a few general events
-			for (int i = 0; i < 5; ++i)
-			{
-				// Get the next general event
-				BaseSoundEvent nextGen = genQueue.poll();
-				// Stop if no gen events left
-				if (nextGen == null)
-				{
-					break;
-				}
-				// Get the class of the next event
-				Class<? extends BaseSoundEvent> c = nextGen.getClass();
-				// Change BGM
-				if (c == BGMEvent.class)
-				{
-					doPlayBGM((BGMEvent) nextGen);
-				}
-				// Change volume settings
-				else if (c == VolumeEvent.class)
-				{
-					doChangeVolume((VolumeEvent) nextGen);
-				}
-				// Stop current BGM
-				else if (c == StopBGMEvent.class)
-				{
-					doStopBGM((StopBGMEvent) nextGen);
-				}
-				// Stop all sfx
-				else if (c == StopAllSFXEvent.class)
-				{
-					doStopAllSFX((StopAllSFXEvent) nextGen);
-				}
-				// Unknown/unused general event
-				else
-				{
-					System.out.println(
-							"WARNING: Non-General/Unused event on the "
-							+ "general sound event queue: "
-									+ c
-							);
-				}
+				currTrack.resume();
 			}
 		}
+		// Clear any finished sound effects
+		for (SFX sfx : playingSFX)
+		{
+			if (sfx.isDone())
+			{
+				playingSFX.remove(sfx);
+			}
+		}
+		// Clear any "stale" sound effects
+		for (SFXEvent e : sfxQueue)
+		{
+			if (e.isStale())
+			{
+				sfxQueue.remove(e);
+			}
+		}
+		// Start a few new sound effects
+		for (int i = 0; i < 7 && playingSFX.size() < MAX_PLAYING_SFX; ++i)
+		{
+			// Get the next sound effect
+			SFXEvent nextSFX = sfxQueue.poll();
+			// No more sfx events
+			if (nextSFX == null)
+			{
+				break;
+			}
+			// Play the next sound effect
+			doPlaySFX(nextSFX);
+		}
+		// Do a few general events
+		for (int i = 0; i < 5; ++i)
+		{
+			// Get the next general event
+			BaseSoundEvent nextGen = genQueue.poll();
+			// Stop if no gen events left
+			if (nextGen == null)
+			{
+				break;
+			}
+			// Get the class of the next event
+			Class<? extends BaseSoundEvent> c = nextGen.getClass();
+			// Change BGM
+			if (c == BGMEvent.class)
+			{
+				doPlayBGM((BGMEvent) nextGen);
+			}
+			// Change volume settings
+			else if (c == VolumeEvent.class)
+			{
+				doChangeVolume((VolumeEvent) nextGen);
+			}
+			// Stop current BGM
+			else if (c == StopBGMEvent.class)
+			{
+				doStopBGM((StopBGMEvent) nextGen);
+			}
+			// Stop all sfx
+			else if (c == StopAllSFXEvent.class)
+			{
+				doStopAllSFX((StopAllSFXEvent) nextGen);
+			}
+			// Unknown/unused general event
+			else
+			{
+				System.out.println(
+						"WARNING: Non-General/Unused event on the "
+						+ "general sound event queue: "
+								+ c
+						);
+			}
+		}
+		return true;
 	}
 	
 	/** TODO fill this out

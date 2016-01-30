@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 /** Handles the rendering thread.
  * @author Bryan Bettis
  */
-public class GfxManager implements core.CustomRunnable
+public class GfxManager extends core.Subsystem
 {
 	/** The default interval for rendering. */
 	public static final int DEFAULT_RENDER_INTERVAL = 16;
@@ -24,14 +24,10 @@ public class GfxManager implements core.CustomRunnable
 	/** The current average FPS. */
 	private static double FPS;
 	
-	/** Thread for this system. */
-	private Thread thread;
-	/** Thread manager. */
-	private core.ThreadClock clock;
-	
 	/** Normal graphics renderer setup. */
 	public GfxManager()
 	{
+		super(DEFAULT_RENDER_INTERVAL, "Graphics Manager Render Loop");
 		System.out.println("Setting Up Graphics System...");
 		// Setup the main window
 		mainWin = new JFrame("Unnamed Java Game Engine");
@@ -46,30 +42,22 @@ public class GfxManager implements core.CustomRunnable
 		mainWin.add(mainLayers);
 		// Create the graphics resource manager
 		grm = new GraphicsResources();
-		// Run at 62.5 FPS
-		clock = new core.ThreadClock(DEFAULT_RENDER_INTERVAL);
 	}
 	
 	@Override
-	public void start()
+	public void startSystem()
 	{
 		System.out.println("Starting Graphics System...");
 		mainWin.pack();
 		mainWin.setVisible(true);
-		thread = new Thread(this);
-		thread.setName("Graphics Manager Render Loop");
-		thread.start();
 	}
 
 	@Override
-	public void run()
+	public boolean runCycle()
 	{
-		while (true)
-		{
-			FPS = clock.getAvgCPS();
-			mainWin.repaint(16);
-			clock.nextCycle();
-		}
+		FPS = clock.getAvgCPS();
+		mainWin.repaint(16);
+		return true;
 	}
 	
 	/** Get the average FPS.

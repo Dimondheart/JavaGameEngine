@@ -12,7 +12,7 @@ import core.userinput.inputdevice.WindowMonitor;
 /** Manages all input devices (keyboard, etc.) for the main window.
  * @author Bryan Bettis
  */
-public class InputManager implements core.CustomRunnable
+public class InputManager extends core.Subsystem
 {
 	/** Event queue. */
 	private static volatile ConcurrentLinkedDeque<InputManagerEvent> queue;
@@ -24,11 +24,6 @@ public class InputManager implements core.CustomRunnable
 	private static Mouse mouse;
 	/** The main window event manager. */
 	private static WindowMonitor window;
-	
-	/** Thread for this object. */
-	private Thread thread;
-	/** Thread controller for this object. */
-	private core.ThreadClock clock;
 	
 	/** Different basic states the game can be in.
 	 * @author Bryan Bettis
@@ -45,6 +40,7 @@ public class InputManager implements core.CustomRunnable
 	 */
 	public InputManager(Window win)
 	{
+		super(8, "Input Manager Event Queue");
 		System.out.println("Setting Up User Input System...");
 		// Setup the event queue
 		queue = new ConcurrentLinkedDeque<InputManagerEvent>();
@@ -52,62 +48,54 @@ public class InputManager implements core.CustomRunnable
 		keyboard = new Keyboard(win);
 		mouse = new Mouse(win);
 		window = new WindowMonitor(win);
-		// The thread manager
-		clock = new core.ThreadClock(8);
 	}
 	
 	@Override
-	public void start()
+	public void startSystem()
 	{
 		System.out.println("Starting User Input System...");
-		thread = new Thread(this);
-		thread.setName("Input Manager Event Queue");
-		thread.start();
 	}
 	
 	@Override
-	public void run()
+	public boolean runCycle()
 	{
-		while(true)
+		// Stop processing new events if quitting soon
+		if (getState() == State.QUIT)
 		{
-			clock.nextCycle();
-			// Stop processing new events if quitting soon
-			if (getState() == State.QUIT)
+			return false;
+		}
+		// Get the next event
+		InputManagerEvent next = queue.poll();
+		// If there is a next event, do it
+		if (next != null)
+		{
+			// Do the event event
+			switch(next.getType())
 			{
-				break;
-			}
-			// Get the next event
-			InputManagerEvent next = queue.poll();
-			// If there is a next event, do it
-			if (next != null)
-			{
-				// Do the event event
-				switch(next.getType())
-				{
-					case POLL:
-						doPoll();
-						break;
-					case CLEAR:
-						doClear();
-						break;
-					case PAUSE:
-						doPause();
-						break;
-					case RESUME:
-						doResume();
-						break;
-					case QUIT:
-						doQuit();
-						break;
-					default:
-						System.out.println(
-								"Unrecognized InputManagerEvent Type: " +
-										next.getType()
-								);
-						break;
-				}
+				case POLL:
+					doPoll();
+					break;
+				case CLEAR:
+					doClear();
+					break;
+				case PAUSE:
+					doPause();
+					break;
+				case RESUME:
+					doResume();
+					break;
+				case QUIT:
+					doQuit();
+					break;
+				default:
+					System.out.println(
+							"Unrecognized InputManagerEvent Type: " +
+									next.getType()
+							);
+					break;
 			}
 		}
+		return true;
 	}
 	
 	/** Get the current general state of the game.
