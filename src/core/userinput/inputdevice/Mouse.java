@@ -2,40 +2,56 @@ package core.userinput.inputdevice;
 
 import java.awt.Window;
 import java.awt.event.*;
+import java.util.Arrays;
+
+import core.DynamicSettings;
 
 /** Handles mouse input events.
  * @author Bryan Bettis
  */
 public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 {
-	/** Number of key values to be used. */
-	private static final int NUM_BTNS = 4;
+	/** Number of button values to use. */
+	private static final int NUM_BTNS = 10;
+		
+	/** Raw/Unprocessed state updates to the mouse buttons. */
+	private volatile boolean[] rawStates;
+	/** Processed button states. */
+	private volatile BtnState[] processedStates;
+	/** The change in the scroll wheel between polls. */
+	private volatile int rawScrollChange = 0;
+	/** The change in the scroll wheel, updated each poll. */
+	private volatile int processedScrollChange = 0;
 	
 	/** States each button can be in.
 	 * @author Bryan Bettis
 	 */
 	private enum BtnState
-		{
-			RELEASED,  // Not down
-			PRESSED,  // Down, but not first pressed this frame
-			ONCE,  // Down for the first time
-			CLICKED  // Button was pressed, then first released this frame
-		}
-		
-	/** Current state of the mouse. */
-	private static volatile boolean[] rawStates = null;
+	{
+		/** When a button is not depressed and was not recently released. */
+		RELEASED,
+		/** When a button has been depressed for a while (when depressed a 
+		 * button will first go to ONCE, then shortly after this state).
+		 */
+		PRESSED,
+		/** When a button was recently depressed (shortly after entering this
+		 * state a button will change to PRESSED).
+		 */
+		ONCE,
+		/** When a button was recently released (shortly after entering this
+		 * state a button will change to RELEASED).
+		 */
+		CLICKED
+	}
 	
-	/** Polled mouse state. */
-	private static volatile BtnState[] processedStates = null;
-	
-	/** Constructor, takes a reference to the frame it should be added to.
+	/** Constructor, takes a reference to the window/frame it should be added to.
 	 * @param win the window to listen to
 	 */
 	public Mouse(Window win)
 	{
+		clear();
 		win.addMouseListener(this);
 		win.addMouseWheelListener(this);
-		clear();
 	}
 	
 	/** Checks if the specified button is pressed down.
@@ -46,8 +62,8 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	public boolean isDown(int btnCode)
 	{
 		return (
-				justPressed(btnCode) ||
-				processedStates[btnCode] == BtnState.PRESSED
+				processedStates[btnCode].equals(BtnState.PRESSED)
+				|| justPressed(btnCode)
 				);
 	}
 	
@@ -59,7 +75,7 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	 */
 	public boolean justPressed(int btnCode)
 	{
-		return (processedStates[btnCode] == BtnState.ONCE);
+		return (processedStates[btnCode].equals(BtnState.ONCE));
 	}
 	
 	/** Checks if the specified button was clicked (pressed and released)
@@ -70,35 +86,54 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	 */
 	public boolean justClicked(int btnCode)
 	{
-		return (processedStates[btnCode] == BtnState.CLICKED);
+		return (processedStates[btnCode].equals(BtnState.CLICKED));
+	}
+	
+	/** Get how much the mouse wheel changed between the two previous polls
+	 * (does not change between polls, it is updated at each poll).
+	 * @return the number of scroll wheel ticks moved
+	 */
+	public int getWheelChange()
+	{
+		return processedScrollChange;
 	}
 	
 	@Override
 	public synchronized void poll()
 	{
-		// For all used button IDs
+		// Update the scroll wheel
+		if ((boolean) DynamicSettings.getSetting("INVERT_SCROLL_WHEEL"))
+		{
+			processedScrollChange = -rawScrollChange;
+		}
+		else
+		{
+			processedScrollChange = rawScrollChange;
+		}
+		rawScrollChange = 0;
+		// Update button processed values
 		for (int i = 0; i < NUM_BTNS; ++i)
 		{
-			// Set the button state if it has been pressed
+			// Button is currently depressed
 			if (rawStates[i])
 			{
-				// If key is down not but not the previous poll, set to once
-				if (processedStates[i] == BtnState.RELEASED)
+				// Key was just pressed
+				if (processedStates[i].equals(BtnState.RELEASED))
 				{
 					processedStates[i] = BtnState.ONCE;
 				}
-				// Otherwise set to pressed
+				// Key has been pressed for a while
 				else
 				{
 					processedStates[i] = BtnState.PRESSED;
 				}
 			}
-			// When the button has been "clicked" (first released)
-			else if (processedStates[i] == BtnState.PRESSED)
+			// The button has been "clicked" (just released)
+			else if (processedStates[i].equals(BtnState.PRESSED))
 			{
 				processedStates[i] = BtnState.CLICKED;
 			}
-			// Otherwise set the key state to released
+			// Otherwise key is released
 			else
 			{
 				processedStates[i] = BtnState.RELEASED;
@@ -114,10 +149,7 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 		// Key state beyond just pressed/released
 		processedStates = new BtnState[NUM_BTNS];
 		// Set all keys as released
-		for (int i = 0; i < NUM_BTNS; ++i)
-		{
-			processedStates[i] = BtnState.RELEASED;
-		}
+		Arrays.fill(processedStates, BtnState.RELEASED);
 	}
 	
 	@Override
@@ -143,12 +175,13 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	{
 		// Get the btn's integer ID
 		int btnCode = e.getButton();
-		// Check if btn is in range of used btns
-		if (0 <= btnCode && btnCode < NUM_BTNS)
+		// Ignore button IDs outside our used range
+		if (btnCode > NUM_BTNS || btnCode < 0)
 		{
-			// Current btn set to pressed
-			rawStates[btnCode] = true;
+			return;
 		}
+		// Update the button
+		rawStates[btnCode] = true;
 	}
 	
 	@Override
@@ -157,16 +190,17 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 		// Get the btn's integer ID
 		int btnCode = e.getButton();
 		// Check if btn is in range of used btns
-		if (0 <= btnCode && btnCode < NUM_BTNS)
+		if (btnCode > NUM_BTNS || btnCode < 0)
 		{
-			// Current btn set to released
-			rawStates[btnCode] = false;
+			return;
 		}
+		// Update the button
+		rawStates[btnCode] = false;
 	}
 	
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e)
 	{
-		// TODO Implement mouse wheel tracking
+		rawScrollChange += e.getWheelRotation();
 	}
 }

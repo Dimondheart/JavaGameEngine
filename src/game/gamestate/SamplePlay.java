@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.ConcurrentHashMap;
 
+import core.DeveloperSettings;
+import core.DynamicSettings;
 import core.gamestate.SavableGameState;
 import core.graphics.GfxManager;
 import core.graphics.LayerSet;
@@ -52,11 +54,13 @@ public class SamplePlay extends SavableGameState
 		entityLayers.addRenderer(sr, 0);
 		entityLayers.addRenderer(sr_2, 0);
 		GfxManager.getMainLayerSet().addRenderer(entityLayers, 4);
-		// Display the FPS on the highest layer
+		// The highest layer
 		int layer =
-				(int) core.DeveloperSettings.getSetting("NUM_MAIN_LAYERS")
+				(int) DeveloperSettings.getSetting("NUM_MAIN_LAYERS")
 				- 1
 				;
+		System.out.println(layer);
+		GfxManager.getMainLayerSet().addRenderer(spc, layer);
 		fpsRenderer.showOnLayer(layer);
 		mainMenuBtn = new Button(150,0,100,20,"Main Menu");
 		mainMenuBtn.setText("Main Menu");
@@ -68,11 +72,12 @@ public class SamplePlay extends SavableGameState
 	@Override
 	public void setupState(ConcurrentHashMap<String, Object> args)
 	{
+		DynamicSettings.setSetting("INVERT_SCROLL_WHEEL", true);
 		String[] cL = new String[4];
 		cL[0] = "WASD to move";
 		cL[1] = "Escape to pause/resume, + left click while paused to return to main menu";
-		cL[2] = "Hold space to move player character in front of everything";
-		cL[3] = "The blue dot will only move when the game is paused";
+		cL[2] = "Scroll to change the player unit's speed";
+		cL[3] = "The blue dot will only move when the game isn't paused";
 		controls = new CtrlRenderer(cL);
 		ta = new TestAnimator("testanimate", "basic");
 		GfxManager.getMainLayerSet().addRenderer(ta, 9);
@@ -120,30 +125,16 @@ public class SamplePlay extends SavableGameState
 		else
 		{
 			mainMenuBtn.hideOnLayer(9);
-			if (InputManager.getKB().isDown(VK_SPACE))
-			{
-				entityLayers.removeRenderer(spc, 1);
-				GfxManager.getMainLayerSet().addRenderer(spc, 9);
-			}
-			else
-			{
-				GfxManager.getMainLayerSet().removeRenderer(spc, 9);
-				entityLayers.addRenderer(spc, 1);
-			}
 			sr.update();
 			sr_2.update();
 			spc.update();
-		}
-		if (InputManager.getKB().justPressed(VK_ENTER))
-		{
-			changeState(MainMenuTest.class);
-			return;
 		}
 	}
 
 	@Override
 	public void cleanupState()
 	{
+		DynamicSettings.setSetting("INVERT_SCROLL_WHEEL", false);
 		SoundManager.stopBGM(SoundManager.BGMTransition.IMMEDIATE);
 		sr2.destroy();
 		sr2_2.destroy();

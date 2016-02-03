@@ -32,13 +32,15 @@ public class DynamicSettings
 	private static void setupSettings()
 	{
 		// TODO load from a file, if fails then recreate settings
-		// How the core engine systems should utilize threading
+		// How the core engine systems should utilize threading (ThreadingSetting)
 		settings.put("ENGINE_THREADING", ThreadingSetting.OPTIMIZE);
-		// Master volume setting %
+		// Invert the scroll wheel on the mouse (boolean)
+		settings.put("INVERT_SCROLL_WHEEL", false);
+		// Master volume setting % (int)
 		settings.put("MASTER_VOLUME", 100);
-		// Background music volume setting %
+		// Background music volume setting % (int)
 		settings.put("BGM_VOLUME", 100);
-		// Sound effects volume setting %
+		// Sound effects volume setting % (int)
 		settings.put("SFX_VOLUME", 100);
 	}
 

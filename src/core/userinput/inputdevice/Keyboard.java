@@ -3,6 +3,7 @@ package core.userinput.inputdevice;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
 
 /** Handles processing of keyboard events.
  * @author Bryan Bettis
@@ -13,18 +14,21 @@ public class Keyboard implements InputDevice, KeyListener
 	private static final short KEY_COUNT = 256;
 	
 	/** Current state of the keys (pressed/released). */
-	private static volatile boolean[] rawStates;
+	private volatile boolean[] rawStates;
 	/** Processed key states (KeyState). */
-	private static volatile KeyState[] processedStates;
+	private volatile KeyState[] processedStates;
 	
 	/** States each key can be in.
 	 * @author Bryan Bettis
 	 */
 	private enum KeyState
 	{
-		RELEASED,  // Not down
-		PRESSED,  // Down, but not first pressed this poll
-		ONCE  // Down for the first time
+		/** Key is not pressed. */
+		RELEASED,
+		/** Key pressed, but not first pressed this poll (see ONCE). */
+		PRESSED,
+		/** Key just pressed (will change to PRESSED on the next poll). */
+		ONCE
 	}
 	
 	/** Basic keyboard setup, takes argument for component to listen to.
@@ -48,8 +52,8 @@ public class Keyboard implements InputDevice, KeyListener
 	public boolean isDown(int keyCode)
 	{
 		return (
-				justPressed(keyCode) ||
-				processedStates[keyCode] == KeyState.PRESSED
+				processedStates[keyCode].equals(KeyState.PRESSED)
+				|| justPressed(keyCode)
 				);
 	}
 	
@@ -61,7 +65,7 @@ public class Keyboard implements InputDevice, KeyListener
 	 */
 	public boolean justPressed(int keyCode)
 	{
-		return (processedStates[keyCode] == KeyState.ONCE);
+		return processedStates[keyCode].equals(KeyState.ONCE);
 	}
 	
 	@Override
@@ -74,7 +78,7 @@ public class Keyboard implements InputDevice, KeyListener
 			if (rawStates[i])
 			{
 				// If key is down not but not the previous frame, set to once
-				if (processedStates[i] == KeyState.RELEASED)
+				if (processedStates[i].equals(KeyState.RELEASED))
 				{
 					processedStates[i] = KeyState.ONCE;
 				}
@@ -100,10 +104,7 @@ public class Keyboard implements InputDevice, KeyListener
 		// Key state beyond just pressed/released
 		processedStates = new KeyState[KEY_COUNT];
 		// Set all keys as released
-		for (int i = 0; i < KEY_COUNT; ++i)
-		{
-			processedStates[i] = KeyState.RELEASED;
-		}
+		Arrays.fill(processedStates, KeyState.RELEASED);
 	}
 	
 	@Override
@@ -112,11 +113,12 @@ public class Keyboard implements InputDevice, KeyListener
 		// Get the key's integer ID
 		int keyCode = e.getKeyCode();
 		// Check if key is in range of used keys
-		if (0 <= keyCode && keyCode < KEY_COUNT)
+		if (keyCode > KEY_COUNT || keyCode < 0)
 		{
-			// Current key set to pressed
-			rawStates[keyCode] = true;
+			return;
 		}
+		// Update key
+		rawStates[keyCode] = true;
 	}
 	
 	@Override
@@ -125,11 +127,12 @@ public class Keyboard implements InputDevice, KeyListener
 		// Get the key's integer ID
 		int keyCode = e.getKeyCode();
 		// Check if key in range of used keys
-		if (0 <= keyCode && keyCode < KEY_COUNT)
+		if (keyCode > KEY_COUNT || keyCode < 0)
 		{
-			// Set key as released
-			rawStates[keyCode] = false;
+			return;
 		}
+		// Update key
+		rawStates[keyCode] = false;
 	}
 	
 	@Override
