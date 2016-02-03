@@ -16,7 +16,12 @@ public class CtrlRenderer implements PrimaryRenderer
 	
 	public CtrlRenderer(String[] text)
 	{
-		displayText = text;
+		displayText = new String[text.length + 1];
+		displayText[0] = "Controls:";
+		for (int i = 1; i < displayText.length; ++i)
+		{
+			displayText[i] = text[i-1];
+		}
 		// Show it on the highest layer
 		int topLayer =
 				(int) core.DeveloperSettings.getSetting("NUM_MAIN_LAYERS")
@@ -30,10 +35,11 @@ public class CtrlRenderer implements PrimaryRenderer
 	{
 		Graphics2D g = e.getContext();
 		g.setColor(Color.white);
-		TextDrawer.drawText(g, "Controls:", 2, 11, 12);
 		for (int line = 0; line < displayText.length; ++line)
 		{
-			TextDrawer.drawText(g, displayText[line], 2, (line+1)*12+11, 12);
+			String text = displayText[line];
+			int y = (line+1)*TextDrawer.getTextHeight(g, text);
+			TextDrawer.drawText(g, text, 0, y);
 		}
 	}
 }

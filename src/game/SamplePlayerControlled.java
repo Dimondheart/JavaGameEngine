@@ -26,7 +26,6 @@ public class SamplePlayerControlled extends Animator
 	@Override
 	public synchronized void render(RenderEvent e)
 	{
-//		System.out.println(e.getLayer());
 		if (e.getLayer() == 9)
 		{
 			e.getContext().setColor(Color.white);

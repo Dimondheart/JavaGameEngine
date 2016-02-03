@@ -5,6 +5,7 @@ import static core.userinput.InputManagerEvent.Type;
 import java.awt.Window;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import core.userinput.inputdevice.GUIMonitor;
 import core.userinput.inputdevice.Keyboard;
 import core.userinput.inputdevice.Mouse;
 import core.userinput.inputdevice.WindowMonitor;
@@ -24,6 +25,8 @@ public class InputManager extends core.Subsystem
 	private static Mouse mouse;
 	/** The main window event manager. */
 	private static WindowMonitor window;
+	/** Manages all the GUI object updates. */
+	private static GUIMonitor gui;
 	
 	/** Different basic states the game can be in.
 	 * @author Bryan Bettis
@@ -48,6 +51,7 @@ public class InputManager extends core.Subsystem
 		keyboard = new Keyboard(win);
 		mouse = new Mouse(win);
 		window = new WindowMonitor(win);
+		gui = new GUIMonitor();
 	}
 	
 	@Override
@@ -128,6 +132,11 @@ public class InputManager extends core.Subsystem
 	public static WindowMonitor getWin()
 	{
 		return window;
+	}
+	
+	public static GUIMonitor getGUI()
+	{
+		return gui;
 	}
 	
 	/** Update processed state information for all input devices. */
@@ -262,6 +271,7 @@ public class InputManager extends core.Subsystem
 		keyboard.poll();
 		mouse.poll();
 		window.poll();
+		gui.poll();
 	}
 	
 	/** Does the clearing of input devices, etc. */
@@ -271,6 +281,7 @@ public class InputManager extends core.Subsystem
 		keyboard.clear();
 		mouse.clear();
 		window.clear();
+		gui.clear();
 	}
 	
 	/** Pause the game. */

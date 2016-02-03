@@ -27,6 +27,6 @@ public class FPSRenderer implements PrimaryRenderer
 		String toDraw = "Avg FPS: " + String.format("%.3f", GfxManager.getAvgFPS());
 		g.setColor(Color.white);
 		// Draw the string to the screen
-		TextDrawer.drawText(g, toDraw, 2, 0);
+		TextDrawer.drawText(g, toDraw, 0, 0);
 	}
 }

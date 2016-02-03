@@ -1,13 +1,13 @@
 package game.gamestate;
 
 //import static java.awt.event.KeyEvent.*;
-import static java.awt.event.MouseEvent.*;
+//import static java.awt.event.MouseEvent.*;
 
+import java.awt.Font;
 import java.util.concurrent.ConcurrentHashMap;
 
 import core.gamestate.GameState;
 import core.graphics.gui.Button;
-import core.userinput.InputManager;
 
 /** The main menu and default game state.
  * @author Bryan Bettis
@@ -34,12 +34,13 @@ public class MainMenuTest extends GameState
 		fpsRenderer.showOnLayer(layer);
 		startBtn.showOnLayer(9);
 		startBtn.setText("Click to Start");
+		startBtn.setFont(new Font("Serif", Font.ITALIC, 16));
 	}
 
 	@Override
 	public void cycleState()
 	{
-		if (InputManager.getMS().justClicked(BUTTON1))
+		if (startBtn.getState().equals(Button.ButtonState.CLICKED))
 		{
 			this.changeState(SamplePlay.class);
 		}

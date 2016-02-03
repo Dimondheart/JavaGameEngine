@@ -2,6 +2,9 @@ package core.graphics;
 
 import java.util.LinkedList;
 
+import core.graphics.gui.GUIObject;
+import core.userinput.InputManager;
+
 /** A single layer used for organizing screen drawing.
  * Each layer holds Renderer(s) that will be called in order once the layer
  * has been told to render itself to the specified graphics context.
@@ -38,6 +41,11 @@ public class Layer implements Renderer
 		{
 			layerSets.addLast((LayerSet) obj);
 		}
+		// Add GUI elements to the GUI manager
+		if (obj instanceof GUIObject)
+		{
+			InputManager.getGUI().addGUIElement((GUIObject) obj);
+		}
 	}
 	
 	/** Remove the specified renderer from this layer.
@@ -50,6 +58,11 @@ public class Layer implements Renderer
 		if (obj instanceof LayerSet)
 		{
 			layerSets.remove((LayerSet) obj);
+		}
+		// Remove GUI elements from the GUI manager
+		if (obj instanceof GUIObject)
+		{
+			InputManager.getGUI().removeGUIElement((GUIObject) obj);
 		}
 	}
 	

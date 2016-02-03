@@ -18,6 +18,10 @@ public abstract class GUIObject implements core.graphics.PrimaryRenderer
 	/** Update the state-related information of a GUI element. */
 	public abstract void update();
 	
+	public void clear()
+	{
+	}
+	
 	/** Update the position of this element.
 	 * @param x the new x coordinate
 	 * @param y the new y coordinate

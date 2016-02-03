@@ -2,7 +2,10 @@
 
 This repository is for my W.I.P. game engine/framework.
 
-![gameengine-pic3](https://cloud.githubusercontent.com/assets/7505459/12219798/78bfea68-b717-11e5-9fb0-bd83a721c47b.png)
+![1-game-engine](https://cloud.githubusercontent.com/assets/7505459/12774906/fa670a6a-ca0e-11e5-8fd3-bf29232ac958.png)
+(Hovering over a button & other stuff)
+![2-game-engine](https://cloud.githubusercontent.com/assets/7505459/12774905/fa66cdac-ca0e-11e5-91f7-e65571ded33b.png)
+(more other stuff)
 
 ## Some Current Features ##
 - Useful graphics system (adaptive layering, object-oriented approach, text rendering, frame-based animation, easy graphics file handling, etc.)
@@ -15,3 +18,4 @@ This repository is for my W.I.P. game engine/framework.
 - Some sample/test classes using the core systems
 - Quickly-made sample graphics
 - Sample sounds & BGM
+- And much more

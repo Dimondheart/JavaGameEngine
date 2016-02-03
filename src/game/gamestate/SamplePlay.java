@@ -4,7 +4,6 @@ package game.gamestate;
 import static java.awt.event.KeyEvent.*;
 
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.util.concurrent.ConcurrentHashMap;
 
 import core.DeveloperSettings;
@@ -12,6 +11,7 @@ import core.DynamicSettings;
 import core.gamestate.SavableGameState;
 import core.graphics.GfxManager;
 import core.graphics.LayerSet;
+import core.graphics.TextDrawer;
 import core.graphics.gui.Button;
 import core.sound.SoundManager;
 import core.userinput.InputManager;
@@ -39,7 +39,7 @@ public class SamplePlay extends SavableGameState
 	private LayerSetTester ls;
 	private LayerSet entityLayers;
 	private boolean paused = false;
-	private ClockTester ct;
+	private MouseMotionTester ct;
 	
 	public SamplePlay()
 	{
@@ -59,13 +59,13 @@ public class SamplePlay extends SavableGameState
 				(int) DeveloperSettings.getSetting("NUM_MAIN_LAYERS")
 				- 1
 				;
-		System.out.println(layer);
 		GfxManager.getMainLayerSet().addRenderer(spc, layer);
 		fpsRenderer.showOnLayer(layer);
 		mainMenuBtn = new Button(150,0,100,20,"Main Menu");
-		mainMenuBtn.setText("Main Menu");
+		mainMenuBtn.setFont(TextDrawer.defFont.deriveFont(16f));
 		ls = new LayerSetTester();
-		ct = new ClockTester();
+		ct = new MouseMotionTester();
+		GfxManager.getMainLayerSet().addRenderer(ct, layer);
 		entityLayers.addRenderer(ct, 0);
 	}
 	
@@ -75,9 +75,9 @@ public class SamplePlay extends SavableGameState
 		DynamicSettings.setSetting("INVERT_SCROLL_WHEEL", true);
 		String[] cL = new String[4];
 		cL[0] = "WASD to move";
-		cL[1] = "Escape to pause/resume, + left click while paused to return to main menu";
+		cL[1] = "Escape to pause/resume, + click main menu button to go to the main menu";
 		cL[2] = "Scroll to change the player unit's speed";
-		cL[3] = "The blue dot will only move when the game isn't paused";
+		cL[3] = "Hold & right click the mouse  over the blue circle & move it by moving the cursor";
 		controls = new CtrlRenderer(cL);
 		ta = new TestAnimator("testanimate", "basic");
 		GfxManager.getMainLayerSet().addRenderer(ta, 9);
@@ -111,12 +111,7 @@ public class SamplePlay extends SavableGameState
 		if (paused)
 		{
 			mainMenuBtn.showOnLayer(9);
-			if (InputManager.getMS().isDown(MouseEvent.BUTTON1))
-			{
-				changeState(MainMenuTest.class);
-				return;
-			}
-			if (mainMenuBtn.getState() == Button.ButtonState.CLICKED)
+			if (mainMenuBtn.getState().equals(Button.ButtonState.CLICKED))
 			{
 				changeState(MainMenuTest.class);
 				return;
@@ -144,5 +139,6 @@ public class SamplePlay extends SavableGameState
 		mainMenuBtn.destroy();
 		entityLayers.destroy();
 		ls.layers.destroy();
+		ct.destroy();
 	}
 }

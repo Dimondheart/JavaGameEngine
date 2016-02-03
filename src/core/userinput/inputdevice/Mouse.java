@@ -5,11 +5,12 @@ import java.awt.event.*;
 import java.util.Arrays;
 
 import core.DynamicSettings;
+import core.graphics.GfxManager;
 
 /** Handles mouse input events.
  * @author Bryan Bettis
  */
-public class Mouse implements InputDevice, MouseListener, MouseWheelListener
+public class Mouse implements InputDevice, MouseListener, MouseWheelListener, MouseMotionListener
 {
 	/** Number of button values to use. */
 	private static final int NUM_BTNS = 10;
@@ -22,6 +23,10 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	private volatile int rawScrollChange = 0;
 	/** The change in the scroll wheel, updated each poll. */
 	private volatile int processedScrollChange = 0;
+	/** The x coordinate of the mouse cursor. */
+	private volatile int mouseX = 0;
+	/** The y coordinate of the mouse cursor. */
+	private volatile int mouseY = 0;
 	
 	/** States each button can be in.
 	 * @author Bryan Bettis
@@ -52,6 +57,7 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 		clear();
 		win.addMouseListener(this);
 		win.addMouseWheelListener(this);
+		win.addMouseMotionListener(this);
 	}
 	
 	/** Checks if the specified button is pressed down.
@@ -96,6 +102,16 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	public int getWheelChange()
 	{
 		return processedScrollChange;
+	}
+	
+	public int getMouseX()
+	{
+		return mouseX;
+	}
+	
+	public int getMouseY()
+	{
+		return mouseY;
 	}
 	
 	@Override
@@ -144,6 +160,8 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	@Override
 	public synchronized void clear()
 	{
+		processedScrollChange = 0;
+		rawScrollChange = 0;
 		// current pressed/released state of keys
 		rawStates = new boolean[NUM_BTNS];
 		// Key state beyond just pressed/released
@@ -202,5 +220,33 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener
 	public void mouseWheelMoved(MouseWheelEvent e)
 	{
 		rawScrollChange += e.getWheelRotation();
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e)
+	{
+		updateCursorPos(e);
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e)
+	{
+		updateCursorPos(e);
+	}
+	
+	private void updateCursorPos(MouseEvent e)
+	{
+		int newX = e.getX() - GfxManager.getMainWin().getInsets().left;
+		if (newX < 0)
+		{
+			newX = 0;
+		}
+		int newY = e.getY() - GfxManager.getMainWin().getInsets().top;
+		if (newY < 0)
+		{
+			newY = 0;
+		}
+		mouseX = newX;
+		mouseY = newY;
 	}
 }
