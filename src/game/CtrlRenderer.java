@@ -8,7 +8,7 @@ import core.graphics.PrimaryRenderer;
 import core.graphics.TextDrawer;
 
 /** Renders controls text to the screen for testing purposes.
-* @author Bryan Bettis
+* @author Bryan Charles Bettis
 */
 public class CtrlRenderer implements PrimaryRenderer
 {

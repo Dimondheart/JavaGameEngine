@@ -10,7 +10,7 @@ import static java.awt.event.KeyEvent.*;
 import java.awt.Color;
 
 /** Sample player-controlled entity.
-* @author Bryan Bettis
+* @author Bryan Charles Bettis
 */
 public class SamplePlayerControlled extends Animator
 {

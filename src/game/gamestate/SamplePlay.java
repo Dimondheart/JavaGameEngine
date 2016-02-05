@@ -18,7 +18,7 @@ import core.userinput.InputManager;
 import game.*;
 
 /** A sample game state with sample stuff.
- * @author Bryan Bettis
+ * @author Bryan Charles Bettis
  */
 public class SamplePlay extends SavableGameState
 {

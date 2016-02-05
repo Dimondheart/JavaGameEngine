@@ -3,7 +3,7 @@ package game;
 import core.graphics.RenderEvent;
 
 /** A sample Renderer implementation.
-* @author Bryan Bettis
+* @author Bryan Charles Bettis
 */
 public class SampleRenderer implements core.graphics.Renderer
 {

@@ -5,7 +5,7 @@ import java.awt.Color;
 import core.graphics.RenderEvent;
 
 /** Another sample Renderer implementation.
-* @author Bryan Bettis
+* @author Bryan Charles Bettis
 */
 public class SampleRenderer2 implements core.graphics.PrimaryRenderer
 {

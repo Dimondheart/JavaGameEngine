@@ -10,7 +10,7 @@ import core.gamestate.GameState;
 import core.graphics.gui.Button;
 
 /** The main menu and default game state.
- * @author Bryan Bettis
+ * @author Bryan Charles Bettis
  */
 public class MainMenuTest extends GameState
 {

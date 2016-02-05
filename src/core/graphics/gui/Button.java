@@ -1,3 +1,18 @@
+/** Copyright 2016 Bryan Charles Bettis
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package core.graphics.gui;
 
 import java.awt.Color;
@@ -11,7 +26,7 @@ import core.userinput.InputManager;
 import static java.awt.event.MouseEvent.*;
 
 /** A button which the user can interact with.
- * @author Bryan Bettis
+ * @author Bryan Charles Bettis
  */
 public class Button extends GUIObject
 {
@@ -23,7 +38,7 @@ public class Button extends GUIObject
 	private Font font;
 	
 	/** The different states a button can be in.
-	 * @author Bryan Bettis
+	 * @author Bryan Charles Bettis
 	 */
 	public enum ButtonState
 	{
