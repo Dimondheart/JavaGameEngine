@@ -14,7 +14,8 @@
  */
 
 /** All graphical user interface inputs that are rendered to the screen,
- * for example on-screen buttons.
+ * for example on-screen buttons.  These inputs use other input devices
+ * such as the mouse or keyboard to update their states.
  * @author Bryan Charles Bettis
  */
-package core.graphics.gui;
+package core.userinput.inputdevice.gui;

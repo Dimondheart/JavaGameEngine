@@ -26,7 +26,9 @@ import java.awt.Dimension;
  */
 class MainLayerSet extends LayerSet
 {
-	/** Basic constructor. */
+	/** Basic constructor.
+	 * @param numLayers the number of layers to setup
+	 */
 	public MainLayerSet(int numLayers)
 	{
 		super(numLayers);
@@ -42,7 +44,7 @@ class MainLayerSet extends LayerSet
 	}
 	
 	/** Resize the layers, used to only resize the main layers when the
-	 * window is resized.
+	 * main window is resized.
 	 * @param newDims the new dimensions of the main layers
 	 */
 	synchronized void resizeLayers(Dimension newDims)

@@ -17,8 +17,8 @@ package core.graphics;
 
 import java.util.LinkedList;
 
-import core.graphics.gui.GUIObject;
 import core.userinput.InputManager;
+import core.userinput.inputdevice.gui.GUIObject;
 
 /** A single layer used for organizing screen drawing.
  * Each layer holds Renderer(s) that will be called in order once the layer

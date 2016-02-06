@@ -5,6 +5,7 @@ import core.graphics.RenderEvent;
 /** A sample Renderer implementation.
 * @author Bryan Charles Bettis
 */
+@SuppressWarnings("javadoc")
 public class SampleRenderer implements core.graphics.Renderer
 {
 	protected int x = 20;

@@ -31,9 +31,16 @@ public class DynamicSettings
 	 */
 	public enum ThreadingSetting
 	{
-		FULL,  // Runs all systems in their own thread, regardless of CPU specs
-		SINGLE,  // Use only one thread for all game engine systems
-		OPTIMIZE  // Auto-optimize threading based on available cores
+		/** Runs all thread-able subsystems in their own threads, regardless
+		 * of the number of available virtual cores.
+		 */
+		FULL,
+		/** Run all game engine systems in the same thread. */
+		SINGLE,
+		/** Optimize threading based on the number of virtual cores
+		 * available.
+		 */
+		OPTIMIZE
 	}
 
 	/* Setup static stuff. */

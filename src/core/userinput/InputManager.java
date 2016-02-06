@@ -48,8 +48,15 @@ public class InputManager extends core.Subsystem
 	 */
 	public enum State
 	{
+		/** The game is running normally. */
 		NORMAL,
+		/** The game has been paused because the main window was
+		 * minimized/iconified.
+		 */
 		PAUSED,
+		/** When the game has been quit, either because the main window
+		 * was closed or InputManager.quit() has been called.
+		 */
 		QUIT
 	}
 	
@@ -149,6 +156,10 @@ public class InputManager extends core.Subsystem
 		return window;
 	}
 	
+	/** Gets the manager of graphical user input devices, such as on-screen
+	 * buttons.
+	 * @return the GUI manager object
+	 */
 	public static GUIMonitor getGUI()
 	{
 		return gui;

@@ -98,6 +98,9 @@ public class ThreadClock
 		start = System.currentTimeMillis();
 	}
 	
+	/** Update the average cycles per second of this thread clock.
+	 * @param duration the run time of the cycle that was just finished
+	 */
 	private void updateAvgCPS(long duration)
 	{
 		// Set the previous avg CPS as avg CPS from previous cycle

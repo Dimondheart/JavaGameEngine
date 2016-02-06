@@ -1,7 +1,8 @@
 package game;
 
-import core.graphics.Animator;
+import core.graphics.FrameAnimator;
 import core.graphics.RenderEvent;
+import core.graphics.Renderer;
 import core.graphics.TextDrawer;
 import core.userinput.InputManager;
 
@@ -12,15 +13,17 @@ import java.awt.Color;
 /** Sample player-controlled entity.
 * @author Bryan Charles Bettis
 */
-public class SamplePlayerControlled extends Animator
+@SuppressWarnings("javadoc")
+public class SamplePlayerControlled implements Renderer
 {
 	private double x = 200;
 	private double y = 135;
 	private double speed = 1;
+	private FrameAnimator animate;
 	
 	public SamplePlayerControlled()
 	{
-		super("arrowship",150);
+		animate = new FrameAnimator("arrowship",150);
 	}
 	
 	@Override
@@ -35,7 +38,7 @@ public class SamplePlayerControlled extends Animator
 		}
 		else
 		{
-			this.renderAnimation(e.getContext(), (int)x-5, (int)y-5);
+			animate.renderAnimation(e.getContext(), (int)x-5, (int)y-5);
 		}
 	}
 	
@@ -84,46 +87,46 @@ public class SamplePlayerControlled extends Animator
 			moveY = -1;
 		}
 		
-		setAnimationSet("basic");
+		animate.setAnimationSet("basic");
 		if (moveX < 0)
 		{
 			if (moveY < 0)
 			{
-				 setAnimationSet("leftup");
+				animate.setAnimationSet("leftup");
 			}
 			else if (moveY > 0)
 			{
-				 setAnimationSet("leftdown");
+				animate.setAnimationSet("leftdown");
 			}
 			else
 			{
-				setAnimationSet("left");
+				animate.setAnimationSet("left");
 			}
 		}
 		else if (moveX > 0)
 		{
 			if (moveY < 0)
 			{
-				 setAnimationSet("rightup");
+				animate.setAnimationSet("rightup");
 			}
 			else if (moveY > 0)
 			{
-				 setAnimationSet("rightdown");
+				animate.setAnimationSet("rightdown");
 			}
 			else
 			{
-				setAnimationSet("right");
+				animate.setAnimationSet("right");
 			}
 		}
 		else
 		{
 			if (moveY < 0)
 			{
-				setAnimationSet("up");
+				animate.setAnimationSet("up");
 			}
 			else if (moveY > 0)
 			{
-				setAnimationSet("down");
+				animate.setAnimationSet("down");
 			}
 		}
 		int scrollWheelChange = InputManager.getMS().getWheelChange();

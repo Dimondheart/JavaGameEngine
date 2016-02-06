@@ -7,11 +7,13 @@ import java.awt.Font;
 import java.util.concurrent.ConcurrentHashMap;
 
 import core.gamestate.GameState;
-import core.graphics.gui.Button;
+import core.graphics.GfxManager;
+import core.userinput.inputdevice.gui.Button;
 
 /** The main menu and default game state.
  * @author Bryan Charles Bettis
  */
+@SuppressWarnings("javadoc")
 public class MainMenuTest extends GameState
 {
 	private static final long serialVersionUID = 1L;
@@ -32,7 +34,7 @@ public class MainMenuTest extends GameState
 				- 1
 				;
 		fpsRenderer.showOnLayer(layer);
-		startBtn.showOnLayer(9);
+		GfxManager.getMainLayerSet().addRenderer(startBtn, 9);
 		startBtn.setText("Click to Start");
 		startBtn.setFont(new Font("Serif", Font.ITALIC, 16));
 	}

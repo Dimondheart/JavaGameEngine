@@ -13,13 +13,16 @@
  * limitations under the License.
  */
 
-package core.graphics.gui;
+package core.userinput.inputdevice.gui;
+
+import core.graphics.Renderer;
+import core.userinput.inputdevice.InputDevice;
 
 /** Base class for user inputs that are rendered on the screen and the use
  * interacts with using input devices (mouse, keyboard, etc.).
  * @author Bryan Charles Bettis
  */
-public abstract class GUIObject implements core.graphics.PrimaryRenderer
+public abstract class GUIObject implements Renderer, InputDevice
 {
 	/** The x coordinate of this object. */
 	protected int x;
@@ -29,9 +32,6 @@ public abstract class GUIObject implements core.graphics.PrimaryRenderer
 	protected int width;
 	/** The height of this object. */
 	protected int height;
-	
-	/** Update the state-related information of a GUI element. */
-	public abstract void update();
 	
 	public void clear()
 	{

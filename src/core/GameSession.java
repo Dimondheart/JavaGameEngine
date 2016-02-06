@@ -170,12 +170,16 @@ public class GameSession
 			}
 			// Start the program timer
 			ProgramClock.setup();
+			// Setup the game state manager
+			gsm.setup();
 			// Go to the main loop
 			play(numThreads);
 		}
 	}
 
-	/** Starts playing the game. */
+	/** Starts playing the game.
+	 * @param numThreads the number of threads the game has been setup to use
+	 */
 	private void play(int numThreads)
 	{
 		// Select how to run based on how subsystems are setup

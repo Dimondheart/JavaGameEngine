@@ -119,11 +119,19 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 		return processedScrollChange;
 	}
 	
+	/** Gets the x position of the mouse cursor. The coordinates are
+	 * constrained to the edges of the main window.
+	 * @return the x position of the mouse over the game window
+	 */
 	public int getMouseX()
 	{
 		return mouseX;
 	}
 	
+	/** Gets the y position of the mouse cursor. The coordinates are
+	 * constrained to the edges of the main window.
+	 * @return the y position of the mouse over the game window
+	 */
 	public int getMouseY()
 	{
 		return mouseY;
@@ -249,6 +257,9 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 		updateCursorPos(e);
 	}
 	
+	/** Update the position of the mouse cursor for the next poll.
+	 * @param e the mouse movement event
+	 */
 	private void updateCursorPos(MouseEvent e)
 	{
 		int newX = e.getX() - GfxManager.getMainWin().getInsets().left;

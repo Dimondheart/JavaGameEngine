@@ -8,19 +8,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import core.DeveloperSettings;
 import core.DynamicSettings;
-import core.gamestate.SavableGameState;
+import core.gamestate.GameState;
 import core.graphics.GfxManager;
 import core.graphics.LayerSet;
 import core.graphics.TextDrawer;
-import core.graphics.gui.Button;
 import core.sound.SoundManager;
 import core.userinput.InputManager;
+import core.userinput.inputdevice.gui.Button;
 import game.*;
 
 /** A sample game state with sample stuff.
  * @author Bryan Charles Bettis
  */
-public class SamplePlay extends SavableGameState
+@SuppressWarnings("javadoc")
+public class SamplePlay extends GameState
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -110,7 +111,7 @@ public class SamplePlay extends SavableGameState
 		}
 		if (paused)
 		{
-			mainMenuBtn.showOnLayer(9);
+			GfxManager.getMainLayerSet().addRenderer(mainMenuBtn, 9);
 			if (mainMenuBtn.getState().equals(Button.ButtonState.CLICKED))
 			{
 				changeState(MainMenuTest.class);
@@ -119,7 +120,7 @@ public class SamplePlay extends SavableGameState
 		}
 		else
 		{
-			mainMenuBtn.hideOnLayer(9);
+			GfxManager.getMainLayerSet().removeRenderer(mainMenuBtn, 9);
 			sr.update();
 			sr_2.update();
 			spc.update();

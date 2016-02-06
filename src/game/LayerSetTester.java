@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import core.graphics.LayerSet;
 
+@SuppressWarnings("javadoc")
 public class LayerSetTester
 {
 	public LayerSet layers;

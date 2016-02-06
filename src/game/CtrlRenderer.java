@@ -10,6 +10,7 @@ import core.graphics.TextDrawer;
 /** Renders controls text to the screen for testing purposes.
 * @author Bryan Charles Bettis
 */
+@SuppressWarnings("javadoc")
 public class CtrlRenderer implements PrimaryRenderer
 {
 	private String[] displayText;

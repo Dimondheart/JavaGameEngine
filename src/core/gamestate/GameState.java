@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class GameState implements Serializable
 {
+	/** */
 	private static final long serialVersionUID = 1L;
 	
 	/** Renders the FPS to the screen. */
@@ -35,9 +36,7 @@ public abstract class GameState implements Serializable
 	 */
 	protected ConcurrentHashMap<String, Object> newStateArgs;
 	
-	/** Basic constructor.
-	 * @param state the GameStates for the subclass
-	 */
+	/** Basic constructor. */
 	public GameState()
 	{
 		fpsRenderer = new FPSRenderer();
@@ -45,14 +44,18 @@ public abstract class GameState implements Serializable
 		newStateArgs = new ConcurrentHashMap<String, Object>();
 	}
 	
-	/** Performs setup operations specific to each game state. */
+	/** Performs setup operations specific to each game state.
+	 * @param args a hash map of arguments the state can use to set up
+	 */
 	protected abstract void setupState(ConcurrentHashMap<String, Object> args);
 	/** State-specific cycle operations. */
 	protected abstract void cycleState();
 	/** Cleanup operations specific to a game state. */
 	protected abstract void cleanupState();
 	
-	/** Performs setup operations for a game state. */
+	/** Performs setup operations for a game state.
+	 * @param args a hash map of arguments the state can use to set up
+	 */
 	public void setup(ConcurrentHashMap<String, Object> args)
 	{
 		// Game-state-specific setup
@@ -94,7 +97,7 @@ public abstract class GameState implements Serializable
 	
 	/** Gets the hash map of arguments to use for setting up the next
 	 * game state.
-	 * @return a ConcurrentHashMap<String, Object> of arguments
+	 * @return the hash map of arguments the next state can use for setup
 	 */
 	public ConcurrentHashMap<String, Object> getNewStateArgs()
 	{

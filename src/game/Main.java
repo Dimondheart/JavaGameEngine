@@ -8,6 +8,7 @@ public class Main
 	/** The game session object. */
 	private static GameSession session;
 	
+	@SuppressWarnings("javadoc")
 	public static void main(String[] args)
 	{
 		// Setup and start the game session

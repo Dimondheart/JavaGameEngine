@@ -121,19 +121,6 @@ public class GfxManager extends core.Subsystem
 		return mainLayers.getLayerSet();
 	}
 	
-	/** Draws a BufferedImage to the specified context.
-	 * @param g the Graphics2D to draw the image to
-	 * @param i the image to draw
-	 * @param x the x coordinate of the left side
-	 * @param y the y coordinate of the top side
-	 * @param width the width to draw the image as
-	 * @param height the height to draw the image as
-	 */
-	public static void drawGraphic(Graphics2D g, BufferedImage i, int x, int y, int width, int height)
-	{
-		g.drawImage(i,x,y,width,height,null);
-	}
-	
 	/** Draws a pre-loaded image to the specified context.
 	 * @param g the Graphics2D to draw the image to
 	 * @param name the "pre-loaded name" of the image to draw
@@ -146,7 +133,33 @@ public class GfxManager extends core.Subsystem
 	{
 		BufferedImage img;
 		img = core.graphics.GfxManager.getResManager().getRes(name);
-		drawGraphic(g,img,x-6,y-6,12,12);
+		drawGraphic(g,img,x,y,width,height);
+	}
+	
+	/** Draws a pre-loaded image to the specified context.
+	 * @param g the Graphics2D to draw the image to
+	 * @param name the "pre-loaded name" of the image to draw
+	 * @param x the x coordinate of the left side
+	 * @param y the y coordinate of the top side
+	 */
+	public static void drawGraphic(Graphics2D g, String name, int x, int y)
+	{
+		BufferedImage img;
+		img = core.graphics.GfxManager.getResManager().getRes(name);
+		drawGraphic(g,img,x,y,img.getWidth(),img.getHeight());
+	}
+	
+	/** Draws a BufferedImage to the specified context.
+	 * @param g the Graphics2D to draw the image to
+	 * @param i the image to draw
+	 * @param x the x coordinate of the left side
+	 * @param y the y coordinate of the top side
+	 * @param width the width to draw the image as
+	 * @param height the height to draw the image as
+	 */
+	public static void drawGraphic(Graphics2D g, BufferedImage i, int x, int y, int width, int height)
+	{
+		g.drawImage(i,x,y,width,height,null);
 	}
 	
 	/** Shows the specified Renderer on the specified layer.

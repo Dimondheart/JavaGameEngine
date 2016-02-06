@@ -8,6 +8,7 @@ import core.userinput.InputManager;
 
 import static java.awt.event.MouseEvent.*;
 
+@SuppressWarnings("javadoc")
 public class MouseMotionTester extends SampleRenderer implements core.graphics.Renderer
 {
 	private boolean isSelected = false;

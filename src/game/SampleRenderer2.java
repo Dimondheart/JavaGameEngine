@@ -7,6 +7,7 @@ import core.graphics.RenderEvent;
 /** Another sample Renderer implementation.
 * @author Bryan Charles Bettis
 */
+@SuppressWarnings("javadoc")
 public class SampleRenderer2 implements core.graphics.PrimaryRenderer
 {
 	private int x;

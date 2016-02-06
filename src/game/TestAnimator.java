@@ -1,18 +1,22 @@
 package game;
 
-import core.graphics.Animator;
+import core.graphics.FrameAnimator;
 import core.graphics.RenderEvent;
+import core.graphics.Renderer;
 
-public class TestAnimator extends Animator
+@SuppressWarnings("javadoc")
+public class TestAnimator implements Renderer
 {
+	private FrameAnimator animate;
+	
 	public TestAnimator(String location, String startingSet)
 	{
-		super(location, startingSet);
+		animate = new FrameAnimator(location, startingSet);
 	}
 
 	@Override
 	public void render(RenderEvent e)
 	{
-		this.renderAnimation(e.getContext(), 100, 100);
+		animate.renderAnimation(e.getContext(), 100, 100);
 	}
 }

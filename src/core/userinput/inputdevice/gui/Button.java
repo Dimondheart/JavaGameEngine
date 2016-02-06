@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package core.graphics.gui;
+package core.userinput.inputdevice.gui;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -42,9 +42,13 @@ public class Button extends GUIObject
 	 */
 	public enum ButtonState
 	{
+		/** The button is not being interacted with or hovered over. */
 		IDLE,
+		/** The button is being pressed, but not released yet. */
 		PRESSED,
+		/** The mouse is hovering over the button, but has not clicked. */
 		HOVER,
+		/** The button has just been released. */
 		CLICKED
 //		PRESSED_NO_HOVER
 	}
@@ -72,6 +76,14 @@ public class Button extends GUIObject
 		this(x, y, width, height, text, TextDrawer.defFont);
 	}
 	
+	/** Takes arguments for position, dimensions, and text settings.
+	 * @param x the x coordinate
+	 * @param y the y coordinate (screen coordinates)
+	 * @param width the width of the button
+	 * @param height the height of the button
+	 * @param text the text to display over the button
+	 * @param font the font to use to display the button text
+	 */
 	public Button(int x, int y, int width, int height, String text, Font font)
 	{
 		state = ButtonState.IDLE;
@@ -90,7 +102,7 @@ public class Button extends GUIObject
 	}
 	
 	@Override
-	public synchronized void update()
+	public synchronized void poll()
 	{
 		// Mouse is hovering over, interact with button
 		if (isMouseOver())
@@ -121,7 +133,9 @@ public class Button extends GUIObject
 		state = ButtonState.IDLE;
 	}
 	
-	/** Gets the text displayed on this button. */
+	/** Gets the text displayed on this button.
+	 * @return the text being drawn over this button
+	 */
 	public synchronized String getText()
 	{
 		return text;
@@ -135,7 +149,9 @@ public class Button extends GUIObject
 		text = newText;
 	}
 	
-	/** Gets the font used for the label text on this button. */
+	/** Gets the font used for the label text on this button.
+	 * @return the font object used to draw this buttons label
+	 */
 	public synchronized Font getFont()
 	{
 		return font;
@@ -149,6 +165,9 @@ public class Button extends GUIObject
 		font = newFont;
 	}
 	
+	/** Check if the mouse is hovering over this button.
+	 * @return true if the mouse is over this button, false otherwise
+	 */
 	public boolean isMouseOver()
 	{
 		int mx = InputManager.getMS().getMouseX();
@@ -169,6 +188,7 @@ public class Button extends GUIObject
 	public synchronized void render(RenderEvent event)
 	{
 		Graphics2D g = event.getContext();
+		// Button pressed; adjust the background
 		if (state.equals(ButtonState.PRESSED))
 		{
 			g.setColor(Color.darkGray);
@@ -177,17 +197,19 @@ public class Button extends GUIObject
 		{
 			g.setColor(Color.gray);
 		}
+		// Fill the button background
 		g.fillRect(x, y, width, height);
+		// Highlight the button center if hovering over
 		if (state.equals(ButtonState.HOVER))
 		{
 			g.setColor(Color.darkGray);
-			int[] textOffset = TextDrawer.getCenterOffsets(g, text, font);
-			int tw = TextDrawer.getTextWidth(g, text, font);
-			int th = TextDrawer.getTextHeight(g, text, font);
-			int hx = getX() + getWidth()/2 - textOffset[0];
-			int hy = getY() + getHeight()/2 - textOffset[1]*3/4;
+			int tw = getWidth() - 8;
+			int th = getHeight() - 8;
+			int hx = getX() + 4;
+			int hy = getY() + 4;
 			g.fillRect(hx, hy, tw, th);
 		}
+		// Draw the text over the button
 		g.setColor(Color.white);
 		int[] centerCoords = {x + getWidth()/2, y + getHeight()/2};
 		int[] drawCoords = TextDrawer.centerOverPoint(g, text, centerCoords, font);

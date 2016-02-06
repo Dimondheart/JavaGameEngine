@@ -31,7 +31,9 @@ public class LayerSet implements Renderer
 	/** Height of the layers. */
 	private int height;
 	
-	/** Basic constructor. */
+	/** Basic constructor.
+	 * @param numLayers the number of layers to setup
+	 */
 	public LayerSet(int numLayers)
 	{
 		this.numLayers = numLayers;
@@ -111,7 +113,7 @@ public class LayerSet implements Renderer
 	 * this layer set, then it will call this method on each of them. If used
 	 * on the main layer set, this method will ensure a Renderer is completely
 	 * removed from all <b>currently displayed</b> layers and layer sets.
-	 * @param obj
+	 * @param obj the renderer to recursively remove
 	 */
 	public synchronized void recursiveRemoveRenderer(Renderer obj)
 	{
@@ -124,7 +126,8 @@ public class LayerSet implements Renderer
 	/** Resizes all layers in this layer set. Calling this method on the
 	 * main layer set will have no effect, as the main layers are adjusted
 	 * to fit the entire display area/window.
-	 * @param newDims the new dimensions
+	 * @param width the new width of the layers
+	 * @param height the new height of the layers
 	 */
 	public synchronized void resizeLayers(int width, int height)
 	{

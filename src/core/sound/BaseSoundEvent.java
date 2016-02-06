@@ -23,9 +23,7 @@ abstract class BaseSoundEvent
 	/** The time the sound effect was queued. */
 	private final long queueTime;
 	
-	/** Basic constructor.
-	 * @param type the Type of this sound event
-	 */
+	/** Basic constructor. */
 	public BaseSoundEvent()
 	{
 		this.queueTime = core.ProgramClock.getTime();

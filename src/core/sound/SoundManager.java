@@ -48,9 +48,16 @@ public class SoundManager extends core.Subsystem
 	 */
 	public enum BGMTransition
 	{
-		IMMEDIATE,  // Stop the previous track and start the new track
-		SMOOTH,  // Fade out old track then start new track (WIP)
-		CROSSOVER  // Fade out old track as the new one is faded in (WIP)
+		/** Immediately stop the previous track, then start the new track. */
+		IMMEDIATE,
+		/** NOT YET IMPLEMENTED. Fade out the old track, then start the
+		 * new track.
+		 */
+		FADE_OUT,
+		/** NOT YET IMPLEMENTED. Fade out the old track and fade in the new
+		 * track at the same time.
+		 */
+		CROSSFADE
 	}
 	
 	/** The different volume settings for the sound system.
@@ -58,8 +65,11 @@ public class SoundManager extends core.Subsystem
 	 */
 	public enum VolumeSetting
 	{
+		/** The master volume setting, changes the overall volume. */
 		MASTER,
+		/** The volume of sound effects. */
 		SFX,
+		/** The volume of the background music track. */
 		BGM
 	}
 	
@@ -178,8 +188,8 @@ public class SoundManager extends core.Subsystem
 		return true;
 	}
 	
-	/** TODO fill this out
-	 * @return TODO fill this
+	/** Gets the object that manages sound files.
+	 * @return the manager of sound resources
 	 */
 	public static SoundResources getResManager()
 	{
@@ -346,6 +356,7 @@ public class SoundManager extends core.Subsystem
 	 * @return true if the dynamic volume settings have changed since the
 	 * 		the last time they were used to update playing sounds' volumes
 	 */
+	@SuppressWarnings("unused")
 	private boolean hasVolumeChanged()
 	{
 		int[] settings = {0,0,0};

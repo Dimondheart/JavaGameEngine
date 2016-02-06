@@ -5,6 +5,7 @@ import java.awt.Color;
 import core.graphics.RenderEvent;
 import core.graphics.Renderer;
 
+@SuppressWarnings("javadoc")
 public class LayerSetTesterObject implements Renderer
 {
 	private int x;

@@ -17,6 +17,8 @@ package core.gamestate;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import core.DeveloperSettings;
+
 /** Manages the game states, including handling cycling and transition
  * between game states.
  * @author Bryan Charles Bettis
@@ -36,18 +38,33 @@ public class GameStateManager
 	/** Basic constructor. */
 	public GameStateManager()
 	{
-		// TODO make a way to specify this in the game or a game sub-package
-		this(game.gamestate.MainMenuTest.class);
 	}
 	
-	/** TODO add javadoc. */
-	public GameStateManager(Class<? extends GameState> initialState)
+	/** Setup the game state manager, and the first game state. The initial
+	 * game state will be the game state specified by the developer setting
+	 * "INIT_GAME_STATE".
+	 */
+	@SuppressWarnings("unchecked")
+	public void setup()
 	{
-		this(initialState, new ConcurrentHashMap<String, Object>());
+		Class<? extends GameState> initState;
+		initState = (Class<? extends GameState>) DeveloperSettings.getSetting("INIT_GAME_STATE");
+		setup(initState, new ConcurrentHashMap<String, Object>());
 	}
 	
-	/** TODO add javadoc. */
-	public GameStateManager(Class<? extends GameState> initialState, ConcurrentHashMap<String, Object> args)
+	/** Setup the game state manager, and the first game state.
+	 * @param initialState the class of the game state to start with
+	 */
+	public void setup(Class<? extends GameState> initialState)
+	{
+		setup(initialState, new ConcurrentHashMap<String, Object>());
+	}
+	
+	/** Setup the game state manager, and the first game state.
+	 * @param initialState the class of the game state to start with
+	 * @param args a hash map of arguments the game state can use to setup
+	 */
+	public void setup(Class<? extends GameState> initialState, ConcurrentHashMap<String, Object> args)
 	{
 		setNewGameState(initialState, args);
 	}
@@ -90,20 +107,6 @@ public class GameStateManager
 		return clock;
 	}
 	
-	/** Save the current game state, if it is a save-able state. */
-	public void saveState()
-	{
-		// TODO implement
-		if (currGS instanceof SavableGameState)
-		{
-			System.out.println("Current State IS saveable");
-		}
-		else
-		{
-			System.out.println("Current State is NOT saveable");
-		}
-	}
-	
 	/** Cleans up the current game state. */
 	public void cleanup()
 	{
@@ -118,7 +121,7 @@ public class GameStateManager
 	 * @param newState the class of the new state
 	 * @param setupArgs the hash map of arguments to setup the new game state
 	 */
-	private synchronized void setNewGameState(Class<? extends GameState> newState, ConcurrentHashMap<String, Object> setupArgs)
+	private void setNewGameState(Class<? extends GameState> newState, ConcurrentHashMap<String, Object> setupArgs)
 	{
 		clock = new core.Clock();
 		// Cleanup after previous game state (if any)
@@ -134,7 +137,6 @@ public class GameStateManager
 		// Class cannot be instantiated
 		catch (InstantiationException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(
 					"ERROR: GameState \'" +

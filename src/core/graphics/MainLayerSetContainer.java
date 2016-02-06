@@ -28,12 +28,11 @@ import javax.swing.JComponent;
  */
 public class MainLayerSetContainer extends JComponent
 {
+	/** */
 	private static final long serialVersionUID = 1L;
 	
 	/** Window this layer container is part of. */
 	private Window myWin;
-//	/** Initial container dimensions. */
-//	private final Dimension initDims;
 	/** The primary layer set which is drawn to the screen. */
 	private MainLayerSet mainLayers;
 	
@@ -45,7 +44,6 @@ public class MainLayerSetContainer extends JComponent
 	public MainLayerSetContainer(Window window, Dimension dims, int numLayers)
 	{
 		myWin = window;
-//		initDims = dims;
 		// Setup the layers
 		mainLayers = new MainLayerSet(numLayers);
 		setPreferredSize(dims);
@@ -67,7 +65,7 @@ public class MainLayerSetContainer extends JComponent
 	@Override
 	public synchronized void paintComponent(Graphics g)
 	{
-		// TODO add a buffer or buffer flipping strategy
+		// TODO add a buffer or buffer flip strategy
 		Graphics2D g2 = (Graphics2D)g;
 		// Clear the graphics context
 		g2.setBackground(Color.black);

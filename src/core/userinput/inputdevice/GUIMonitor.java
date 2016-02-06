@@ -17,15 +17,17 @@ package core.userinput.inputdevice;
 
 import java.util.LinkedList;
 
-import core.graphics.gui.GUIObject;
+import core.userinput.inputdevice.gui.GUIObject;
 
 /** TODO document
  * @author Bryan Charles Bettis
  */
 public class GUIMonitor implements InputDevice
 {
+	/** List of all GUI objects added to a layer. */
 	private LinkedList<GUIObject> guiObjects;
 	
+	/** Basic constructor. */
 	public GUIMonitor()
 	{
 		guiObjects = new LinkedList<GUIObject>();
@@ -36,7 +38,7 @@ public class GUIMonitor implements InputDevice
 	{
 		for (GUIObject element : guiObjects)
 		{
-			element.update();
+			element.poll();
 		}
 	}
 
@@ -49,6 +51,11 @@ public class GUIMonitor implements InputDevice
 		}
 	}
 	
+	/** Add a new GUI object to the list of active GUI objects. This is done
+	 * automatically by the layering system.  Each GUI element can only be
+	 * added once.
+	 * @param element the GUI object to add
+	 */
 	public synchronized void addGUIElement(GUIObject element)
 	{
 		if (guiObjects.contains(element))
@@ -58,6 +65,10 @@ public class GUIMonitor implements InputDevice
 		guiObjects.add(element);
 	}
 	
+	/** Remove a GUI object from the list of active GUI objects. This is done
+	 * automatically by the layering system.
+	 * @param element the GUI object to remove
+	 */
 	public synchronized void removeGUIElement(GUIObject element)
 	{
 		guiObjects.remove(element);

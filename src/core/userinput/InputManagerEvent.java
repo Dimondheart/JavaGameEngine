@@ -28,10 +28,15 @@ class InputManagerEvent
 	 */
 	public enum Type
 	{
+		/** Update input devices. */
 		POLL,
+		/** Clear input devices. */
 		CLEAR,
+		/** Pause the game when the window has been minimized, etc. */
 		PAUSE,
+		/** Resume the game after it has been PAUSED. */
 		RESUME,
+		/** Quit the game. */
 		QUIT
 	}
 	
