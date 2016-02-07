@@ -13,9 +13,8 @@
  * limitations under the License.
  */
 
-/** All graphical user interface inputs that are rendered to the screen,
- * for example on-screen buttons.  These inputs use other input devices
- * such as the mouse or keyboard to update their states.
+/** All inputs that are rendered to the screen and use other input devices,
+ * such as the mouse or keyboard, to update their states.
  * @author Bryan Charles Bettis
  */
 package core.userinput.inputdevice.gui;

@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-/** Classes dealing with different forms of user input.
- * This includes classes providing access to devices like a keyboard,
- * as well as more advanced classes like on-screen buttons.
+/** Classes dealing with different forms of user input, including the 
+ * keyboard and mouse, as well as more advanced user input, such as
+ * on-screen buttons.
  * @author Bryan Charles Bettis
  */
 package core.userinput;

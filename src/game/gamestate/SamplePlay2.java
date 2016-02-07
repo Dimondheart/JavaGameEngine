@@ -66,17 +66,16 @@ public class SamplePlay2 extends GameState
 			{
 				paused = false;
 				getClock().resume();
-				GfxManager.getMainLayerSet().removeRenderer(mainMenuBtn, 9);
 			}
 			else
 			{
 				paused = true;
 				getClock().pause();
-				GfxManager.getMainLayerSet().addRenderer(mainMenuBtn, 9);
 			}
 		}
 		if (paused)
 		{
+			GfxManager.getMainLayerSet().addRenderer(mainMenuBtn, 9);
 			if (mainMenuBtn.getState().equals(Button.ButtonState.CLICKED))
 			{
 				changeState(MainMenu.class);
@@ -85,6 +84,7 @@ public class SamplePlay2 extends GameState
 		}
 		else
 		{
+			GfxManager.getMainLayerSet().removeRenderer(mainMenuBtn, 9);
 			for (Enemy e : enemies)
 			{
 				e.update();
@@ -120,5 +120,6 @@ public class SamplePlay2 extends GameState
 	{
 		enemies.add(e);
 		entityLayers.addRenderer(e, 0);
+		System.out.println(enemies.size());
 	}
 }

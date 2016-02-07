@@ -77,6 +77,7 @@ public class GfxManager extends core.Subsystem
 	@Override
 	public boolean runCycle()
 	{
+		// TODO Make FPS calculation actually reflect FPS
 		FPS = clock.getAvgCPS();
 		mainWin.repaint(16);
 		return true;
