@@ -64,6 +64,9 @@ public class DynamicSettings
 		settings.put("BGM_VOLUME", 100);
 		// Sound effects volume setting % (int)
 		settings.put("SFX_VOLUME", 100);
+		// The FPS to try to run the graphics system at (CURRENTLY UNUSED SETTING)
+		settings.put("TARGET_FPS", 60);
+		
 	}
 
 	/** Gets the specified dynamic setting, or returns null if the

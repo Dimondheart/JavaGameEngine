@@ -22,6 +22,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
+import core.DeveloperSettings;
+
 /** Handles the rendering thread.
  * @author Bryan Charles Bettis
  */
@@ -29,6 +31,10 @@ public class GfxManager extends core.Subsystem
 {
 	/** The default interval for rendering. */
 	public static final int DEFAULT_RENDER_INTERVAL = 16;
+	/** The index of the top layer. */
+	public static final int TOP_LAYER_INDEX =
+			(int)
+			DeveloperSettings.getSetting("NUM_MAIN_LAYERS") - 1;
 	
 	/** The main window frame. */
 	private static JFrame mainWin;
@@ -48,11 +54,12 @@ public class GfxManager extends core.Subsystem
 		mainWin = new JFrame("Unnamed Java Game Engine");
 		// Setup the main layer container
 		Integer numMainLayers =
-				(Integer) core.DeveloperSettings.getSetting("NUM_MAIN_LAYERS");
-		Dimension mainWinDims =
-				(Dimension) core.DeveloperSettings.getSetting(
-						"INIT_MAIN_WIN_DIMS"
-						);
+				(Integer) DeveloperSettings.getSetting("NUM_MAIN_LAYERS");
+		int width = 
+				(int) DeveloperSettings.getSetting("INIT_MAIN_WIN_WIDTH");
+		int height = 
+				(int) DeveloperSettings.getSetting("INIT_MAIN_WIN_HEIGHT");
+		Dimension mainWinDims = new Dimension(width, height);
 		mainLayers = new MainLayerSetContainer(mainWin, mainWinDims, numMainLayers);
 		mainWin.add(mainLayers);
 		// Create the graphics resource manager
@@ -160,32 +167,6 @@ public class GfxManager extends core.Subsystem
 	public static void drawGraphic(Graphics2D g, BufferedImage i, int x, int y, int width, int height)
 	{
 		g.drawImage(i,x,y,width,height,null);
-	}
-	
-	/** Shows the specified Renderer on the specified layer.
-	 * @param obj the Renderer to show
-	 * @param layer the layer to show on
-	 */
-	public static synchronized void showRenderer(PrimaryRenderer obj, int layer)
-	{
-		mainLayers.getLayerSet().addRenderer(obj, layer);
-	}
-	
-	/** Hide (remove) the specified renderer from the specified layer.
-	 * @param obj the Renderer to hide
-	 * @param layer the layer to hide on
-	 */
-	public static synchronized void hideRenderer(PrimaryRenderer obj, int layer)
-	{
-		mainLayers.getLayerSet().removeRenderer(obj, layer);
-	}
-	
-	/** Hide (remove) the specified renderer from all layers.
-	 * @param obj the Renderer to hide
-	 */
-	public static synchronized void hideRenderer(PrimaryRenderer obj)
-	{
-		mainLayers.getLayerSet().removeRenderer(obj);
 	}
 	
 	/** Clears all graphics data, like each Renderer, etc. */

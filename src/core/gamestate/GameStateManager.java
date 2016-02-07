@@ -27,8 +27,6 @@ public class GameStateManager
 {
 	/** The current game state object. */
 	protected static GameState currGS;
-	/** A clock for timing different things in a game state. */
-	protected static core.Clock clock;
 	
 	/** Used by the cycle method to limit debug output when a game state
 	 * is not currently set.
@@ -99,14 +97,6 @@ public class GameStateManager
 		}
 	}
 	
-	/** Gets the game state's clock.
-	 * @return the core.Clock object for the current game state
-	 */
-	public static synchronized core.Clock getClock()
-	{
-		return clock;
-	}
-	
 	/** Cleans up the current game state. */
 	public void cleanup()
 	{
@@ -123,7 +113,6 @@ public class GameStateManager
 	 */
 	private void setNewGameState(Class<? extends GameState> newState, ConcurrentHashMap<String, Object> setupArgs)
 	{
-		clock = new core.Clock();
 		// Cleanup after previous game state (if any)
 		if (currGS != null)
 		{
@@ -159,7 +148,5 @@ public class GameStateManager
 		}
 		// Setup the new game state
 		currGS.setup(setupArgs);
-		// Start the game state clock
-		clock.start();
 	}
 }

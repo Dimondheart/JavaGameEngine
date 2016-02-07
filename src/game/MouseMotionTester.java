@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Color;
+import java.util.LinkedList;
 
 import core.graphics.RenderEvent;
 import core.graphics.TextDrawer;
@@ -12,11 +13,13 @@ import static java.awt.event.MouseEvent.*;
 public class MouseMotionTester extends SampleRenderer implements core.graphics.Renderer
 {
 	private boolean isSelected = false;
+	private LinkedList<SampleRenderer> minions;
 	
 	public MouseMotionTester()
 	{
+		minions = new LinkedList<SampleRenderer>();
 		x = 100;
-		y = 100;
+		y = 150;
 	}
 	
 	@Override
@@ -42,6 +45,10 @@ public class MouseMotionTester extends SampleRenderer implements core.graphics.R
 		int x = InputManager.getMS().getMouseX();
 		int y = InputManager.getMS().getMouseY();
 		double dist = Math.pow((double)(Math.pow(x-this.x, 2)+Math.pow(y-this.y, 2)), 0.5);
+		for (SampleRenderer minion : minions)
+		{
+			minion.update();
+		}
 		if (dist < 6 && InputManager.getMS().justPressed(BUTTON3))
 		{
 			isSelected = true;
@@ -50,11 +57,43 @@ public class MouseMotionTester extends SampleRenderer implements core.graphics.R
 		{
 			this.x = x;
 			this.y = y;
+			if (InputManager.getMS().justPressed(BUTTON1))
+			{
+				int randomizer = minions.size();
+				SampleRenderer newMinion;
+				if (randomizer % 2 == 0)
+				{
+					newMinion = new SampleRenderer(x,y,-1,-1);
+				}
+				else if (randomizer % 3 == 0)
+				{
+					newMinion = new SampleRenderer(x,y,-1,1);
+				}
+				else if (randomizer % 5 == 0)
+				{
+					newMinion = new SampleRenderer(x,y,1,1);
+				}
+				else
+				{
+					newMinion = new SampleRenderer(x,y,1,-1);
+				}
+				minions.add(newMinion);
+				game.gamestate.SamplePlay.entityLayers.addRenderer(newMinion, 1);
+			}
 		}
 		else
 		{
 			isSelected = false;
 		}
-			
+	}
+	
+	@Override
+	public void destroy()
+	{
+		for (SampleRenderer minion : minions)
+		{
+			minion.destroy();
+		}
+		super.destroy();
 	}
 }

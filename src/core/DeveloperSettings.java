@@ -15,10 +15,7 @@
 
 package core;
 
-import java.awt.Dimension;
 import java.util.concurrent.ConcurrentHashMap;
-
-import game.gamestate.MainMenuTest;
 
 /** Contains different settings that a developer can safely modify without
  * damaging the game engine's systems.
@@ -41,9 +38,12 @@ public class DeveloperSettings
 	{
 		// The number of layers in the main layer set
 		settings.put("NUM_MAIN_LAYERS", 10);
-		// The initial dimensions of the main window
-		settings.put("INIT_MAIN_WIN_DIMS", new Dimension(480,270));
-		settings.put("INIT_GAME_STATE", MainMenuTest.class);
+		// The initial width of the main window
+		settings.put("INIT_MAIN_WIN_WIDTH", 480);
+		// The initial height of the main window
+		settings.put("INIT_MAIN_WIN_HEIGHT", 270);
+		// The game state to use when the game first starts
+		settings.put("INIT_GAME_STATE", game.gamestate.MainMenu.class);
 	}
 	
 	/** Gets the specified developer setting, or returns null if the

@@ -13,21 +13,21 @@
  * limitations under the License.
  */
 
-package core.gamestate;
+package utility;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 
 import core.graphics.GfxManager;
 import core.graphics.RenderEvent;
-import core.graphics.PrimaryRenderer;
+import core.graphics.Renderer;
 import core.graphics.TextDrawer;
 
 /** A simple implementation of a Renderer, used to display the current average
  * FPS on the screen.
  * @author Bryan Charles Bettis
  */
-public class FPSRenderer implements PrimaryRenderer
+public class FPSRenderer implements Renderer
 {
 	/** Basic constructor. */
 	public FPSRenderer()

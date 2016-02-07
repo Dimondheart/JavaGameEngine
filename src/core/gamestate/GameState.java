@@ -15,33 +15,28 @@
 
 package core.gamestate;
 
-import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** Base Class for a game state.
  * @author Bryan Charles Bettis
  */
-public abstract class GameState implements Serializable
+public abstract class GameState
 {
-	/** */
-	private static final long serialVersionUID = 1L;
+	/** A clock for timing different things in a game state. */
+	protected static core.Clock clock;
 	
-	/** Renders the FPS to the screen. */
-	protected FPSRenderer fpsRenderer;
+	/** The collection of startup arguments for the next game state. */
+	protected ConcurrentHashMap<String, Object> newStateArgs;
 	
 	/** The Class of the next game state to transition to. */
 	private Class<? extends GameState> newState;
-	/** The list of startup arguments for the next game state.
-	 * TODO wrap this with a custom object.
-	 */
-	protected ConcurrentHashMap<String, Object> newStateArgs;
 	
 	/** Basic constructor. */
 	public GameState()
 	{
-		fpsRenderer = new FPSRenderer();
-		newState = this.getClass();
+		clock = new core.Clock();
 		newStateArgs = new ConcurrentHashMap<String, Object>();
+		newState = this.getClass();
 	}
 	
 	/** Performs setup operations specific to each game state.
@@ -60,6 +55,7 @@ public abstract class GameState implements Serializable
 	{
 		// Game-state-specific setup
 		setupState(args);
+		clock.start();
 	}
 	
 	/** Does one cycle of the game state. */
@@ -74,9 +70,16 @@ public abstract class GameState implements Serializable
 	 */
 	public void cleanup()
 	{
-		fpsRenderer.destroy();
 		// Game-state-specific cleanup
 		cleanupState();
+	}
+	
+	/** Gets the game state's clock.
+	 * @return the core.Clock object for the current game state
+	 */
+	public static synchronized core.Clock getClock()
+	{
+		return clock;
 	}
 	
 	/** Determines if this game state should be transitioned.

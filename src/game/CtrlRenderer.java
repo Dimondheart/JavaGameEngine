@@ -4,14 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import core.graphics.RenderEvent;
-import core.graphics.PrimaryRenderer;
+import core.graphics.Renderer;
 import core.graphics.TextDrawer;
 
 /** Renders controls text to the screen for testing purposes.
 * @author Bryan Charles Bettis
 */
 @SuppressWarnings("javadoc")
-public class CtrlRenderer implements PrimaryRenderer
+public class CtrlRenderer implements Renderer
 {
 	private String[] displayText;
 	
@@ -23,12 +23,6 @@ public class CtrlRenderer implements PrimaryRenderer
 		{
 			displayText[i] = text[i-1];
 		}
-		// Show it on the highest layer
-		int topLayer =
-				(int) core.DeveloperSettings.getSetting("NUM_MAIN_LAYERS")
-				- 1
-				;
-		showOnLayer(topLayer);
 	}
 	
 	@Override

@@ -102,24 +102,31 @@ public class LayerSet implements Renderer
 	public synchronized void clearAllLayers()
 	{
 		// Clear each layer
-		for (int i = 0; i < numLayers; ++i)
+		for (Layer layer : layers)
 		{
-			layers[i].clear();
+			layer.clear();
 		}
 	}
 	
-	/** Recursively removes the specified Renderer from all layers in this
-	 * layer set, meaning if there are any layer sets within the layers of
-	 * this layer set, then it will call this method on each of them. If used
-	 * on the main layer set, this method will ensure a Renderer is completely
-	 * removed from all <b>currently displayed</b> layers and layer sets.
+	/** Removes the specified Renderer from the specified layer, and then
+	 * calls this method on any layer sets inside that layer.
+	 * @param obj the renderer to recursively remove
+	 * @param layer the layer to recursively remove the renderer from
+	 */
+	public synchronized void recursiveRemoveRenderer(Renderer obj, int layer)
+	{
+		layers[layer].recursiveRemoveRenderer(obj);
+	}
+	
+	/** Removes the specified Renderer from all layers, and also calls
+	 * this method on any layer sets within the layers.
 	 * @param obj the renderer to recursively remove
 	 */
 	public synchronized void recursiveRemoveRenderer(Renderer obj)
 	{
-		for (Layer l : layers)
+		for (Layer layer : layers)
 		{
-			l.recursiveRemoveRenderer(obj);
+			layer.recursiveRemoveRenderer(obj);
 		}
 	}
 	

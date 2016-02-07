@@ -76,7 +76,19 @@ public class Button extends GUIObject
 		this(x, y, width, height, text, TextDrawer.defFont);
 	}
 	
-	/** Takes arguments for position, dimensions, and text settings.
+	/** Takes arguments for position, dimensions, and the text font.
+	 * @param x the x coordinate
+	 * @param y the y coordinate (screen coordinates)
+	 * @param width the width of the button
+	 * @param height the height of the button
+	 * @param font the font to use to display the button text
+	 */
+	public Button(int x, int y, int width, int height, Font font)
+	{
+		this(x, y, width, height, "", font);
+	}
+	
+	/** Takes arguments for position, dimensions, label, and label settings.
 	 * @param x the x coordinate
 	 * @param y the y coordinate (screen coordinates)
 	 * @param width the width of the button

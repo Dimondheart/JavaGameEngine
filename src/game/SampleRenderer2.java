@@ -8,7 +8,7 @@ import core.graphics.RenderEvent;
 * @author Bryan Charles Bettis
 */
 @SuppressWarnings("javadoc")
-public class SampleRenderer2 implements core.graphics.PrimaryRenderer
+public class SampleRenderer2 implements core.graphics.Renderer
 {
 	private int x;
 	private int y;
@@ -18,17 +18,16 @@ public class SampleRenderer2 implements core.graphics.PrimaryRenderer
 	
 	public SampleRenderer2()
 	{
-		this(180, 0, 20, 270, Color.darkGray, 5);
+		this(180, 0, 20, 270, Color.darkGray);
 	}
 	
-	public SampleRenderer2(int x, int y, int width, int height, Color color, int layer)
+	public SampleRenderer2(int x, int y, int width, int height, Color color)
 	{
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.renderColor = color;
-		this.showOnLayer(layer);
 	}
 
 	@Override
