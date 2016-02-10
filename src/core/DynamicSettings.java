@@ -18,11 +18,50 @@ package core;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** The collection of settings that can change during a game, such as
- * volume levels, resource usage settings, etc.
+ * volume levels, resource usage settings, etc.  The core engine settings
+ * have string constants provided for them as public constants.
  * @author Bryan Charles Bettis
  */
 public class DynamicSettings
 {
+	/** How the game engine should try to handle threading of it's subsystems.
+	 * <br>
+	 * <br> <i>Type:</i> DynamicSettings.ThreadingSetting
+	 */
+	public static final String ENGINE_THREADING = "ENGINE_THREADING";
+	/** If the scroll wheel readings on the mouse should be inverted or not.
+	 * <br>
+	 * <br> <i>Type:</i> boolean, true (scroll up is positive) or false
+	 * (scroll down is positive)
+	 */
+	public static final String INVERT_SCROLL_WHEEL = "INVERT_SCROLL_WHEEL";
+	/** The overall volume level for the sound system.
+	 * <br>
+	 * <br> <i>Type:</i> integer in the range 0-100 (0 is muted)
+	 */
+	public static final String MASTER_VOLUME = "MASTER_VOLUME";
+	/** The volume change applied to the background music only (effect is
+	 * combined with the MASTER_VOLUME setting affecting the overall volume).
+	 * <br>
+	 * <br> <i>Type:</i> integer in the range 0-100 (0 is muted)
+	 */
+	public static final String BGM_VOLUME = "BGM_VOLUME";
+	/** The volume change applied to the sound effects only (effect is
+	 * combined with the MASTER_VOLUME setting affecting the overall volume).
+	 * <br>
+	 * <br> <i>Type:</i> integer in the range 0-100 (0 is muted)
+	 */
+	public static final String SFX_VOLUME = "SFX_VOLUME";
+	/** The speed to try to run the graphics system at, in
+	 * frames per second (FPS).
+	 * <br>
+	 * <br> <i>Type:</i> integer (for example, 60 would be 60 FPS)
+	 * <br>
+	 * <br> <b>WARNING:</b> this setting has not yet been incorporated into
+	 * the graphics system.
+	 */
+	public static final String TARGET_FPS = "TARGET_FPS";
+	
 	/** The map of the different dynamic settings. */
 	protected static volatile ConcurrentHashMap<String, Object> settings;
 	
@@ -55,17 +94,17 @@ public class DynamicSettings
 	{
 		// TODO load from a file, if fails then recreate settings
 		// How the core engine systems should utilize threading (ThreadingSetting)
-		settings.put("ENGINE_THREADING", ThreadingSetting.OPTIMIZE);
+		settings.put(ENGINE_THREADING, ThreadingSetting.OPTIMIZE);
 		// Invert the scroll wheel on the mouse (boolean)
-		settings.put("INVERT_SCROLL_WHEEL", false);
+		settings.put(INVERT_SCROLL_WHEEL, false);
 		// Master volume setting % (int)
-		settings.put("MASTER_VOLUME", 100);
+		settings.put(MASTER_VOLUME, 100);
 		// Background music volume setting % (int)
-		settings.put("BGM_VOLUME", 100);
+		settings.put(BGM_VOLUME, 100);
 		// Sound effects volume setting % (int)
-		settings.put("SFX_VOLUME", 100);
+		settings.put(SFX_VOLUME, 100);
 		// The FPS to try to run the graphics system at (CURRENTLY UNUSED SETTING)
-		settings.put("TARGET_FPS", 60);
+		settings.put(TARGET_FPS, 60);
 		
 	}
 

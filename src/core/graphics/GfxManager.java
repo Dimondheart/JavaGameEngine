@@ -45,7 +45,7 @@ public class GfxManager extends core.Subsystem
 	/** The current average FPS. */
 	private static double FPS;
 	
-	/** Normal graphics renderer setup. */
+	/** Normal graphics system setup. */
 	public GfxManager()
 	{
 		super(DEFAULT_RENDER_INTERVAL, "Graphics Manager Render Loop");
@@ -110,18 +110,11 @@ public class GfxManager extends core.Subsystem
 	/** Gets the main layer set, which is drawn to the screen. To be able to
 	 * draw to the screen, a subclass of Renderer (LayerSet, your own
 	 * subclasses, etc.) must be added to this layer set, or to a different
-	 * Renderer container (LayerSet, etc.) that has been/will be added to
+	 * Renderer "container" (LayerSet, etc.) that has been/will be added to
 	 * this main layer set.
 	 * <br>
-	 * <br>For the primary window, there are 10 layers.
-	 * They "could" be used as follows:
-	 * <br>
-	 * <br>0-2: Background Layers
-	 * <br>3-6: Main Content Layers
-	 * <br>7-9: GUI Layers
-	 * <br>
-	 * <br>What you use each layer for is up to you, but setting your own
-	 * standard usage for a game, like above for example, is recommended.
+	 * <br>The number of layers in this layer set is specified in
+	 * DeveloperSettings, as the setting "NUM_MAIN_LAYERS".
 	 * @return the LayerSet for the main drawing layers
 	 */
 	public static LayerSet getMainLayerSet()
@@ -129,11 +122,11 @@ public class GfxManager extends core.Subsystem
 		return mainLayers.getLayerSet();
 	}
 	
-	/** Draws a pre-loaded image to the specified context.
-	 * @param g the Graphics2D to draw the image to
+	/** Draws a pre-loaded image to the specified graphics context.
+	 * @param g the Graphics2D context to draw the image to
 	 * @param name the "pre-loaded name" of the image to draw
-	 * @param x the x coordinate of the left side
-	 * @param y the y coordinate of the top side
+	 * @param x the x coordinate of the top left corner
+	 * @param y the y coordinate of the top left corner
 	 * @param width the width to draw the image as
 	 * @param height the height to draw the image as
 	 */
@@ -144,11 +137,12 @@ public class GfxManager extends core.Subsystem
 		drawGraphic(g,img,x,y,width,height);
 	}
 	
-	/** Draws a pre-loaded image to the specified context.
-	 * @param g the Graphics2D to draw the image to
+	/** Draws a pre-loaded image to the specified context, without resizing
+	 * the image.
+	 * @param g the Graphics2D context to draw the image to
 	 * @param name the "pre-loaded name" of the image to draw
-	 * @param x the x coordinate of the left side
-	 * @param y the y coordinate of the top side
+	 * @param x the x coordinate of the top left corner
+	 * @param y the y coordinate of the top left corner
 	 */
 	public static void drawGraphic(Graphics2D g, String name, int x, int y)
 	{
@@ -158,10 +152,10 @@ public class GfxManager extends core.Subsystem
 	}
 	
 	/** Draws a BufferedImage to the specified context.
-	 * @param g the Graphics2D to draw the image to
+	 * @param g the Graphics2D context to draw the image to
 	 * @param i the image to draw
-	 * @param x the x coordinate of the left side
-	 * @param y the y coordinate of the top side
+	 * @param x the x coordinate of the top left corner
+	 * @param y the y coordinate of the top left corner
 	 * @param width the width to draw the image as
 	 * @param height the height to draw the image as
 	 */
