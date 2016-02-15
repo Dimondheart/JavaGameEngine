@@ -33,7 +33,7 @@ public class InputManager extends core.Subsystem
 	/** Event queue. */
 	private static volatile ConcurrentLinkedDeque<InputManagerEvent> queue;
 	/** The state the game is currently in. */
-	private static volatile State state = State.NORMAL;
+	private static volatile InputManagerState state = InputManagerState.NORMAL;
 	/** The keyboard. */
 	private static Keyboard keyboard;
 	/** The mouse. */
@@ -43,10 +43,10 @@ public class InputManager extends core.Subsystem
 	/** Manages all the GUI object updates. */
 	private static GUIMonitor gui;
 	
-	/** Different basic states the game can be in.
+	/** Different general states the game can be in.
 	 * @author Bryan Charles Bettis
 	 */
-	public enum State
+	public enum InputManagerState
 	{
 		/** The game is running normally. */
 		NORMAL,
@@ -86,7 +86,7 @@ public class InputManager extends core.Subsystem
 	public boolean runCycle()
 	{
 		// Stop processing new events if quitting soon
-		if (getState() == State.QUIT)
+		if (getState() == InputManagerState.QUIT)
 		{
 			return false;
 		}
@@ -127,7 +127,7 @@ public class InputManager extends core.Subsystem
 	/** Get the current general state of the game.
 	 * @return the State of the game
 	 */
-	public static synchronized State getState()
+	public static synchronized InputManagerState getState()
 	{
 		return state;
 	}
@@ -181,7 +181,7 @@ public class InputManager extends core.Subsystem
 	public static void pause()
 	{
 		// Queue unless already paused
-		if (getState() != State.PAUSED)
+		if (getState() != InputManagerState.PAUSED)
 		{
 			queueEventUnlessPrev(new InputManagerEvent(Type.PAUSE));
 		}
@@ -191,7 +191,7 @@ public class InputManager extends core.Subsystem
 	public static void resume()
 	{
 		// Queue unless already resumed
-		if (getState() != State.NORMAL)
+		if (getState() != InputManagerState.NORMAL)
 		{
 			queueEventUnlessPrev(new InputManagerEvent(Type.RESUME));
 		}
@@ -206,7 +206,7 @@ public class InputManager extends core.Subsystem
 	/** Change the current state.
 	 * @param newState the new general game state State
 	 */
-	private static synchronized void setState(State newState)
+	private static synchronized void setState(InputManagerState newState)
 	{
 		state = newState;
 	}
@@ -314,14 +314,14 @@ public class InputManager extends core.Subsystem
 	private void doPause()
 	{
 		doClear();
-		setState(State.PAUSED);
+		setState(InputManagerState.PAUSED);
 		core.ProgramClock.pause();
 	}
 	
 	/** Resume the game to normal operation. */
 	private void doResume()
 	{
-		setState(State.NORMAL);
+		setState(InputManagerState.NORMAL);
 		core.ProgramClock.resume();
 	}
 	
@@ -329,6 +329,6 @@ public class InputManager extends core.Subsystem
 	private void doQuit()
 	{
 		doClear();
-		setState(State.QUIT);
+		setState(InputManagerState.QUIT);
 	}
 }

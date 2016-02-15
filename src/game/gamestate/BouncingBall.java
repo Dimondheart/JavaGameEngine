@@ -2,6 +2,7 @@ package game.gamestate;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("javadoc")
 public class BouncingBall extends core.gamestate.GameState
 {
 	private game.Ball ball1;

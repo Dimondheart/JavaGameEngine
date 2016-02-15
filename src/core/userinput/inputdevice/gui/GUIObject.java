@@ -18,8 +18,8 @@ package core.userinput.inputdevice.gui;
 import core.graphics.Renderer;
 import core.userinput.inputdevice.InputDevice;
 
-/** Base class for user inputs that are rendered on the screen and the use
- * interacts with using input devices (mouse, keyboard, etc.).
+/** Base class for user inputs that are rendered on the screen, and interaction
+ * with these inputs is through simple input devices such as a mouse.
  * @author Bryan Charles Bettis
  */
 public abstract class GUIObject implements Renderer, InputDevice

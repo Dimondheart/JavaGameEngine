@@ -15,12 +15,12 @@
 
 package core.sound;
 
-/** Used to represent all general sound events on a queue.
+/** Base class for all sound system events.
  * @author Bryan Charles Bettis
  */
 abstract class BaseSoundEvent
 {
-	/** The time the sound effect was queued. */
+	/** The core.ProgramClock time when the sound effect was queued. */
 	private final long queueTime;
 	
 	/** Basic constructor. */
@@ -30,7 +30,7 @@ abstract class BaseSoundEvent
 	}
 	
 	/** How long this event has been queued.
-	 * @return the ProgramTimer time that this event has been queued
+	 * @return the core.ProgramClock time that this event has been queued
 	 */
 	public final long getTimeInQueue()
 	{
@@ -38,8 +38,9 @@ abstract class BaseSoundEvent
 	}
 	
 	/** Determines if this event has met any conditions that make
-	 * it "stale"/old.
-	 * @return if this event is old/stale
+	 * it "stale"/old, for example when a sound effect event has been
+	 * queued for a long time.
+	 * @return true if this event is old/stale
 	 */
 	public boolean isStale()
 	{

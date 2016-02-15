@@ -104,7 +104,7 @@ public class GameSession
 		while (true)
 		{
 			// Quit the game
-			if (InputManager.getState().equals(InputManager.State.QUIT))
+			if (InputManager.getState().equals(InputManager.InputManagerState.QUIT))
 			{
 				break;
 			}
@@ -276,7 +276,7 @@ public class GameSession
 			return false;
 		}
 		// Normal cycle; game is not paused, quitting, etc.
-		else if (InputManager.getState() == InputManager.State.NORMAL)
+		else if (InputManager.getState() == InputManager.InputManagerState.NORMAL)
 		{
 			// Update input devices
 			InputManager.poll();
@@ -284,7 +284,7 @@ public class GameSession
 			gsm.cycle();
 		}
 		// Input manager indicated that the program should quit
-		else if (InputManager.getState() == InputManager.State.QUIT)
+		else if (InputManager.getState() == InputManager.InputManagerState.QUIT)
 		{
 			// Clean up the current game state before quitting
 			gsm.cleanup();

@@ -4,6 +4,7 @@ import core.graphics.RenderEvent;
 
 import java.awt.Color;
 
+@SuppressWarnings("javadoc")
 public class Ball implements core.graphics.Renderer
 {
 	private double x;

@@ -33,7 +33,6 @@ public class DeveloperSettings
 	/** The initial width of the game window.
 	 * <br>
 	 * <br> <i>Type:</i> integer greater than 0
-	 * (scroll down is positive)
 	 */
 	public static final String INIT_MAIN_WIN_WIDTH = "INIT_MAIN_WIN_WIDTH";
 	/** The initial height of the game window.

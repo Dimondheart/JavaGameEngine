@@ -111,7 +111,7 @@ public class SoundManager extends core.Subsystem
 		// Pause/resume the current BGM based on program state
 		if (currTrack != null)
 		{
-			if (InputManager.getState().equals(InputManager.State.PAUSED))
+			if (InputManager.getState().equals(InputManager.InputManagerState.PAUSED))
 			{
 				currTrack.stop();
 				return true;

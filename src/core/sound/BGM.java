@@ -18,13 +18,13 @@ package core.sound;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
 
-/** Handles play-back of a background music track.
+/** Handles playing and control for a background music track.
  * @author Bryan Charles Bettis
  */
 class BGM extends Sound
 {
 	/** Basic constructor.
-	 * @param event the event object for this track
+	 * @param event the event object that requested this background music
 	 */
 	public BGM(BGMEvent event)
 	{

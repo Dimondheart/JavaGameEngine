@@ -120,6 +120,5 @@ public class SamplePlay2 extends GameState
 	{
 		enemies.add(e);
 		entityLayers.addRenderer(e, 0);
-		System.out.println(enemies.size());
 	}
 }
