@@ -105,7 +105,7 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	 * @return True if the button was released first during the last poll
 	 * @see java.awt.event.MouseEvent
 	 */
-	public boolean justClicked(int btnCode)
+	public boolean justReleased(int btnCode)
 	{
 		return (processedStates[btnCode].equals(BtnState.CLICKED));
 	}

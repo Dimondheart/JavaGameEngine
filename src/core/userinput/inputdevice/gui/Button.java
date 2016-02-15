@@ -50,6 +50,9 @@ public class Button extends GUIObject
 		HOVER,
 		/** The button has just been released. */
 		CLICKED
+//		/** The button was selected, but the mouse is no longer hovering over
+//		 * this button.
+//		 */
 //		PRESSED_NO_HOVER
 	}
 	
@@ -113,13 +116,43 @@ public class Button extends GUIObject
 		return state;
 	}
 	
+	/** Checks if this button is in the specified state.
+	 * @param state the state to check if this button is in or not
+	 * @return true if this button is in the specified state, false otherwise
+	 */
+	public synchronized boolean isInState(ButtonState state)
+	{
+		return getState().equals(state);
+	}
+	
+	/** Determines if this button is currently being pressed. This is
+	 * a convenience method for checking if this button is in the state
+	 * ButtonState.PRESSED.
+	 * @return true if this button is pressed, false otherwise
+	 */
+	public synchronized boolean isPressed()
+	{
+		return isInState(ButtonState.PRESSED);
+	}
+	
+	/** Determines if this button was just released ("clicked"). This is
+	 * a convenience method for checking if this button is in the state
+	 * ButtonState.CLICKED.
+	 * @return true if this button was first released last poll, false
+	 * 		otherwise
+	 */
+	public synchronized boolean justReleased()
+	{
+		return isInState(ButtonState.CLICKED);
+	}
+	
 	@Override
 	public synchronized void poll()
 	{
 		// Mouse is hovering over, interact with button
 		if (isMouseOver())
 		{
-			if (InputManager.getMS().justClicked(BUTTON1))
+			if (InputManager.getMS().justReleased(BUTTON1))
 			{
 				state = ButtonState.CLICKED;
 			}

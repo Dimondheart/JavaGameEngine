@@ -72,7 +72,7 @@ public class SamplePlay extends GameState
 		cL[0] = "WASD to move";
 		cL[1] = "Escape to pause/resume, + click main menu button to go to the main menu";
 		cL[2] = "Scroll to change the player unit's speed";
-		cL[3] = "Hold & right click the mouse  over the blue circle & move it by moving the cursor";
+		cL[3] = "Select the blue circle (left mouse button) & move it by moving the cursor";
 		controls = new CtrlRenderer(cL);
 		GfxManager.getMainLayerSet().addRenderer(controls, GfxManager.TOP_LAYER_INDEX);
 		GfxManager.getMainLayerSet().addRenderer(ct, GfxManager.TOP_LAYER_INDEX);

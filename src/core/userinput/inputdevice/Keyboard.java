@@ -83,6 +83,17 @@ public class Keyboard implements InputDevice, KeyListener
 		return processedStates[keyCode].equals(KeyState.ONCE);
 	}
 	
+	/** Checks if the specified key was clicked (pressed and released),
+	 * and the release was during the last poll.
+	 * @param keyCode the integer representing the key
+	 * @return True if the key was released first during the last poll
+	 * @see java.awt.event.KeyEvent
+	 */
+	public boolean justReleased(int keyCode)
+	{
+		return (processedStates[keyCode].equals(KeyState.ONCE));
+	}
+	
 	@Override
 	public synchronized void poll()
 	{

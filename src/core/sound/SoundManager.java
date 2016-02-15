@@ -42,22 +42,29 @@ public class SoundManager extends core.Subsystem
 	 */
 	private int[] currVolLvls;
 	
-	/** Different ways to transition BGM.  Currently only IMMEDIATE is
-	 * implemented.
+	/** Different ways to transition BGM. Currently only one is implemented.
 	 * @author Bryan Charles Bettis
 	 */
 	public enum BGMTransition
 	{
-		/** Immediately stop the previous track, then start the new track. */
-		IMMEDIATE,
-		/** NOT YET IMPLEMENTED. Fade out the old track, then start the
+		/** Immediately stop the previous track, then immediately start the
 		 * new track.
 		 */
-		FADE_OUT,
-		/** NOT YET IMPLEMENTED. Fade out the old track and fade in the new
-		 * track at the same time.
-		 */
-		CROSSFADE
+		IMMEDIATE
+//		/** Fades out the previous track, then fades in the new track. */
+//		SMOOTH,
+//		/** Fade out the old track, then immediately start the
+//		 * new track.
+//		 */
+//		FADE_OUT,
+//		/** Immediately stop the old track, then fade in the
+//		 * new track.
+//		 */
+//		FADE_IN,
+//		/** Fade out the old track and fade in the new
+//		 * track at the same time.
+//		 */
+//		CROSSFADE
 	}
 	
 	/** The different volume settings for the sound system.
@@ -104,7 +111,7 @@ public class SoundManager extends core.Subsystem
 		// Pause/resume the current BGM based on program state
 		if (currTrack != null)
 		{
-			if (InputManager.getState() == InputManager.State.PAUSED)
+			if (InputManager.getState().equals(InputManager.State.PAUSED))
 			{
 				currTrack.stop();
 				return true;
@@ -312,7 +319,7 @@ public class SoundManager extends core.Subsystem
 				return;
 		}
 		core.DynamicSettings.setSetting(settingName, ve.getNewVolume());
-		// TODO actually update sounds here? Or more to run()
+		// TODO actually update sounds here? Or move to run()
 	}
 	
 	/** Actually play/change the BGM track.
