@@ -55,13 +55,13 @@ public class GUIPanel extends GUIObject
 		/** Place the new GUIObject to the right of the specified one. */
 		RIGHT_OF,
 		/** Place the new GUIObject above the specified one. If there is
-		 * already a row above the specified GUIObject, the new GUIObject
-		 * will be placed on the end of the existing row.
+		 * already a row above the specified GUIObject, a new row will be
+		 * created for the GUIObject.
 		 */
 		ABOVE,
 		/** Place the new GUIObject below the specified one. If there is
-		 * already a row below the specified GUIObject, the new GUIObject
-		 * will be placed on the end of the existing row.
+		 * already a row below the specified GUIObject, a new row will be
+		 * created for the GUIObject.
 		 */
 		BELOW
 	}
