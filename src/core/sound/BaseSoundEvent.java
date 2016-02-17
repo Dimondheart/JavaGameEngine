@@ -18,7 +18,7 @@ package core.sound;
 /** Base class for all sound system events.
  * @author Bryan Charles Bettis
  */
-abstract class BaseSoundEvent
+public abstract class BaseSoundEvent
 {
 	/** The core.ProgramClock time when the sound effect was queued. */
 	private final long queueTime;
@@ -42,7 +42,7 @@ abstract class BaseSoundEvent
 	 * queued for a long time.
 	 * @return true if this event is old/stale
 	 */
-	public boolean isStale()
+	boolean isStale()
 	{
 		return false;
 	}

@@ -20,7 +20,7 @@ package core;
  * game is paused.
  * @author Bryan Charles Bettis
  */
-public class Clock
+public class SimpleClock
 {
 	/** Used to make sure this clock is only initialized once. */
 	private boolean isStarted = false;

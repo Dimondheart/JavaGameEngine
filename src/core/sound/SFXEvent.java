@@ -18,7 +18,7 @@ package core.sound;
 /** An event used to play a sound effect.
 * @author Bryan Charles Bettis
 */
-class SFXEvent extends BaseSoundEvent
+public class SFXEvent extends BaseSoundEvent
 {
 	/** How long a sound effect can be queued before it is stale/old. */
 	private static final long MAX_QUEUE_TIME = 200;
@@ -34,7 +34,7 @@ class SFXEvent extends BaseSoundEvent
 		this.sfx = sfx;
 	}
 	
-	/** Get the sound effect to play.
+	/** Get the name/path of the sound effect to play.
 	 * @return the name of the file
 	 */
 	public String getSFX()
@@ -42,8 +42,17 @@ class SFXEvent extends BaseSoundEvent
 		return sfx;
 	}
 	
+	/** Set the name of the sound effect to play.
+	 * @param sfx the sound effect to play
+	 * @see game.resources
+	 */
+	public void setSFX(String sfx)
+	{
+		this.sfx = sfx;
+	}
+	
 	@Override
-	public boolean isStale()
+	boolean isStale()
 	{
 		return getTimeInQueue() >= MAX_QUEUE_TIME;
 	}

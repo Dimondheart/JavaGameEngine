@@ -167,11 +167,6 @@ public class SoundManager extends core.Subsystem
 			{
 				doPlayBGM((BGMEvent) nextGen);
 			}
-			// Change volume settings
-			else if (c == VolumeEvent.class)
-			{
-				doChangeVolume((VolumeEvent) nextGen);
-			}
 			// Stop current BGM
 			else if (c == StopBGMEvent.class)
 			{
@@ -211,22 +206,30 @@ public class SoundManager extends core.Subsystem
 		queueSFXEvent(new SFXEvent(sfx));
 	}
 	
-	/** Change a volume setting.
-	 * @param setting the volume setting to change
-	 * @param newVolume the new volume setting
+	/** Play a sound effect, using the given sound effect event.
+	 * @param sfx the event to use to play a sound effect
 	 */
-	public static void changeVolume(VolumeSetting setting, int newVolume)
+	public static void playSFX(SFXEvent sfx)
 	{
-		queueGenEvent(new VolumeEvent(setting, newVolume));
+		queueSFXEvent(sfx);
 	}
 	
-	/** Change/play a background music track.
+	/** Change or set the background music track.
 	 * @param track the track to play
 	 * @param effect the transition effect for fading in the new track
 	 */
 	public static void playBGM(String track, BGMTransition effect)
 	{
 		queueGenEvent(new BGMEvent(track, effect));
+	}
+	
+	/** Change or set the background music track, using the given background
+	 * music event.
+	 * @param bgm the event to use to change/set the background music track
+	 */
+	public static void playBGM(BGMEvent bgm)
+	{
+		queueGenEvent(bgm);
 	}
 	
 	/** Stop the current BGM and remove any queued tracks, fades out the
@@ -289,55 +292,31 @@ public class SoundManager extends core.Subsystem
 	}
 	
 	/** Play the specified sound effect.
-	 * @param sfx the sound effect event
+	 * @param event the sound effect event
 	 */
-	private void doPlaySFX(SFXEvent sfx)
+	private void doPlaySFX(SFXEvent event)
 	{
-		SFX newSFX = new SFX(sfx);
+		SFX newSFX = new SFX(event);
 		newSFX.play();
 		playingSFX.add(newSFX);
 	}
 	
-	/** Actually change the volume setting.
-	 * @param ve the volume change event
-	 */
-	private void doChangeVolume(VolumeEvent ve)
-	{
-		String settingName = "";
-		switch (ve.getSetting())
-		{
-			case BGM:
-				settingName = "BGM_VOLUME";
-				break;
-			case MASTER:
-				settingName = "MASTER_VOLUME";
-				break;
-			case SFX:
-				settingName = "SFX_VOLUME";
-				break;
-			default:
-				return;
-		}
-		core.DynamicSettings.setSetting(settingName, ve.getNewVolume());
-		// TODO actually update sounds here? Or move to run()
-	}
-	
 	/** Actually play/change the BGM track.
-	 * @param bgme the background music play event
+	 * @param event the background music play event
 	 */
-	private void doPlayBGM(BGMEvent bgme)
+	private void doPlayBGM(BGMEvent event)
 	{
 		if (currTrack != null)
 		{
 			currTrack.stop();
 		}
-		currTrack = new BGM(bgme);
+		currTrack = new BGM(event);
 	}
 	
 	/** Stops the current BGM and clears any queued ones.
-	 * @param sbgme the stop background music event
+	 * @param event the stop background music event
 	 */
-	private void doStopBGM(StopBGMEvent sbgme)
+	private void doStopBGM(StopBGMEvent event)
 	{
 		currTrack.stop();
 		currTrack = null;
@@ -345,9 +324,9 @@ public class SoundManager extends core.Subsystem
 	
 	/** Stops all currently playing sound effects and clears any queued
 	 * ones.
-	 * @param se the stop all sound effects event object
+	 * @param event the stop all sound effects event object
 	 */
-	private void doStopAllSFX(StopAllSFXEvent se)
+	private void doStopAllSFX(StopAllSFXEvent event)
 	{
 		sfxQueue.clear();
 		for (SFX sfx : playingSFX)

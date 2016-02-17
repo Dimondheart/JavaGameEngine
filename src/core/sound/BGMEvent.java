@@ -17,39 +17,64 @@ package core.sound;
 
 import static core.sound.SoundManager.BGMTransition;
 
-/** An event used to change/transition the playing background music track.
+/** An event for the sound system queue, used to change the background music.
 * @author Bryan Charles Bettis
 */
-class BGMEvent extends BaseSoundEvent
+public class BGMEvent extends BaseSoundEvent
 {
 	/** The background music to play. */
 	private String bgm;
 	/** The transition effect into this track. */
 	private BGMTransition effect;
 	
-	/** Basic constructor.
-	 * @param bgm the name of the file
-	 * @param effect the effect used to transition in the new track
+	/** Basic constructor. Sets the track and other settings to default or
+	 * placeholder values.
 	 */
-	public BGMEvent(String bgm, BGMTransition effect)
+	public BGMEvent()
 	{
-		this.bgm = bgm;
-		this.effect = effect;
+		this("", BGMTransition.IMMEDIATE);
 	}
 	
-	/** Get the track to play.
+	/** Basic constructor.
+	 * @param bgmTrack the name of the file
+	 * @param effect the effect used to transition in the new track
+	 */
+	public BGMEvent(String bgmTrack, BGMTransition effect)
+	{
+		setTrack(bgmTrack);
+		setEffect(effect);
+	}
+	
+	/** Get the background music track to play.
 	 * @return the name of the file
 	 */
-	public String getBGM()
+	public String getTrack()
 	{
 		return bgm;
 	}
 	
-	/** Get the effect used to transition in this track.
+	/** Get the transition effect used to transition in this track.
 	 * @return the transition effect
 	 */
 	public BGMTransition getEffect()
 	{
 		return effect;
+	}
+	
+	/** Change the background music track.
+	 * @param newTrack the name/path to the new track
+	 * @see game.resources
+	 */
+	public void setTrack(String newTrack)
+	{
+		this.bgm = newTrack;
+	}
+	
+	/** Get the effect used to transition in this track.
+	 * @param effect the effect to use to transition in the new track
+	 */
+	public void setEffect(BGMTransition effect)
+	{
+		this.effect = effect;
 	}
 }
