@@ -67,19 +67,6 @@ public class SoundManager extends core.Subsystem
 //		CROSSFADE
 	}
 	
-	/** The different volume settings for the sound system.
-	 * @author Bryan Charles Bettis
-	 */
-	public enum VolumeSetting
-	{
-		/** The master volume setting, changes the overall volume. */
-		MASTER,
-		/** The volume of sound effects. */
-		SFX,
-		/** The volume of the background music track. */
-		BGM
-	}
-	
 	/** Normal sound manager setup. */
 	public SoundManager()
 	{
