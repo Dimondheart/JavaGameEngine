@@ -17,6 +17,6 @@ public class TestAnimator implements Renderer
 	@Override
 	public void render(RenderEvent e)
 	{
-		animate.renderAnimation(e.getContext(), 100, 100);
+		animate.renderAnimation(e, 100, 100);
 	}
 }

@@ -13,37 +13,14 @@
  * limitations under the License.
  */
 
-package core.graphics;
+package core.entity.entitymodule;
 
-/** The base class for all graphics classes that handle animating
- * things on the screen, like rotation or image-frame-based.
+import core.entity.Map;
+
+/** 
  * @author Bryan Charles Bettis
  */
-public abstract class Animator
+public abstract class Body extends EntityModule
 {
-	private boolean loopAnimation;
-	protected boolean isFinished;
-	
-	public Animator()
-	{
-		setLooping(false);
-		isFinished =  false;
-	}
-	
-	public abstract void renderAnimation(RenderEvent event, int x, int y);
-	
-	public boolean isLooping()
-	{
-		return loopAnimation;
-	}
-	
-	public void setLooping(boolean doLoop)
-	{
-		loopAnimation = doLoop;
-	}
-	
-	public boolean isAnimationDone()
-	{
-		return isFinished;
-	}
+	public abstract boolean setMap(Map map);
 }

@@ -13,37 +13,9 @@
  * limitations under the License.
  */
 
-package core.graphics;
-
-/** The base class for all graphics classes that handle animating
- * things on the screen, like rotation or image-frame-based.
+/** Entity modules are different aspects of entities, such as a body or
+ * an inventory.
  * @author Bryan Charles Bettis
+ *
  */
-public abstract class Animator
-{
-	private boolean loopAnimation;
-	protected boolean isFinished;
-	
-	public Animator()
-	{
-		setLooping(false);
-		isFinished =  false;
-	}
-	
-	public abstract void renderAnimation(RenderEvent event, int x, int y);
-	
-	public boolean isLooping()
-	{
-		return loopAnimation;
-	}
-	
-	public void setLooping(boolean doLoop)
-	{
-		loopAnimation = doLoop;
-	}
-	
-	public boolean isAnimationDone()
-	{
-		return isFinished;
-	}
-}
+package core.entity.entitymodule;

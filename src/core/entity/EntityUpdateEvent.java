@@ -13,37 +13,24 @@
  * limitations under the License.
  */
 
-package core.graphics;
+package core.entity;
 
-/** The base class for all graphics classes that handle animating
- * things on the screen, like rotation or image-frame-based.
+import java.util.LinkedList;
+
+/** 
  * @author Bryan Charles Bettis
  */
-public abstract class Animator
+public class EntityUpdateEvent extends EntityEvent
 {
-	private boolean loopAnimation;
-	protected boolean isFinished;
+	private EntityContainer entities;
 	
-	public Animator()
+	public EntityContainer getEntities()
 	{
-		setLooping(false);
-		isFinished =  false;
+		return entities;
 	}
 	
-	public abstract void renderAnimation(RenderEvent event, int x, int y);
-	
-	public boolean isLooping()
+	public void setEntities(EntityContainer entities)
 	{
-		return loopAnimation;
-	}
-	
-	public void setLooping(boolean doLoop)
-	{
-		loopAnimation = doLoop;
-	}
-	
-	public boolean isAnimationDone()
-	{
-		return isFinished;
+		this.entities = entities;
 	}
 }

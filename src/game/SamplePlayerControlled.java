@@ -38,7 +38,7 @@ public class SamplePlayerControlled implements Renderer
 		}
 		else
 		{
-			animate.renderAnimation(e.getContext(), (int)x-5, (int)y-5);
+			animate.renderAnimation(e, (int)x-5, (int)y-5);
 		}
 	}
 	

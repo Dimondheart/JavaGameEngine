@@ -109,21 +109,9 @@ public class SoundManager extends core.Subsystem
 			}
 		}
 		// Clear any finished sound effects
-		for (SFX sfx : playingSFX)
-		{
-			if (sfx.isDone())
-			{
-				playingSFX.remove(sfx);
-			}
-		}
+		playingSFX.removeIf((SFX sfx)->{return sfx.isDone();});
 		// Clear any "stale" sound effects
-		for (SFXEvent e : sfxQueue)
-		{
-			if (e.isStale())
-			{
-				sfxQueue.remove(e);
-			}
-		}
+		sfxQueue.removeIf((SFXEvent event)->{return event.isStale();});
 		// Start a few new sound effects
 		for (int i = 0; i < 7 && playingSFX.size() < MAX_PLAYING_SFX; ++i)
 		{
@@ -142,7 +130,7 @@ public class SoundManager extends core.Subsystem
 		{
 			// Get the next general event
 			BaseSoundEvent nextGen = genQueue.poll();
-			// Stop if no gen events left
+//			 Stop if no gen events left
 			if (nextGen == null)
 			{
 				break;
@@ -190,7 +178,7 @@ public class SoundManager extends core.Subsystem
 	 */
 	public static void playSFX(String sfx)
 	{
-		queueSFXEvent(new SFXEvent(sfx));
+		playSFX(new SFXEvent(sfx));
 	}
 	
 	/** Play a sound effect, using the given sound effect event.
@@ -262,17 +250,13 @@ public class SoundManager extends core.Subsystem
 	 */
 	private static synchronized void queueGenEventUnlessPrev(BaseSoundEvent e)
 	{
-		try
+		if (genQueue.size() <= 0)
 		{
-			// Check if the previous queued event is the same type
-			if (genQueue.getLast().getClass().equals(e.getClass()))
-			{
-				return;
-			}
+			queueGenEvent(e);
 		}
-		// Queue is empty, so yes this event should still be queued
-		catch (java.util.NoSuchElementException ex)
+		else if (genQueue.getLast().getClass().equals(e.getClass()))
 		{
+			return;
 		}
 		// Queue the event
 		queueGenEvent(e);
@@ -283,9 +267,12 @@ public class SoundManager extends core.Subsystem
 	 */
 	private void doPlaySFX(SFXEvent event)
 	{
-		SFX newSFX = new SFX(event);
-		newSFX.play();
-		playingSFX.add(newSFX);
+		if (playingSFX.size() < MAX_PLAYING_SFX)
+		{
+			SFX newSFX = new SFX(event);
+			newSFX.play();
+			playingSFX.add(newSFX);
+		}
 	}
 	
 	/** Actually play/change the BGM track.
@@ -305,6 +292,10 @@ public class SoundManager extends core.Subsystem
 	 */
 	private void doStopBGM(StopBGMEvent event)
 	{
+		if (currTrack == null)
+		{
+			return;
+		}
 		currTrack.stop();
 		currTrack = null;
 	}
@@ -342,14 +333,10 @@ public class SoundManager extends core.Subsystem
 		settings[2] = (int) core.DynamicSettings.getSetting(
 				"SFX_VOLUME"
 				);
-		if (
+		return (
 				settings[0] != currVolLvls[0]
 				|| settings[1] != currVolLvls[1]
 				|| settings[2] != currVolLvls[2]
-			)
-		{
-			return true;
-		}
-		return false;
+						);
 	}
 }

@@ -13,37 +13,17 @@
  * limitations under the License.
  */
 
-package core.graphics;
+package core.entity;
 
-/** The base class for all graphics classes that handle animating
- * things on the screen, like rotation or image-frame-based.
+/** 
  * @author Bryan Charles Bettis
  */
-public abstract class Animator
+public interface Entity extends core.graphics.Renderer
 {
-	private boolean loopAnimation;
-	protected boolean isFinished;
+	public void update(EntityUpdateEvent event);
+	public boolean hasBody();
 	
-	public Animator()
+	public default void render(core.graphics.RenderEvent event)
 	{
-		setLooping(false);
-		isFinished =  false;
-	}
-	
-	public abstract void renderAnimation(RenderEvent event, int x, int y);
-	
-	public boolean isLooping()
-	{
-		return loopAnimation;
-	}
-	
-	public void setLooping(boolean doLoop)
-	{
-		loopAnimation = doLoop;
-	}
-	
-	public boolean isAnimationDone()
-	{
-		return isFinished;
 	}
 }

@@ -30,6 +30,26 @@ public class SimpleClock
 	private long elapsed = 0;
 	/** When the timer is paused and will not change until resumed. */
 	private boolean paused = true;
+	/** The clock that this clock uses to update itself. */
+	private SimpleClock parentClock;
+	
+	/** Basic constructor. Uses the ProgramTimer for updating its internal
+	 * time.
+	 */
+	public SimpleClock()
+	{
+		this(null);
+	}
+	
+	/** Takes an argument for a clock to update this clock using (uses the
+	 * program clock to update itself if specified clock is null.)
+	 * @param parentClock the clock to use to update this clock (this clock
+	 * 		pauses and resumes with the parent clock.)
+	 */
+	public SimpleClock(SimpleClock parentClock)
+	{
+		this.parentClock = parentClock;
+	}
 	
 	/** Start this clock. Repeated calls will have no effect. */
 	public synchronized void start()
@@ -54,9 +74,15 @@ public class SimpleClock
 		{
 			return elapsed;
 		}
-		else
+		// When the parent clock is the static program clock
+		else if (parentClock == null)
 		{
 			return elapsed + (core.ProgramClock.getTime() - started);
+		}
+		// Instantiated parent clocks
+		else
+		{
+			return elapsed + (parentClock.getTime() - started);
 		}
 	}
 	
@@ -67,10 +93,16 @@ public class SimpleClock
 		{
 			return;
 		}
-		else
+		// When the parent clock is the static program clock
+		else if (parentClock == null)
 		{
 			paused = true;
 			elapsed += (core.ProgramClock.getTime() - started);
+		}
+		// Instantiated parent clocks
+		else
+		{
+			elapsed += (parentClock.getTime() - started);
 		}
 	}
 	
@@ -80,11 +112,16 @@ public class SimpleClock
 		if (paused && isStarted)
 		{
 			paused = false;
-			started = core.ProgramClock.getTime();
-		}
-		else
-		{
-			return;
+			// When the parent clock is the static program clock
+			if (parentClock == null)
+			{
+				started = core.ProgramClock.getTime();
+			}
+			// Instantiated parent clocks
+			else
+			{
+				started = parentClock.getTime();
+			}
 		}
 	}
 }

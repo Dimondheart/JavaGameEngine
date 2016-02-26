@@ -37,6 +37,7 @@ public class FrameAnimator extends Animator
 	private String currFramePath;
 	/** The start time of the current frame. */
 	private long frameStart;
+	private boolean centerOverCoords;
 	
 	/** Defaults to the "basic" animation set.
 	 * @param location the root folder containing animation sets
@@ -76,23 +77,57 @@ public class FrameAnimator extends Animator
 		setAnimationSet(startingSet);
 		setInterval(interval);
 		setFrame(1);
+		setCenterOverCoords(true);
 	}
 	
 	/** Render the current frame of this animation at the specified
 	 * coordinates.
-	 * @param g the surface to draw to
+	 * @param event the RenderEvent containing the graphics context to draw to
 	 * @param x the x coordinate to draw at
 	 * @param y the y coordinate to draw at
 	 */
-	public void renderAnimation(Graphics2D g, int x, int y)
+	@Override
+	public void renderAnimation(RenderEvent event, int x, int y)
 	{
 		// Update the current frame
 		selectFrame();
+		if (isFinished)
+		{
+			return;
+		}
 		// Get the actual image
 		BufferedImage img =
 				GfxManager.getResManager().getRes(currFramePath);
+		int imgWidth = img.getWidth();
+		int imgHeight = img.getHeight();
 		// Draw the current frame
-		GfxManager.drawGraphic(g, img, x, y, img.getWidth(), img.getHeight());
+		if (centerOverCoords)
+		{
+			GfxManager.drawGraphic(
+					event.getContext(),
+					img,
+					x-imgWidth/2,
+					y-imgHeight/2,
+					imgWidth,
+					imgHeight
+					);
+		}
+		else
+		{
+			GfxManager.drawGraphic(
+					event.getContext(),
+					img,
+					x,
+					y,
+					imgWidth,
+					imgHeight
+					);
+		}
+	}
+	
+	public void setCenterOverCoords(boolean doCenter)
+	{
+		centerOverCoords = doCenter;
 	}
 	
 	/** Changes the animation set to use for this animator.
@@ -125,6 +160,7 @@ public class FrameAnimator extends Animator
 	 */
 	public void setFrame(int frame)
 	{
+		isFinished = false;
 		currFrame = frame;
 		frameStart = core.ProgramClock.getTime();
 	}
@@ -139,11 +175,18 @@ public class FrameAnimator extends Animator
 		}
 		// Get the path to the current frame's image
 		setFramePath();
-		// If the image frame doesn't exist, reset to the beginning
+		// If the image frame doesn't exist...
 		if (!GfxManager.getResManager().resExists(currFramePath))
 		{
-			setFrame(1);
-			setFramePath();
+			if (isLooping())
+			{
+				setFrame(1);
+				setFramePath();
+			}
+			else
+			{
+				isFinished = true;
+			}
 		}
 	}
 	
