@@ -215,8 +215,8 @@ public class Button extends GUIObject
 	 */
 	public boolean isMouseOver()
 	{
-		int mx = InputManager.getMS().getMouseX();
-		int my = InputManager.getMS().getMouseY();
+		int mx = InputManager.getMS().getUnpolledX();
+		int my = InputManager.getMS().getUnpolledY();
 		if (
 				mx < getX()
 				|| mx > getX() + getWidth()

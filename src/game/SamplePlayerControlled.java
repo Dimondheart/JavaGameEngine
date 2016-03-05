@@ -24,6 +24,7 @@ public class SamplePlayerControlled implements Renderer
 	public SamplePlayerControlled()
 	{
 		animate = new FrameAnimator("arrowship",150);
+		animate.setLooping(true);
 	}
 	
 	@Override
@@ -38,7 +39,7 @@ public class SamplePlayerControlled implements Renderer
 		}
 		else
 		{
-			animate.renderAnimation(e, (int)x-5, (int)y-5);
+			animate.renderAnimation(e, (int)x, (int)y);
 		}
 	}
 	

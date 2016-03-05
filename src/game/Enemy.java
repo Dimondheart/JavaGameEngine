@@ -1,16 +1,22 @@
 package game;
 
+import java.awt.Color;
+import java.util.LinkedList;
 import java.util.Random;
 
+import core.entity.Entity;
+import core.entity.EntityContainer;
 import core.entity.EntityUpdateEvent;
-import core.entity.entitymodule.Body;
 import core.gamestate.GameState;
 import core.graphics.FrameAnimator;
+import core.graphics.TextDrawer;
 
 @SuppressWarnings("javadoc")
 public class Enemy implements core.entity.Entity, core.graphics.Renderer
 {
 	private static final int HEAL_RATE = 250;
+	private static final int FIGHT_DISTANCE = 16;
+	private static final int SPLIT_HEALTH = 48;
 	/** The vitality of this enemy. */
 	private int health;
 	private long lastHeal = 0;
@@ -18,6 +24,7 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 	private FrameAnimator deathAnimator;
 	private FrameAnimator lifeAnimator;
 	private boolean dying = false;
+	private boolean finishedDying = false;
 	private long lastResistanceUpdate;
 	private SimpleBody body;
 	
@@ -26,8 +33,8 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 		body = new SimpleBody(x, y, vectorX, vectorY);
 		this.health = health;
 		randNumGen = new Random();
-		lifeAnimator = new FrameAnimator("bluering", 60);
-		lastResistanceUpdate = GameState.getClock().getTime();
+		lifeAnimator = new FrameAnimator("birth", 60);
+		lastResistanceUpdate = GameState.getClock().getMSTime();
 	}
 	
 	public Enemy(double[] coords, double[] vector, int health)
@@ -38,9 +45,15 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 	@Override
 	public synchronized void render(core.graphics.RenderEvent e)
 	{
-		if (deathAnimator == null)
+		int[] drawCoords = {(int) body.getX(), (int) body.getY()};
+//		e.getContext().setColor(Color.red);
+//		e.getContext().drawOval(drawCoords[0]-32, drawCoords[1]-32, 64, 64);
+		if (!dying)
 		{
-			int[] drawCoords = {(int) body.getX(), (int) body.getY()};
+//			e.getContext().setColor(Color.white);
+//			e.getContext().drawOval(drawCoords[0]-SPLIT_HEALTH/4, drawCoords[1]-SPLIT_HEALTH/4, SPLIT_HEALTH/2, SPLIT_HEALTH/2);
+//			e.getContext().setColor(Color.orange);
+//			e.getContext().drawOval(drawCoords[0]-FIGHT_DISTANCE, drawCoords[1]-FIGHT_DISTANCE, FIGHT_DISTANCE*2, FIGHT_DISTANCE*2);
 			core.graphics.GfxManager.drawGraphic(
 					e.getContext(),
 					"planet6.png",
@@ -49,62 +62,90 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 					health/2,
 					health/2
 					);
-//			core.graphics.GfxManager.drawGraphic(
-//					e.getContext(),
-//					"asteroid.png",
-//					drawCoords[0]-health/4,
-//					drawCoords[1]-health/4,
-//					health/2,
-//					health/2
-//					);
 			lifeAnimator.renderAnimation(e, drawCoords[0], drawCoords[1]);
 //			e.getContext().setColor(Color.white);
-//			String toDraw = Integer.toString(health);
-//			int[] textCoords = TextDrawer.centerOverPoint(e.getContext(), toDraw, drawCoords);
-//			TextDrawer.drawText(e.getContext(), toDraw, textCoords);
+//			String toPrint = String.format("%.2f", body.getVectorX())
+//					+ ","
+//					+ String.format("%.2f", body.getVectorY());
+//			TextDrawer.drawText(
+//					e.getContext(),
+//					toPrint,
+//					(int) body.getX() - TextDrawer.getTextWidth(e.getContext(), toPrint)/2,
+//					(int) body.getY() - TextDrawer.getTextHeight(e.getContext(), toPrint)
+//					);
+//			String toPrint2 = String.format("%.0f", body.getX())
+//					+ ","
+//					+ String.format("%.0f", body.getY());
+//			TextDrawer.drawText(
+//					e.getContext(),
+//					toPrint2,
+//					(int) body.getX() - TextDrawer.getTextWidth(e.getContext(), toPrint2)/2,
+//					(int) body.getY()
+//					); 
 		}
 		else
 		{
 			deathAnimator.renderAnimation(e, (int) body.getX(), (int) body.getY());
 		}
+//		TextDrawer.drawText(e.getContext(), Boolean.toString(dying), drawCoords);
 	}
 	
 	public synchronized void update(EntityUpdateEvent event)
 	{
-		System.out.println("UPDATING");
-		long currTime = core.gamestate.GameState.getClock().getTime();
+		if (dying && deathAnimator.isAnimationDone())
+		{
+			finishedDying = true;
+			return;
+		}
+		else if (health <= 0)
+		{
+			die();
+			LinkedList<Enemy> nearEnemies = getNearEnemies(event.getEntities(), 32);
+			for (Enemy ne : nearEnemies)
+			{
+				ne.doDamage(2);
+			}
+			return;
+		}
+		long currTime = core.gamestate.GameState.getClock().getMSTime();
 		int maxX = core.graphics.GfxManager.getMainLayerSet().getLayerSetWidth();
 		int maxY = core.graphics.GfxManager.getMainLayerSet().getLayerSetHeight();
-		if (health <= 0)
+		LinkedList<Enemy> nearEnemies = getNearEnemies(event.getEntities(), 8);
+		for (Enemy ne : nearEnemies)
 		{
-			health = 0;
-			return;
+			ne.doDamage(1);
+		}
+		if (currTime - lastHeal >= HEAL_RATE)
+		{
+			doDamage(-1);
+			lastHeal = currTime;
 		}
 		if (body.getX() <= 0 || body.getY() >= maxX)
 		{
-//			core.sound.SoundManager.playSFX("sfx/bounce.wav");
-			body.invertVectorX();
-			health -=5;
+			doDamage(4);
 		}
 		if (body.getY() <= 0 || body.getY() >= maxY)
 		{
-			body.invertVectorY();
-			health -=5;
+			doDamage(4);
 		}
 		if (body.getX() <= 0)
 		{
+			body.invertVectorX();
 			body.setX(1);
 		}
 		else if (body.getX() >= maxX)
 		{
+			body.invertVectorX();
 			body.setX(maxX - 1);
 		}
 		if (body.getY() <= 0)
 		{
+			body.invertVectorY();
 			body.setY(1);
 		}
 		else if (body.getY() >= maxY)
 		{
+			body.invertVectorY();
 			body.setY(maxY - 1);
 		}
 		body.move();
@@ -115,10 +156,9 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 			double newVY = body.getVectorY()*0.9;
 			body.setVector(newVX, newVY);
 		}
-		if (currTime - lastHeal >= HEAL_RATE)
+		if (shouldSplit())
 		{
-			health += 1;
-			lastHeal = currTime;
+			event.getEntities().addEntity(split());
 		}
 	}
 	
@@ -145,7 +185,7 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 		}
 		body.setVector(-newVector[0], -newVector[1]);
 		health *= 0.5;
-		core.sound.SoundManager.playSFX("sfx/pulse.wav");
+//		core.sound.SoundManager.playSFX("sfx/pulse.wav");
 		return new Enemy(body.getPos(), newVector, health);
 	}
 	
@@ -157,6 +197,10 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 	public synchronized void doDamage(int amount)
 	{
 		health -= amount;
+		if (health < 0)
+		{
+			health = 0;
+		}
 	}
 	
 	public synchronized void die()
@@ -170,21 +214,12 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 		core.sound.SoundManager.playSFX("sfx/explosion1.wav");
 	}
 	
-	public synchronized boolean isDead()
-	{
-		return health <= 0;
-	}
-	
 	public synchronized boolean finishedDying()
 	{
-		if (!dying)
-		{
-			return false;
-		}
-		return deathAnimator.isAnimationDone();
+		return finishedDying;
 	}
 	
-	public int getHealth()
+	public synchronized int getHealth()
 	{
 		return health;
 	}
@@ -200,8 +235,29 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 	}
 
 	@Override
-	public boolean hasBody()
+	public boolean utilizesBody()
 	{
 		return true;
+	}
+	
+	private LinkedList<Enemy> getNearEnemies(EntityContainer entities, int distance)
+	{
+		LinkedList<Enemy> nearby = new LinkedList<Enemy>();
+		for (Entity other : entities.getEntities())
+		{
+			if (!(other instanceof Enemy))
+			{
+				continue;
+			}
+			if (other == this)
+			{
+				continue;
+			}
+			if (distTo((Enemy) other) <= distance)
+			{
+				nearby.add((Enemy) other);
+			}
+		}
+		return nearby;
 	}
 }

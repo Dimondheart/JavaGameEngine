@@ -1,13 +1,8 @@
 package game;
 
-import java.util.LinkedList;
-
-import core.entity.Entity;
 import core.entity.EntityContainer;
-import core.entity.EntityUpdateEvent;
-import core.entity.entitymodule.Body;
-import core.graphics.RenderEvent;
 
+@SuppressWarnings("javadoc")
 public class SimpleMap extends core.entity.Map
 {
 	private EntityContainer entities;

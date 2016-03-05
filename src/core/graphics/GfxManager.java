@@ -50,6 +50,16 @@ public class GfxManager extends core.Subsystem
 	{
 		super(DEFAULT_RENDER_INTERVAL, "Graphics Manager Render Loop");
 		System.out.println("Setting Up Graphics System...");
+	}
+	
+	@Override
+	protected void setupSystem()
+	{
+		// Cleanup any previous main window
+		if (mainWin != null)
+		{
+			mainWin.dispose();
+		}
 		// Setup the main window
 		mainWin = new JFrame("Unnamed Java Game Engine");
 		// Setup the main layer container

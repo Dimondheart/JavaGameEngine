@@ -2,6 +2,7 @@ package game;
 
 import core.entity.Map;
 
+@SuppressWarnings("javadoc")
 public class SimpleBody extends core.entity.entitymodule.Body
 {
 	private SimpleMap myMap;

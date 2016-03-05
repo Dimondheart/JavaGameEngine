@@ -20,6 +20,7 @@ import static core.userinput.InputManagerEvent.Type;
 import java.awt.Window;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import core.graphics.GfxManager;
 import core.userinput.inputdevice.GUIMonitor;
 import core.userinput.inputdevice.Keyboard;
 import core.userinput.inputdevice.Mouse;
@@ -60,20 +61,30 @@ public class InputManager extends core.Subsystem
 		QUIT
 	}
 	
-	/** Normal input setup.
-	 * @param win the main window
-	 */
-	public InputManager(Window win)
+	/** Basic constructor. */
+	public InputManager()
 	{
 		super(8, "Input Manager Event Queue");
 		System.out.println("Setting Up User Input System...");
 		// Setup the event queue
 		queue = new ConcurrentLinkedDeque<InputManagerEvent>();
-		// Setup the input devices
-		keyboard = new Keyboard(win);
-		mouse = new Mouse(win);
-		window = new WindowMonitor(win);
+		// Create main input device managers
+		keyboard = new Keyboard();
+		mouse = new Mouse();
+		window = new WindowMonitor();
 		gui = new GUIMonitor();
+	}
+	
+	@Override
+	protected void setupSystem()
+	{
+		state = InputManagerState.PAUSED;
+		// Setup the main input device managers
+		Window win = GfxManager.getMainWin();
+		keyboard.setup(win);
+		mouse.setup(win);
+		window.setup(win);
+		gui.setup();
 	}
 	
 	@Override
@@ -315,14 +326,14 @@ public class InputManager extends core.Subsystem
 	{
 		doClear();
 		setState(InputManagerState.PAUSED);
-		core.ProgramClock.pause();
+		core.ProgramTime.pause();
 	}
 	
 	/** Resume the game to normal operation. */
 	private void doResume()
 	{
 		setState(InputManagerState.NORMAL);
-		core.ProgramClock.resume();
+		core.ProgramTime.resume();
 	}
 	
 	/** Quit the game. */

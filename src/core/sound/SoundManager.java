@@ -78,6 +78,11 @@ public class SoundManager extends core.Subsystem
 		genQueue = new ConcurrentLinkedDeque<BaseSoundEvent>();
 		playingSFX = new ConcurrentLinkedQueue<SFX>();
 		currVolLvls = new int[3];
+	}
+	
+	@Override
+	public void setupSystem()
+	{
 		currVolLvls[0] = 
 				(int) core.DynamicSettings.getSetting("MASTER_VOLUME");
 		currVolLvls[1] = 

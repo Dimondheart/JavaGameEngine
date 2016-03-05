@@ -15,40 +15,40 @@
 
 package core;
 
-/** A class for timing events. This clock uses the core.ProgramClock
+/** A class for timing events. This clock uses ProgramTime
  * for getting the current time, so it is automatically paused when the
- * game is paused.
+ * program is paused.
  * @author Bryan Charles Bettis
  */
-public class SimpleClock
+public class StopWatch
 {
-	/** Used to make sure this clock is only initialized once. */
+	/** Used to make sure this stopwatch is only initialized once. */
 	private boolean isStarted = false;
-	/** The system time from when the timer was last resumed. */
+	/** The time from when the timer was last resumed. */
 	private long started = 0;
-	/** Elapsed time, not including when InputManager is paused. */
+	/** Elapsed time, not including when parent is paused. */
 	private long elapsed = 0;
 	/** When the timer is paused and will not change until resumed. */
 	private boolean paused = true;
 	/** The clock that this clock uses to update itself. */
-	private SimpleClock parentClock;
+	private StopWatch parentTime;
 	
-	/** Basic constructor. Uses the ProgramTimer for updating its internal
+	/** Basic constructor. Uses the program time for updating its internal
 	 * time.
 	 */
-	public SimpleClock()
+	public StopWatch()
 	{
 		this(null);
 	}
 	
-	/** Takes an argument for a clock to update this clock using (uses the
+	/** Takes an argument for a stopwatch to update this clock using (uses the
 	 * program clock to update itself if specified clock is null.)
-	 * @param parentClock the clock to use to update this clock (this clock
-	 * 		pauses and resumes with the parent clock.)
+	 * @param parentTime the stopwatch to use to update this clock (this
+	 * stopwatch pauses and resumes with the parent device.)
 	 */
-	public SimpleClock(SimpleClock parentClock)
+	public StopWatch(StopWatch parentTime)
 	{
-		this.parentClock = parentClock;
+		this.parentTime = parentTime;
 	}
 	
 	/** Start this clock. Repeated calls will have no effect. */
@@ -65,24 +65,24 @@ public class SimpleClock
 		}
 	}
 
-	/** Get the current time.
-	 * @return the current clock time in milliseconds
+	/** Get the current time in millisecond precision.
+	 * @return the current stopwatch time in milliseconds
 	 */
-	public synchronized long getTime()
+	public synchronized long getMSTime()
 	{
 		if (paused)
 		{
 			return elapsed;
 		}
 		// When the parent clock is the static program clock
-		else if (parentClock == null)
+		else if (parentTime == null)
 		{
-			return elapsed + (core.ProgramClock.getTime() - started);
+			return elapsed + (core.ProgramTime.getTime() - started);
 		}
 		// Instantiated parent clocks
 		else
 		{
-			return elapsed + (parentClock.getTime() - started);
+			return elapsed + (parentTime.getMSTime() - started);
 		}
 	}
 	
@@ -94,15 +94,15 @@ public class SimpleClock
 			return;
 		}
 		// When the parent clock is the static program clock
-		else if (parentClock == null)
+		else if (parentTime == null)
 		{
 			paused = true;
-			elapsed += (core.ProgramClock.getTime() - started);
+			elapsed += (core.ProgramTime.getTime() - started);
 		}
 		// Instantiated parent clocks
 		else
 		{
-			elapsed += (parentClock.getTime() - started);
+			elapsed += (parentTime.getMSTime() - started);
 		}
 	}
 	
@@ -113,14 +113,14 @@ public class SimpleClock
 		{
 			paused = false;
 			// When the parent clock is the static program clock
-			if (parentClock == null)
+			if (parentTime == null)
 			{
-				started = core.ProgramClock.getTime();
+				started = core.ProgramTime.getTime();
 			}
 			// Instantiated parent clocks
 			else
 			{
-				started = parentClock.getTime();
+				started = parentTime.getMSTime();
 			}
 		}
 	}

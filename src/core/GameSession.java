@@ -23,24 +23,24 @@ import core.sound.SoundManager;
 import core.userinput.InputManager;
 
 /** Starts up all subsystems for managing a game session and handles
- * the main game loop (calls the game state manager).
+ * the main game loop (calls the game state manager). Only one instance
+ * of the GameSession class should be created and started at one time.
  * @author Bryan Charles Bettis
  */
 public class GameSession
 {
 	/** The setup of the program files (jar, file, etc.). */
 	private static String URI_SCHEME;
-	
 	/** The graphics system. */
-	private GfxManager gfx;
+	private static GfxManager gfx;
 	/** The system that manages all user input. */
-	private InputManager input;
+	private static InputManager input;
 	/** The sound system. */
-	private SoundManager sound;
+	private static SoundManager sound;
 	/** Manages the state of the game. */
-	private GameStateManager gsm;
+	private static GameStateManager gsm;
 	/** Manages timing of the main thread. */
-	private ThreadClock clock;
+	private static ThreadManager clock;
 	/** The last engine threading setting, used to detect when it has
 	 * been changed so it can be applied.
 	 */
@@ -72,16 +72,13 @@ public class GameSession
 	 */
 	public GameSession()
 	{
-		// Setup graphics system
+		// Create subsystem managers
 		gfx = new GfxManager();
-		// Setup user input system
-		input = new InputManager(GfxManager.getMainWin());
-		// Setup sound system
+		input = new InputManager();
 		sound = new SoundManager();
-		// Setup the game state manager
 		gsm = new GameStateManager();
-		// Setup the time manager for the main game thread
-		clock = new ThreadClock(10);
+		// Setup threading-related stuff
+		clock = new ThreadManager(10);
 		lastThreadingSetting = 
 				(DynamicSettings.ThreadingSetting)
 				DynamicSettings.getSetting("ENGINE_THREADING");
@@ -98,9 +95,22 @@ public class GameSession
 		return URI_SCHEME.substring(0);
 	}
 	
+	/** Gets the average number of cycles per second of the main loop.
+	 * @return the average CPS of the main loop
+	 */
+	public static double getAverageCPS()
+	{
+		return clock.getAvgCPS();
+	}
+	
 	/** Start all subsystems then begin playing. */
 	public void start()
 	{
+		// Setup subsystems
+		gfx.setup();
+		input.setup();
+		sound.setup();
+		gsm.setup();
 		while (true)
 		{
 			// Quit the game
@@ -168,10 +178,10 @@ public class GameSession
 				gfx.startUnthreaded();
 				sound.startUnthreaded();
 			}
-			// Start the program timer
-			ProgramClock.setup();
-			// Setup the game state manager
-			gsm.setup();
+			// Reset the program timer
+			ProgramTime.reset();
+			// Start the input manager
+			InputManager.resume();
 			// Go to the main loop
 			play(numThreads);
 		}
@@ -276,7 +286,7 @@ public class GameSession
 			return false;
 		}
 		// Normal cycle; game is not paused, quitting, etc.
-		else if (InputManager.getState() == InputManager.InputManagerState.NORMAL)
+		else if (InputManager.getState().equals(InputManager.InputManagerState.NORMAL))
 		{
 			// Update input devices
 			InputManager.poll();
@@ -284,7 +294,7 @@ public class GameSession
 			gsm.cycle();
 		}
 		// Input manager indicated that the program should quit
-		else if (InputManager.getState() == InputManager.InputManagerState.QUIT)
+		else if (InputManager.getState().equals(InputManager.InputManagerState.QUIT))
 		{
 			// Clean up the current game state before quitting
 			gsm.cleanup();

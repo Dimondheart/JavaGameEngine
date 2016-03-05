@@ -15,7 +15,7 @@
 
 package core.entity;
 
-/** 
+/** Base class for any event in the entity system.
  * @author Bryan Charles Bettis
  */
 public abstract class EntityEvent

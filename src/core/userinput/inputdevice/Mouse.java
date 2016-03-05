@@ -15,7 +15,7 @@
 
 package core.userinput.inputdevice;
 
-import java.awt.Window;
+import java.awt.Component;
 import java.awt.event.*;
 import java.util.Arrays;
 
@@ -27,21 +27,21 @@ import core.graphics.GfxManager;
  */
 public class Mouse implements InputDevice, MouseListener, MouseWheelListener, MouseMotionListener
 {
-	/** Number of button values to use. */
-	private static final int NUM_BTNS = 10;
+	/** Number of button values used. */
+	private static final int BUTTONS_USED = 10;
 		
 	/** Raw/Unprocessed state updates to the mouse buttons. */
-	private volatile boolean[] rawStates;
+	private volatile boolean[] unpolledStates;
 	/** Processed button states. */
-	private volatile BtnState[] processedStates;
+	private volatile BtnState[] polledStates;
 	/** The change in the scroll wheel between polls. */
-	private volatile int rawScrollChange = 0;
+	private volatile int unpolledScrollChange = 0;
 	/** The change in the scroll wheel, updated each poll. */
-	private volatile int processedScrollChange = 0;
+	private volatile int polledScrollChange = 0;
 	/** The x coordinate of the mouse cursor. */
-	private volatile int mouseX = 0;
+	private volatile int unpolledX = 0;
 	/** The y coordinate of the mouse cursor. */
-	private volatile int mouseY = 0;
+	private volatile int unpolledY = 0;
 	
 	/** States each button can be in.
 	 * @author Bryan Charles Bettis
@@ -64,15 +64,20 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 		CLICKED
 	}
 	
-	/** Constructor, takes a reference to the window/frame it should be added to.
-	 * @param win the window to listen to
-	 */
-	public Mouse(Window win)
+	/** Basic constructor. */
+	public Mouse()
 	{
 		clear();
-		win.addMouseListener(this);
-		win.addMouseWheelListener(this);
-		win.addMouseMotionListener(this);
+	}
+	
+	/** Setup different device-dependent stuff.
+	 * @param comp the component to listen to
+	 */
+	public void setup(Component comp)
+	{
+		comp.addMouseListener(this);
+		comp.addMouseWheelListener(this);
+		comp.addMouseMotionListener(this);
 	}
 	
 	/** Checks if the specified button is pressed down.
@@ -83,7 +88,7 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	public boolean isDown(int btnCode)
 	{
 		return (
-				processedStates[btnCode].equals(BtnState.PRESSED)
+				polledStates[btnCode].equals(BtnState.PRESSED)
 				|| justPressed(btnCode)
 				);
 	}
@@ -96,7 +101,7 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	 */
 	public boolean justPressed(int btnCode)
 	{
-		return (processedStates[btnCode].equals(BtnState.ONCE));
+		return (polledStates[btnCode].equals(BtnState.ONCE));
 	}
 	
 	/** Checks if the specified button was clicked (pressed and released)
@@ -107,7 +112,7 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	 */
 	public boolean justReleased(int btnCode)
 	{
-		return (processedStates[btnCode].equals(BtnState.CLICKED));
+		return (polledStates[btnCode].equals(BtnState.CLICKED));
 	}
 	
 	/** Get how much the mouse wheel changed between the two previous polls
@@ -116,25 +121,25 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	 */
 	public int getWheelChange()
 	{
-		return processedScrollChange;
+		return polledScrollChange;
 	}
 	
 	/** Gets the x position of the mouse cursor. The coordinates are
 	 * constrained to the edges of the main window.
 	 * @return the x position of the mouse over the game window
 	 */
-	public int getMouseX()
+	public int getUnpolledX()
 	{
-		return mouseX;
+		return unpolledX;
 	}
 	
 	/** Gets the y position of the mouse cursor. The coordinates are
 	 * constrained to the edges of the main window.
 	 * @return the y position of the mouse over the game window
 	 */
-	public int getMouseY()
+	public int getUnpolledY()
 	{
-		return mouseY;
+		return unpolledY;
 	}
 	
 	@Override
@@ -143,39 +148,39 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 		// Update the scroll wheel
 		if ((boolean) DynamicSettings.getSetting("INVERT_SCROLL_WHEEL"))
 		{
-			processedScrollChange = -rawScrollChange;
+			polledScrollChange = -unpolledScrollChange;
 		}
 		else
 		{
-			processedScrollChange = rawScrollChange;
+			polledScrollChange = unpolledScrollChange;
 		}
-		rawScrollChange = 0;
+		unpolledScrollChange = 0;
 		// Update button processed values
-		for (int i = 0; i < NUM_BTNS; ++i)
+		for (int i = 0; i < BUTTONS_USED; ++i)
 		{
 			// Button is currently depressed
-			if (rawStates[i])
+			if (unpolledStates[i])
 			{
 				// Key was just pressed
-				if (processedStates[i].equals(BtnState.RELEASED))
+				if (polledStates[i].equals(BtnState.RELEASED))
 				{
-					processedStates[i] = BtnState.ONCE;
+					polledStates[i] = BtnState.ONCE;
 				}
 				// Key has been pressed for a while
 				else
 				{
-					processedStates[i] = BtnState.PRESSED;
+					polledStates[i] = BtnState.PRESSED;
 				}
 			}
 			// The button has been "clicked" (just released)
-			else if (processedStates[i].equals(BtnState.PRESSED))
+			else if (polledStates[i].equals(BtnState.PRESSED) || polledStates[i].equals(BtnState.ONCE))
 			{
-				processedStates[i] = BtnState.CLICKED;
+				polledStates[i] = BtnState.CLICKED;
 			}
 			// Otherwise key is released
 			else
 			{
-				processedStates[i] = BtnState.RELEASED;
+				polledStates[i] = BtnState.RELEASED;
 			}
 		}
 	}
@@ -183,32 +188,29 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	@Override
 	public synchronized void clear()
 	{
-		processedScrollChange = 0;
-		rawScrollChange = 0;
+		polledScrollChange = 0;
+		unpolledScrollChange = 0;
 		// current pressed/released state of keys
-		rawStates = new boolean[NUM_BTNS];
+		unpolledStates = new boolean[BUTTONS_USED];
 		// Key state beyond just pressed/released
-		processedStates = new BtnState[NUM_BTNS];
-		// Set all keys as released
-		Arrays.fill(processedStates, BtnState.RELEASED);
+		polledStates = new BtnState[BUTTONS_USED];
+		// Init all keys as released
+		Arrays.fill(polledStates, BtnState.RELEASED);
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		// Not used
 	}
 	
 	@Override
 	public void mouseEntered(MouseEvent e)
 	{
-		// Not used
 	}
 	
 	@Override
 	public void mouseExited(MouseEvent e)
 	{
-		// Not used
 	}
 	
 	@Override
@@ -217,12 +219,12 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 		// Get the btn's integer ID
 		int btnCode = e.getButton();
 		// Ignore button IDs outside our used range
-		if (btnCode > NUM_BTNS || btnCode < 0)
+		if (btnCode > BUTTONS_USED || btnCode < 0)
 		{
 			return;
 		}
 		// Update the button
-		rawStates[btnCode] = true;
+		unpolledStates[btnCode] = true;
 	}
 	
 	@Override
@@ -231,18 +233,18 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 		// Get the btn's integer ID
 		int btnCode = e.getButton();
 		// Check if btn is in range of used btns
-		if (btnCode > NUM_BTNS || btnCode < 0)
+		if (btnCode > BUTTONS_USED || btnCode < 0)
 		{
 			return;
 		}
 		// Update the button
-		rawStates[btnCode] = false;
+		unpolledStates[btnCode] = false;
 	}
 	
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e)
 	{
-		rawScrollChange += e.getWheelRotation();
+		unpolledScrollChange += e.getWheelRotation();
 	}
 
 	@Override
@@ -257,22 +259,33 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 		updateCursorPos(e);
 	}
 	
-	/** Update the position of the mouse cursor for the next poll.
+	/** Update the position of the mouse cursor.
 	 * @param e the mouse movement event
 	 */
 	private void updateCursorPos(MouseEvent e)
 	{
 		int newX = e.getX() - GfxManager.getMainWin().getInsets().left;
+		int newY = e.getY() - GfxManager.getMainWin().getInsets().top;
+		// Limit the x coordinate to inside the main window
 		if (newX < 0)
 		{
 			newX = 0;
 		}
-		int newY = e.getY() - GfxManager.getMainWin().getInsets().top;
+		else if (newX > GfxManager.getMainLayerSet().getLayerSetWidth())
+		{
+			newX = GfxManager.getMainLayerSet().getLayerSetWidth();
+		}
+		// Limit the x coordinate to inside the main window
 		if (newY < 0)
 		{
 			newY = 0;
 		}
-		mouseX = newX;
-		mouseY = newY;
+		else if (newY > GfxManager.getMainLayerSet().getLayerSetHeight())
+		{
+			newY = GfxManager.getMainLayerSet().getLayerSetHeight();
+		}
+		// Update the unpolled mouse position values
+		unpolledX = newX;
+		unpolledY = newY;
 	}
 }

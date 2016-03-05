@@ -16,10 +16,10 @@
 package core;
 
 /** A class used to pause time-based events when the game is
- * completely paused (i.e. InputManager is paused).
+ * completely paused (meaning InputManager is paused).
  * @author Bryan Charles Bettis
  */
-public class ProgramClock
+public class ProgramTime
 {
 	/** Used to make sure this timer is only initialized once. */
 	private static boolean isSetup = false;
@@ -30,19 +30,14 @@ public class ProgramClock
 	/** When the timer is paused and will not change until resumed. */
 	private static boolean paused = true;
 
-	/** Setup this timer. Repeated calls will have no effect. */
-	public static synchronized void setup()
+	/** Reset the program time. */
+	static synchronized void reset()
 	{
-		if (isSetup)
-		{
-			return;
-		}
-		else
-		{
-			started = System.currentTimeMillis();
-			isSetup = true;
-			resume();
-		}
+		isSetup = true;
+		started = System.currentTimeMillis();
+		elapsed = 0;
+		paused = true;
+		resume();
 	}
 
 	/** Get the current program time.

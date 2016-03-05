@@ -70,6 +70,8 @@ public class MainMenu extends GameState
 	@Override
 	public void setupState(ConcurrentHashMap<String, Object> args)
 	{
+		// Testing frame animator image dimensioning setup
+//		GfxManager.getMainLayerSet().addRenderer(new game.FrameAnimatorUT1(), 0);
 		GfxManager.getMainLayerSet().addRenderer(fpsRenderer, GfxManager.TOP_LAYER_INDEX);
 		GfxManager.getMainLayerSet().addRenderer(buttonPanel, 9);
 		GfxManager.getMainLayerSet().addRenderer(gpt, 9);

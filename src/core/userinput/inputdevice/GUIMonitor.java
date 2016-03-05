@@ -33,6 +33,11 @@ public class GUIMonitor implements InputDevice
 		guiObjects = new LinkedList<GUIObject>();
 	}
 	
+	/** Setup different device-dependent stuff. */
+	public void setup()
+	{
+	}
+	
 	@Override
 	public synchronized void poll()
 	{

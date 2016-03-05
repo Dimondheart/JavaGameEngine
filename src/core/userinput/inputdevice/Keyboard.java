@@ -46,17 +46,18 @@ public class Keyboard implements InputDevice, KeyListener
 		ONCE
 	}
 	
-	/** Basic keyboard setup, takes argument for component to listen to.
-	 * @param comp the awt/swing component to listen to
-	 */
-	public Keyboard(Component comp)
+	/** Basic constructor. */
+	public Keyboard()
 	{
-		// Don't add if null was specified as the dispatcher
-		if (comp != null)
-		{
-			comp.addKeyListener(this);
-		}
 		clear();
+	}
+	
+	/** Setup different device-dependent stuff.
+	 * @param comp the component to listen to
+	 */
+	public void setup(Component comp)
+	{
+		comp.addKeyListener(this);
 	}
 	
 	/** Checks if the specified key is pressed down.

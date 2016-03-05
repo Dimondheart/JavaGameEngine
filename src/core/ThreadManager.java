@@ -18,7 +18,7 @@ package core;
 /** Manages timing for the thread of an object that instantiates it.
  * @author Bryan Charles Bettis
  */
-public class ThreadClock
+public class ThreadManager
 {
 	/** Preset, low speed cycling. */
 	public static final int LOW_CPS = 10;
@@ -37,7 +37,7 @@ public class ThreadClock
 	private long start;
 
 	/** Standard ThreadClock, defaults to MEDIUM_CPS speed. */
-	public ThreadClock()
+	public ThreadManager()
 	{
 		// Default priority
 		this(MEDIUM_CPS);
@@ -47,7 +47,7 @@ public class ThreadClock
 	 * presets/constants ending in '_CPS'.
 	 * @param interval the number of milliseconds per cycle
 	 */
-	public ThreadClock(int interval)
+	public ThreadManager(int interval)
 	{
 		setSpeed(interval);
 		startCycle();

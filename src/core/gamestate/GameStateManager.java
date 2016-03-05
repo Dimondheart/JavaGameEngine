@@ -31,11 +31,12 @@ public class GameStateManager
 	/** Used by the cycle method to limit debug output when a game state
 	 * is not currently set.
 	 */
-	private boolean noGSSetIndicated = false;
+	private boolean noGSSetIndicated;
 	
 	/** Basic constructor. */
 	public GameStateManager()
 	{
+		noGSSetIndicated = false;
 	}
 	
 	/** Setup the game state manager, and the first game state. The initial
@@ -77,14 +78,9 @@ public class GameStateManager
 			{
 				// Change the game state
 				setNewGameState(currGS.getNewState(), currGS.getNewStateArgs());
-				// Call one cycle of events for this game state
-				currGS.cycle();
 			}
-			else
-			{
-				// Call one cycle of events for this game state
-				currGS.cycle();
-			}
+			// Call one cycle of events for this game state
+			currGS.cycle();
 		}
 		catch (NullPointerException e)
 		{

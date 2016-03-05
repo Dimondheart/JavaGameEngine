@@ -27,7 +27,7 @@ public abstract class Subsystem implements Runnable
 	/** The name of this system's thread. */
 	protected String threadName;
 	/** Thread manager. */
-	protected core.ThreadClock clock;
+	protected core.ThreadManager clock;
 	/** Used to make this subsystem stop when running in threaded mode. */
 	private boolean stopThread = false;
 	
@@ -38,8 +38,14 @@ public abstract class Subsystem implements Runnable
 	 */
 	protected Subsystem(int clockCyclInterval, String threadName)
 	{
-		clock = new core.ThreadClock(clockCyclInterval);
+		clock = new core.ThreadManager(clockCyclInterval);
 		this.threadName = threadName;
+	}
+	
+	/** Does final setup that is needed for a system before starting it. */
+	public void setup()
+	{
+		setupSystem();
 	}
 	
 	/** Starts this subsystem in its own thread. */
@@ -63,6 +69,11 @@ public abstract class Subsystem implements Runnable
 	 * 		threaded mode
 	 */
 	public abstract boolean runCycle();
+	
+	/** Does final setup for the system. Subclasses should perform final setup
+	 * here that will have to be run each time the game is restarted.
+	 */
+	protected abstract void setupSystem();
 	
 	/** Startup specific to each subsystem. */
 	protected abstract void startSystem();

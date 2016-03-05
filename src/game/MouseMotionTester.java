@@ -2,6 +2,7 @@ package game;
 
 import java.awt.Color;
 
+import core.graphics.GfxManager;
 import core.graphics.RenderEvent;
 import core.graphics.TextDrawer;
 import core.userinput.InputManager;
@@ -39,12 +40,13 @@ public class MouseMotionTester extends SampleRenderer implements core.graphics.R
 	@Override
 	public void update()
 	{
-		int x = InputManager.getMS().getMouseX();
-		int y = InputManager.getMS().getMouseY();
+		int x = InputManager.getMS().getUnpolledX();
+		int y = InputManager.getMS().getUnpolledY();
 		double dist = Math.pow((double)(Math.pow(x-this.x, 2)+Math.pow(y-this.y, 2)), 0.5);
 		if (dist < 6 && InputManager.getMS().justPressed(BUTTON1))
 		{
 			isSelected = true;
+			System.out.println(GfxManager.getMainLayerSet().getLayerSetWidth());
 		}
 		if (isSelected && InputManager.getMS().isDown(BUTTON1))
 		{

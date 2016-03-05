@@ -12,6 +12,7 @@ public class TestAnimator implements Renderer
 	public TestAnimator(String location, String startingSet)
 	{
 		animate = new FrameAnimator(location, startingSet);
+		animate.setLooping(true);
 	}
 
 	@Override

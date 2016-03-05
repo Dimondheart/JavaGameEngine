@@ -32,11 +32,15 @@ public class WindowMonitor implements InputDevice, WindowListener, ComponentList
 	/** The window this manager is listening to. */
 	private Window myWin;
 	
-	/** Constructor which takes a reference to the frame it will
-	 * manage events for.
-	 * @param window the window to monitor
+	/** Basic constructor. */
+	public WindowMonitor()
+	{
+	}
+	
+	/** Setup different device-dependent stuff.
+	 * @param window the window to listen to
 	 */
-	public WindowMonitor(Window window)
+	public void setup(Window window)
 	{
 		myWin = window;
 		myWin.addWindowListener(this);
@@ -48,22 +52,24 @@ public class WindowMonitor implements InputDevice, WindowListener, ComponentList
 	 */
 	public boolean isActive()
 	{
+		// No window has been set yet
+		if (myWin == null)
+		{
+			return false;
+		}
 		return myWin.isActive();
 	}
 	
 	@Override
 	public void poll()
 	{
-		// Not used
 	}
 	
 	@Override
 	public void clear()
 	{
-		// Not used
 	}
 	
-	/* WindowListener Events */
 	@Override
 	public void windowClosing(WindowEvent e)
 	{
@@ -71,10 +77,6 @@ public class WindowMonitor implements InputDevice, WindowListener, ComponentList
 		if (myWin == GfxManager.getMainWin())
 		{
 			InputManager.quit();
-		}
-		else
-		{
-			closeWindow();
 		}
 	}
 
@@ -86,14 +88,7 @@ public class WindowMonitor implements InputDevice, WindowListener, ComponentList
 	@Override
 	public void windowClosed(WindowEvent e)
 	{
-		// Main window closed
-		if (myWin == GfxManager.getMainWin())
-		{
-		}
-		else
-		{
-			closeWindow();
-		}
+		myWin = null;
 	}
 
 	@Override
@@ -119,7 +114,6 @@ public class WindowMonitor implements InputDevice, WindowListener, ComponentList
 		focusRegained();
 	}
 	
-	/* ComponentListener Events */
 	@Override
 	public void componentHidden(ComponentEvent e)
 	{
@@ -134,7 +128,10 @@ public class WindowMonitor implements InputDevice, WindowListener, ComponentList
 	public void componentResized(ComponentEvent e)
 	{
 		// Do any special sizing adjustments for the window
-		GfxManager.windowResized();
+		if (myWin == GfxManager.getMainWin())
+		{
+			GfxManager.windowResized();
+		}
 	}
 
 	@Override
@@ -160,11 +157,5 @@ public class WindowMonitor implements InputDevice, WindowListener, ComponentList
 		{
 			InputManager.resume();
 		}
-	}
-	
-	/** Safely destroys the window and all related info. */
-	private void closeWindow()
-	{
-		// TODO Safely remove the window
 	}
 }

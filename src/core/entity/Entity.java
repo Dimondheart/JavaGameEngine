@@ -15,14 +15,27 @@
 
 package core.entity;
 
-/** 
+/** TODO add documentation
  * @author Bryan Charles Bettis
  */
 public interface Entity extends core.graphics.Renderer
 {
+	/** Check if this entity utilizes a Body. An entity does not need to 
+	 * currently have a body setup for this to return true. This method 
+	 * only indicates if the entity could be using a body.
+	 * @return true if the entity could be using a body, false if the
+	 * 		entity does not support use of a body
+	 */
+	public boolean utilizesBody();
+	/** Tell this entity to update itself. Updating includes interaction
+	 * with other entities and general actions and changes made by the
+	 * entity.
+	 * @param event the event containing information which could be useful
+	 * to an updating entity
+	 */
 	public void update(EntityUpdateEvent event);
-	public boolean hasBody();
 	
+	@Override
 	public default void render(core.graphics.RenderEvent event)
 	{
 	}

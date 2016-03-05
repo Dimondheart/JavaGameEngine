@@ -15,13 +15,16 @@
 
 package core.entity;
 
-import java.util.LinkedList;
-
-/** 
+/** Entity update events are passed in to entities when calling the entities'
+ * update methods. These events provide contextual information that the entity
+ * could use, like other entities it could interact with.
  * @author Bryan Charles Bettis
  */
 public class EntityUpdateEvent extends EntityEvent
 {
+	/** Contains entities that could be interacted with by entities
+	 * this event will be given to.
+	 */
 	private EntityContainer entities;
 	
 	public EntityContainer getEntities()

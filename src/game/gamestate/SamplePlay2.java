@@ -52,7 +52,7 @@ public class SamplePlay2 extends GameState
 		btd = new game.BasicTextDrawer();
 		pi = new game.PlayerInteractor();
 		rep1 = new game.Repulsor();
-		rep1.setCoords(200, 200);
+		rep1.getBody().setPos(200, 200);
 		entities = new EntityContainer();
 	}
 
@@ -64,14 +64,14 @@ public class SamplePlay2 extends GameState
 		GfxManager.getMainLayerSet().addRenderer(controls, GfxManager.TOP_LAYER_INDEX);
 		GfxManager.getMainLayerSet().addRenderer(entityLayers, 4);
 //		SoundManager.playBGM("bgm/Into_the_Unknown.wav", SoundManager.BGMTransition.IMMEDIATE);
-		addEnemy(new Enemy(50.0,50.0,0.2,1.2,100));
-		addEnemy(new Enemy(50.0,0,-1.5,3.0,100));
+		entities.addEntity(new Enemy(50.0,50.0,0.0,0.0,100));
+		entities.addEntity(new Enemy(50.0,0,0.0,0.0,100));
+		entities.addEntity(pi);
+		entities.addEntity(rep1);
 		GfxManager.getMainLayerSet().addRenderer(btd, GfxManager.TOP_LAYER_INDEX);
-		String[] td = {"Count", "Average Health", "Curr Num Dying"};
+		String[] td = {"Count", "Average Health", "Curr Num Dying", "AVG CPS"};
 		toDraw = td;
 		btd.setText(toDraw);
-		GfxManager.getMainLayerSet().addRenderer(pi, 5);
-		GfxManager.getMainLayerSet().addRenderer(rep1, 5);
 		map = new SimpleMap(100,100);
 		entityLayers.addRenderer(entities, 0);
 	}
@@ -122,93 +122,17 @@ public class SamplePlay2 extends GameState
 			EntityUpdateEvent eue = new EntityUpdateEvent();
 			eue.setEntities(entities);
 			entities.updateEntities(eue);
-			pi.update(eue);
-			for (Enemy e : enemies)
-			{
-				e.update(new EntityUpdateEvent());
-			}
-//			if (pi.isRepulsing())
-//			{
-//				for (Enemy e : enemies)
-//				{
-//					if (pi.isWithinAOE((int) e.getBody().getX(), (int) e.getBody().getY()))
-//					{
-//						double dx = 0.1;
-//						double dy = 0.1;
-//						if (pi.getX() > e.getBody().getX())
-//						{
-//							dx *= -1.0;
-//						}
-//						if(pi.getY() > e.getBody().getY())
-//						{
-//							dy *= -1.0;
-//						}
-//						e.adjVector(dx, dy);
-//					}
-//				}
-//			}
-			if (rep1.isRepulsing())
-			{
-				for (Enemy e : enemies)
-				{
-					if (rep1.isWithinAOE((int) e.getBody().getX(), (int) e.getBody().getY()))
-					{
-						double dx = 0.1;
-						double dy = 0.1;
-						if (rep1.getX() > e.getBody().getX())
-						{
-							dx *= -1.0;
-						}
-						if(rep1.getY() > e.getBody().getY())
-						{
-							dy *= -1.0;
-						}
-						e.adjVector(dx, dy);
-					}
-				}
-			}
-			for (Enemy e : enemies)
-			{
-				if (e.isDead())
-				{
-					e.die();
-					LinkedList<Enemy> nearEnemies = getNearEnemies(e, 32);
-					for (Enemy ne : nearEnemies)
-					{
-						ne.doDamage(1);
-					}
-				}
-				else
-				{
-					LinkedList<Enemy> nearEnemies = getNearEnemies(e, 8);
-					for (Enemy ne : nearEnemies)
-					{
-						ne.doDamage(1);
-					}
-				}
-			}
-			int numEnemies = enemies.size();
-			for (int i = 0; i < numEnemies; ++i)
-			{
-				Enemy e = enemies.get(i);
-				if (e.shouldSplit())
-				{
-					Enemy newEnemy = e.split();
-					addEnemy(newEnemy);
-				}
-			}
 		}
-		double count = enemies.size();
+		double count = entities.numEntities();
 		double sumHealth = 0;
 		for (Enemy e : enemies)
 		{
 			sumHealth += e.getHealth();
 		}
-		toDraw[0] = "Count: " + Integer.toString((int) count);
+		toDraw[0] = "Count (Approx.): " + Integer.toString((int) count);
 		toDraw[1] = "Average Health: " + String.format("%.2f", sumHealth/count);
+		toDraw[3] = "Average CPS: " + String.format("%.3f", core.GameSession.getAverageCPS());
 		btd.setText(toDraw);
-		rep1.nextCycle();
-		pi.nextCycle();
 	}
 
 	@Override
@@ -219,35 +143,7 @@ public class SamplePlay2 extends GameState
 		controls.destroy();
 		mainMenuBtn.destroy();
 		entityLayers.destroy();
-		for (Enemy e : enemies)
-		{
-			e.destroy();
-		}
-		entities.destroy();
+		entities.cleanupAll();
 		btd.destroy();
-		pi.destroy();
-	}
-	
-	private void addEnemy(Enemy e)
-	{
-		enemies.add(e);
-		entityLayers.addRenderer(e, 0);
-	}
-	
-	private LinkedList<Enemy> getNearEnemies(Enemy e, int distance)
-	{
-		LinkedList<Enemy> nearby = new LinkedList<Enemy>();
-		for (Enemy other : enemies)
-		{
-			if (other == e)
-			{
-				continue;
-			}
-			if (e.distTo(other) <= distance)
-			{
-				nearby.add(other);
-			}
-		}
-		return nearby;
 	}
 }

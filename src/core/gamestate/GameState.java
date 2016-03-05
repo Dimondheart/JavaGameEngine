@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class GameState
 {
 	/** A clock for timing different things in a game state. */
-	protected static core.SimpleClock clock;
+	protected static core.StopWatch clock;
 	
 	/** The collection of startup arguments for the next game state. */
 	protected ConcurrentHashMap<String, Object> newStateArgs;
@@ -34,7 +34,7 @@ public abstract class GameState
 	/** Basic constructor. */
 	public GameState()
 	{
-		clock = new core.SimpleClock();
+		clock = new core.StopWatch();
 		newStateArgs = new ConcurrentHashMap<String, Object>();
 		newState = this.getClass();
 	}
@@ -77,7 +77,7 @@ public abstract class GameState
 	/** Gets the game state's clock.
 	 * @return the core.Clock object for the current game state
 	 */
-	public static synchronized core.SimpleClock getClock()
+	public static synchronized core.StopWatch getClock()
 	{
 		return clock;
 	}

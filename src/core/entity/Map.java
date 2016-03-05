@@ -15,10 +15,7 @@
 
 package core.entity;
 
-import core.entity.entitymodule.Body;
-
-/** This class is the base class for all maps. A map is defined as containing
- * various properties that is corresponding Body classes can use.
+/** This class is the base class for all maps.
  * @author Bryan Charles Bettis
  */
 public abstract class Map
