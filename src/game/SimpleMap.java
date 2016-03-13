@@ -1,9 +1,10 @@
 package game;
 
 import core.entity.EntityContainer;
+import core.entity.SceneUpdateEvent;
 
 @SuppressWarnings("javadoc")
-public class SimpleMap extends core.entity.Map
+public class SimpleMap extends core.entity.Scene
 {
 	private EntityContainer entities;
 	
@@ -54,5 +55,11 @@ public class SimpleMap extends core.entity.Map
 			return;
 		}
 		this.height = height;
+	}
+
+	@Override
+	public void updateScene(SceneUpdateEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 }

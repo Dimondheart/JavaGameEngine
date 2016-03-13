@@ -1,9 +1,11 @@
 package game;
 
 import java.awt.Color;
+import java.util.Random;
 
 import core.entity.Entity;
 import core.entity.EntityUpdateEvent;
+import core.gamestate.GameState;
 import core.graphics.FrameAnimator;
 import core.graphics.RenderEvent;
 import core.graphics.TextDrawer;
@@ -21,26 +23,44 @@ public class Repulsor implements core.entity.Entity
 	protected long effectTime = 20;
 	protected SimpleBody body;
 	protected boolean autoRepulse = true;
-	protected int health = 50;
+	protected double health = 50;
+	protected long lastDegradeUpdate;
 	
 	public Repulsor()
 	{
-		body = new SimpleBody(0, 0);
+		this(10,10,1.2,-0.5,50);
+	}
+	
+	public Repulsor(double x, double y, double vectorX, double vectorY, double health)
+	{
+		body = new SimpleBody(x, y, vectorX, vectorY);
 		pulseAnimator = new FrameAnimator("bluering", 60);
 		effectClock = new core.StopWatch(core.gamestate.GameState.getClock());
 		effectClock.start();
-		lastCycleUpdate = effectClock.getMSTime();
+		lastCycleUpdate = effectClock.getTimeMS();
 		pulseAnimator.setLooping(false);
 		activateRepulsion();
+		this.health = health;
+		lastDegradeUpdate = GameState.getClock().getTimeMS();
+	}
+	
+	public Repulsor(double[] coords, double[] vector, double health)
+	{
+		this(coords[0], coords[1], vector[0], vector[1], health);
 	}
 	
 	@Override
-	public synchronized void render(RenderEvent event)
+	public void render(RenderEvent event)
 	{
 //		int x = ((int) body.getX())-outerPulseRadius;
 //		int y = ((int) body.getY())-outerPulseRadius;
 		event.getContext().setColor(Color.gray);
-		event.getContext().fillOval((int) body.getX()-health/4, (int) body.getY()-health/4, health/2, health/2);
+		event.getContext().fillOval(
+				(int) (body.getX()-getHealth()/4),
+				(int) (body.getY()-getHealth()/4),
+				(int) getHealth()/2,
+				(int) getHealth()/2
+				);
 		pulseAnimator.renderAnimation(event, (int) body.getX(), (int) body.getY());
 //		event.getContext().drawOval(x, y, outerPulseRadius*2, outerPulseRadius*2);
 //		event.getContext().drawOval(((int) body.getX())-innerPulseRadius, ((int) body.getY())-innerPulseRadius, innerPulseRadius*2, innerPulseRadius*2);
@@ -91,10 +111,14 @@ public class Repulsor implements core.entity.Entity
 	}
 	
 	@Override
-	public synchronized void update(EntityUpdateEvent event)
+	public void update(EntityUpdateEvent event)
 	{
 		int maxX = core.graphics.GfxManager.getMainLayerSet().getLayerSetWidth();
 		int maxY = core.graphics.GfxManager.getMainLayerSet().getLayerSetHeight();
+		if (health >= 100)
+		{
+			event.getEntities().addEntity(split());
+		}
 		if (pulseAnimator.isAnimationDone())
 		{
 			deactivateRepulsion();
@@ -128,6 +152,15 @@ public class Repulsor implements core.entity.Entity
 		{
 			health = 0;
 			return;
+		}
+		long currTime = core.gamestate.GameState.getClock().getTimeMS();
+		if (lastDegradeUpdate - currTime >= 10)
+		{
+			lastDegradeUpdate = currTime;
+			if (health > 1)
+			{
+				doDamage(1);
+			}
 		}
 		if (body.getX() <= 0)
 		{
@@ -167,6 +200,8 @@ public class Repulsor implements core.entity.Entity
 					Enemy e2 = (Enemy) e;
 					if (isWithinAOE((int) e2.getBody().getX(), (int) e2.getBody().getY()))
 					{
+						e2.doDamage(0.5);
+						doDamage(-0.1);
 						double dx = 0.1;
 						double dy = 0.1;
 						if (((int) body.getX()) > e2.getBody().getX())
@@ -180,11 +215,12 @@ public class Repulsor implements core.entity.Entity
 						e2.adjVector(dx, dy);
 					}
 				}
-				else if (e instanceof Repulsor)
+				else if (e instanceof Repulsor && !(e instanceof PlayerInteractor))
 				{
 					Repulsor e2 = (Repulsor) e;
 					if (isWithinAOE((int) e2.getBody().getX(), (int) e2.getBody().getY()))
 					{
+						e2.doDamage(0.8);
 						double dx = 0.2;
 						double dy = 0.2;
 						if (((int) body.getX()) > e2.getBody().getX())
@@ -202,16 +238,50 @@ public class Repulsor implements core.entity.Entity
 		}
 	}
 	
+	protected Entity split()
+	{
+		double newVector[] = {body.getVectorX(), body.getVectorY()};
+		for (int i = 0; i < 2; ++i)
+		{
+			if (newVector[i] > -0.1 && newVector[i] <= 0.0)
+			{
+				newVector[i] -= 0.5;
+			}
+			else if (newVector[i] < 0.1 && newVector[i] >= 0.0)
+			{
+				newVector[i] += 0.5;
+			}
+		}
+		body.setVector(-newVector[0], -newVector[1]);
+		health *= 0.5;
+//		core.sound.SoundManager.playSFX("sfx/pulse.wav");
+		return new Repulsor(body.getPos(), newVector, health);
+	}
+	
+	public double getHealth()
+	{
+		if (health < 1 && health > 0)
+		{
+			return 1;
+		}
+		return health;
+	}
+	
+	public void doDamage(double damage)
+	{
+		health -= damage;
+	}
+	
 	public void adjVector(double dx, double dy)
 	{
 		body.changeVector(dx, dy);
 	}
 
-	public synchronized void nextCycle()
+	protected void nextCycle()
 	{
-		if (effectClock.getMSTime() - lastCycleUpdate >= effectTime)
+		if (effectClock.getTimeMS() - lastCycleUpdate >= effectTime)
 		{
-			lastCycleUpdate = effectClock.getMSTime();
+			lastCycleUpdate = effectClock.getTimeMS();
 		}
 	}
 
@@ -221,7 +291,7 @@ public class Repulsor implements core.entity.Entity
 		return true;
 	}
 	
-	public SimpleBody getBody()
+	public synchronized SimpleBody getBody()
 	{
 		return body;
 	}

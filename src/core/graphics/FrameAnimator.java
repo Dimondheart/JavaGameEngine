@@ -24,15 +24,6 @@ import core.graphics.GfxManager;
  */
 public class FrameAnimator extends Animator
 {
-	/** Indicates that a dimension of an animation image should be scaled
-	 * to maintain the original aspect ratio of the image.
-	 */
-	public static final int SCALE_DIMENSION = -1;
-	/** Indicates that a dimension of an animation image should not be
-	 * altered, instead using the actual respective dimension of the original
-	 * image.
-	 */
-	public static final int ORIGINAL_DIMENSION = -2;
 	/** The directory all animation sets are located in. */
 	private String location;
 	/** The current set of animation frames being drawn. */
@@ -51,8 +42,29 @@ public class FrameAnimator extends Animator
 	private boolean centerOverCoords;
 	/** The width to draw the animation images. */
 	private int imgWidth;
+	private SpecialDimension specialWidth;
 	/** The height to draw the animation images. */
 	private int imgHeight;
+	private SpecialDimension specialHeight;
+	
+	
+	/** Different special dimension situations for image dimensions,
+	 * such as scaling a dimension to maintain aspect ratio.
+	 * @author Bryan Charles Bettis
+	 */
+	public enum SpecialDimension
+	{
+		NONE,
+		/** Indicates that a dimension of an animation image should not be
+		 * altered, instead using the actual respective dimension of the
+		 * original image.
+		 */
+		ORIGINAL,
+		/** Indicates that a dimension of an animation image should be scaled
+		 * to maintain the original aspect ratio of the image.
+		 */
+		SCALE
+	}
 	
 	/** Defaults to the "basic" animation set.
 	 * @param location the root folder containing animation sets
@@ -93,7 +105,7 @@ public class FrameAnimator extends Animator
 		setInterval(interval);
 		setFrame(1);
 		setCenterOverCoords(true);
-		setImageSize(SCALE_DIMENSION, SCALE_DIMENSION);
+		setImageSize(SpecialDimension.ORIGINAL, SpecialDimension.ORIGINAL);
 	}
 	
 	/** Render the current frame of this animation at the specified
@@ -114,65 +126,77 @@ public class FrameAnimator extends Animator
 		// Get the actual image
 		BufferedImage img =
 				GfxManager.getResManager().getRes(currFramePath);
-//		String theCase = "1";
+		String theCase = "1";
 		int imgWidth = this.imgWidth;
 		int imgHeight = this.imgHeight;
 		// Width needs to be scaled
-		if (imgWidth == SCALE_DIMENSION)
+		if (specialWidth == SpecialDimension.SCALE)
 		{
 			// Use both original image dimensions
-			if (imgHeight == SCALE_DIMENSION || imgHeight == ORIGINAL_DIMENSION)
+			if (specialHeight == SpecialDimension.SCALE || specialHeight == SpecialDimension.ORIGINAL)
 			{
-//				theCase = "8,9";
+				theCase = "8,9";
 				imgWidth = img.getWidth();
 				imgHeight = img.getHeight();
 			}
 			// Scale only the width
 			else
 			{
-//				theCase = "7";
+				theCase = "7";
 				// TODO scale dimension
-				imgWidth = 0;
+				imgWidth = imgHeight * img.getWidth() / img.getHeight();
 			}
 		}
 		// Height needs to be scaled
-		else if (imgHeight == SCALE_DIMENSION)
+		else if (specialHeight == SpecialDimension.SCALE)
 		{
 			// Use both original image dimensions
-			if (imgWidth == ORIGINAL_DIMENSION)
+			if (specialWidth == SpecialDimension.ORIGINAL)
 			{
 				
-//				theCase = "6";
+				theCase = "6";
 				imgWidth = img.getWidth();
 				imgHeight = img.getHeight();
 			}
 			// Scale only the height
 			else
 			{
-//				theCase = "3";
+				theCase = "3";
 				// TODO scale dimension
-				imgHeight = 0;
+				imgHeight = imgWidth * img.getHeight() / img.getWidth();
 			}
 		}
 		// Use the original image width
-		else if (imgWidth == ORIGINAL_DIMENSION)
+		else if (specialWidth == SpecialDimension.ORIGINAL)
 		{
-//			theCase = "4";
+			theCase = "4";
 			imgWidth = img.getWidth();
 			// Use the original image height
-			if (imgHeight == ORIGINAL_DIMENSION)
+			if (specialHeight == SpecialDimension.ORIGINAL)
 			{
-//				theCase = "5";
+				theCase = "5";
 				imgHeight = img.getHeight();
 			}
 		}
 		// Use the original image height
-		else if (imgHeight == ORIGINAL_DIMENSION)
+		else if (specialHeight == SpecialDimension.ORIGINAL)
 		{
-//			theCase = "2";
+			theCase = "2";
 			imgHeight = img.getHeight();
 		}
 //		System.out.println("FrAnim case " + theCase);
+//		System.out.print("Original Width:");
+//		System.out.print(img.getWidth());
+//		System.out.print(", Original Height:");
+//		System.out.println(img.getHeight());
+//		// Print special stuff
+//		System.out.print("Spec. Width:" + specialWidth.toString());
+//		System.out.println(", Spec. Height:" + specialHeight.toString());
+//		// Print calculated dims
+//		System.out.print("Width:");
+//		System.out.print(imgWidth);
+//		System.out.print(", Height:");
+//		System.out.println(imgHeight);
 		// Reset back to actual image size for testing
 		imgWidth = img.getWidth();
 		imgHeight = img.getHeight();
@@ -234,6 +258,24 @@ public class FrameAnimator extends Animator
 		setImageHeight(height);
 	}
 	
+	public void setImageSize(SpecialDimension width, SpecialDimension height)
+	{
+		setImageWidth(width);
+		setImageHeight(height);
+	}
+	
+	public void setImageSize(int width, SpecialDimension height)
+	{
+		setImageWidth(width);
+		setImageHeight(height);
+	}
+	
+	public void setImageSize(SpecialDimension width, int height)
+	{
+		setImageWidth(width);
+		setImageHeight(height);
+	}
+	
 	/** Get the width that this animation will draw its images with. There
 	 * are several constants contained in FrameAnimator that this may be
 	 * equal to.
@@ -242,6 +284,11 @@ public class FrameAnimator extends Animator
 	public int getImageWidth()
 	{
 		return imgWidth;
+	}
+	
+	public SpecialDimension getSpecialWidth()
+	{
+		return specialWidth;
 	}
 	
 	/** Get the height that this animation will draw its images with. There
@@ -254,6 +301,11 @@ public class FrameAnimator extends Animator
 		return imgHeight;
 	}
 	
+	public SpecialDimension getSpecialHeight()
+	{
+		return specialHeight;
+	}
+	
 	/** Set the width to draw the animation images. FrameAnimator
 	 * contains several constants for special dimension values.
 	 * Negative dimension values could cause undesired widths.
@@ -261,7 +313,13 @@ public class FrameAnimator extends Animator
 	 */
 	public void setImageWidth(int width)
 	{
+		specialWidth = SpecialDimension.NONE;
 		imgWidth = width;
+	}
+	
+	public void setImageWidth(SpecialDimension width)
+	{
+		specialWidth = width;
 	}
 	
 	/** Set the height to draw the animation images. FrameAnimator
@@ -271,7 +329,13 @@ public class FrameAnimator extends Animator
 	 */
 	public void setImageHeight(int height)
 	{
+		specialHeight = SpecialDimension.NONE;
 		imgHeight = height;
+	}
+	
+	public void setImageHeight(SpecialDimension height)
+	{
+		specialHeight = height;
 	}
 	
 	/** Check if this frame animator is currently centering its images over
@@ -313,14 +377,14 @@ public class FrameAnimator extends Animator
 	{
 		isFinished = false;
 		currFrame = frame;
-		frameStart = core.ProgramTime.getTime();
+		frameStart = core.ProgramTime.getTimeMS();
 	}
 	
 	/** Selects and updates what the next rendered frame is. */
 	private void selectFrame()
 	{
 		// Increment the animation frame
-		if (core.ProgramTime.getTime() - frameStart >= interval)
+		if (core.ProgramTime.getTimeMS() - frameStart >= interval)
 		{
 			setFrame(currFrame+1);
 		}

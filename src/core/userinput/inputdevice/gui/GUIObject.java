@@ -15,6 +15,8 @@
 
 package core.userinput.inputdevice.gui;
 
+import java.awt.Color;
+
 import core.graphics.Renderer;
 import core.userinput.inputdevice.InputDevice;
 
@@ -32,7 +34,10 @@ public abstract class GUIObject implements Renderer, InputDevice
 	protected int width;
 	/** The height of this object. */
 	protected int height;
+	/** The fill color of this GUI Object. */
+	private Color bgColor;
 	
+	@Override
 	public void clear()
 	{
 	}
@@ -119,5 +124,21 @@ public abstract class GUIObject implements Renderer, InputDevice
 	public int getHeight()
 	{
 		return height;
+	}
+	
+	/** Gets the current background fill color.
+	 * @return the current background fill color
+	 */
+	public synchronized Color getBGColor()
+	{
+		return bgColor;
+	}
+	
+	/** Set the background fill color.
+	 * @param color the Color to fill the background with
+	 */
+	public synchronized void setBGColor(Color color)
+	{
+		bgColor = color;
 	}
 }

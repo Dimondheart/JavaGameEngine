@@ -105,7 +105,7 @@ public class Layer implements Renderer
 		}
 	}
 	
-	/** Remove each Renderer in this layer. */
+	/** Remove all Renderers in this layer. */
 	public synchronized void clear()
 	{
 		renderers.clear();

@@ -70,10 +70,8 @@ public class GUIPanel extends GUIObject
 	 * effect because they are not yet used by the panel.
 	 * @param x the x coordinate of the panel's upper left corner
 	 * @param y the y coordinate of the panel's upper left corner
-	 * @param width the width of the panel (currently unused)
-	 * @param height the height of the panel (currently unused)
 	 */
-	public GUIPanel(int x, int y, int width, int height)
+	public GUIPanel(int x, int y)
 	{
 		setPos(x, y);
 		setDims(width, height);
@@ -84,6 +82,11 @@ public class GUIPanel extends GUIObject
 	@Override
 	public synchronized void render(RenderEvent event)
 	{
+		if (getBGColor() != null)
+		{
+			event.getContext().setColor(getBGColor());
+			event.getContext().fillRect(getX(), getY(), getWidth(), getHeight());
+		}
 		// For each row
 		for (LinkedList<GUIObject> row : guiPositioning)
 		{
@@ -99,6 +102,7 @@ public class GUIPanel extends GUIObject
 	public synchronized void poll()
 	{
 		updatePositions();
+		updateDims();
 		// Update each contained element
 		for (LinkedList<GUIObject> row : guiPositioning)
 		{
@@ -470,6 +474,27 @@ public class GUIPanel extends GUIObject
 		}
 	}
 	
+	private void updateDims()
+	{
+		int width = 0;
+		int height = 0;
+		for (int i = 0; i < guiPositioning.size(); ++i)
+		{
+			int rw = getRowWidth(i);
+			if (rw > width)
+			{
+				width = rw;
+			}
+			height += getRowHeight(i);
+			if (i != guiPositioning.size() - 1)
+			{
+				height += getRowSpacing();
+			}
+		}
+		setDims(width, height);
+		
+	}
+	
 	/** Inserts a row before the specified row, with a Placeholder element
 	 * added to the new row.
 	 * @param insertAt the row to insert the new row before
@@ -514,5 +539,11 @@ public class GUIPanel extends GUIObject
 			}
 			return maxHeight;
 		}
+	}
+	
+	private int getRowWidth(int row)
+	{
+		GUIObject obj = guiPositioning.get(row).getLast();
+		return obj.getX() - getX() + obj.getWidth();
 	}
 }

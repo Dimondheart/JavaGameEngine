@@ -3,19 +3,19 @@ package game.gamestate;
 //import static java.awt.event.MouseEvent.*;
 import static java.awt.event.KeyEvent.*;
 
-import java.awt.Color;
 import java.util.concurrent.ConcurrentHashMap;
 
 import core.DynamicSettings;
+import core.entity.EntityContainer;
+import core.entity.EntityUpdateEvent;
 import core.gamestate.GameState;
 import core.graphics.GfxManager;
-import core.graphics.LayerSet;
-import core.graphics.TextDrawer;
 import core.sound.SoundManager;
 import core.userinput.InputManager;
 import core.userinput.inputdevice.gui.Button;
-import game.*;
-import utility.FPSRenderer;
+import game.AstroBody;
+import game.AstroScene;
+import game.Planet;
 
 /** A sample game state with sample stuff.
  * @author Bryan Charles Bettis
@@ -23,120 +23,105 @@ import utility.FPSRenderer;
 @SuppressWarnings("javadoc")
 public class SamplePlay extends GameState
 {
-	private FPSRenderer fpsRenderer;
-	// Sample dynamic renderers
-	private SampleRenderer sr;
-	private SampleRenderer sr_2;
-	// Sample static renderers
-	private SampleRenderer2 sr2;
-	private SampleRenderer2 sr2_2;
-	// Sample player controlled and renderer
-	private SamplePlayerControlled spc;
-	private transient CtrlRenderer controls;
-	// Animation testing
-	private transient TestAnimator ta;
-	private Button mainMenuBtn;
-	private LayerSetTester ls;
-	public static LayerSet entityLayers;
-	private boolean paused = false;
-	private MouseMotionTester ct;
+	protected EntityContainer astroObjects;
+	protected AstroScene realisticScene;
+	protected AstroScene testScene;
 	
 	public SamplePlay()
 	{
-		fpsRenderer = new FPSRenderer();
-		sr = new SampleRenderer();
-		sr_2 = new SampleRenderer(40,200,1,-1);
-		sr2 = new SampleRenderer2();
-		sr2_2 = new SampleRenderer2(150,120,80,80,Color.cyan);
-		spc = new SamplePlayerControlled();
-		entityLayers = new LayerSet(2);
-		mainMenuBtn = new Button(150,0,100,20,"Main Menu");
-		mainMenuBtn.setFont(TextDrawer.defFont.deriveFont(16f));
-		ls = new LayerSetTester();
-		ct = new MouseMotionTester();
+		astroObjects = new EntityContainer();
+		realisticScene = new AstroScene();
+		testScene = new AstroScene();
 	}
 	
 	@Override
 	public void setupState(ConcurrentHashMap<String, Object> args)
 	{
-		DynamicSettings.setSetting("INVERT_SCROLL_WHEEL", true);
-		entityLayers.addRenderer(ct, 0);
-		entityLayers.addRenderer(spc, 1);
-		entityLayers.addRenderer(sr, 0);
-		entityLayers.addRenderer(sr_2, 0);
-		GfxManager.getMainLayerSet().addRenderer(sr2, 5);
-		GfxManager.getMainLayerSet().addRenderer(sr2_2, 3);
-		GfxManager.getMainLayerSet().addRenderer(fpsRenderer, GfxManager.TOP_LAYER_INDEX);
-		GfxManager.getMainLayerSet().addRenderer(spc, GfxManager.TOP_LAYER_INDEX);
-		String[] cL = new String[4];
-		cL[0] = "WASD to move";
-		cL[1] = "Escape to pause/resume, + click main menu button to go to the main menu";
-		cL[2] = "Scroll to change the player unit's speed";
-		cL[3] = "Select the blue circle (left mouse button) & move it by moving the cursor";
-		controls = new CtrlRenderer(cL);
-		GfxManager.getMainLayerSet().addRenderer(controls, GfxManager.TOP_LAYER_INDEX);
-		GfxManager.getMainLayerSet().addRenderer(ct, GfxManager.TOP_LAYER_INDEX);
-		GfxManager.getMainLayerSet().addRenderer(entityLayers, 4);
-		ta = new TestAnimator("testanimate", "basic");
-		GfxManager.getMainLayerSet().addRenderer(ta, 9);
-		SoundManager.playBGM("bgm/Into_the_Unknown.wav", SoundManager.BGMTransition.IMMEDIATE);
+		DynamicSettings.setSetting(DynamicSettings.INVERT_SCROLL_WHEEL, true);
+		realisticScene.setup(0);
+		testScene.setup(1);
+		GfxManager.getMainLayerSet().addRenderer(realisticScene, 2);
+		GfxManager.getMainLayerSet().addRenderer(testScene, 2);
+		realisticScene.setActive(false);
+		testScene.setActive(true);
+//		AstroBody b1 = new AstroBody();
+//		b1.setMass(5.972e24);
+//		b1.setRadius(6371.3929);
+//		b1.setPos(0, 0);
+//		astroObjects.addEntity(new Planet(b1, realisticScene));
+//		AstroBody b2 = new AstroBody();
+//		b2.setMass(7.34767309e22);
+//		b2.setRadius(1736.4822);
+//		b2.setPos(384472.282, 0);
+//		b2.setVector(0, 1.022);
+//		b2.setMass(7.34767309e22);
+//		b2.setRadius(1736.4822);
+//		b2.setPos(9000, 0);
+//		b2.setVector(0, 10);
+//		astroObjects.addEntity(new Planet(b2, realisticScene));
+//		GfxManager.getMainLayerSet().addRenderer(astroObjects, 1);
+//		GfxManager.getMainLayerSet().addRenderer(realisticScene, 2);
 	}
 
 	@Override
 	public void cycleState()
 	{
-		ct.update();
-		if (InputManager.getKB().isDown(VK_SPACE))
+//		EntityUpdateEvent event = new EntityUpdateEvent();
+		int cdx = 0;
+		int cdy = 0;
+		double zoomFactor = 1;
+		if (InputManager.getKB().isDown(VK_A))
 		{
-			SoundManager.stopAllSFX();
+			cdx += 2;
 		}
-		if (!InputManager.getWin().isActive())
+		if (InputManager.getKB().isDown(VK_D))
 		{
-			paused = true;
+			cdx += -2;
 		}
-		else if (InputManager.getKB().justPressed(VK_ESCAPE))
+		if (InputManager.getKB().isDown(VK_W))
 		{
-			paused = !paused;
-			if (paused)
+			cdy += 2;
+		}
+		if (InputManager.getKB().isDown(VK_S))
+		{
+			cdy += -2;
+		}
+		if (InputManager.getKB().isDown(VK_SHIFT))
+		{
+			cdx *= 2;
+			cdy *= 2;
+			zoomFactor *= 3;
+		}
+		if (realisticScene.isActive())
+		{
+			if (InputManager.getMS().getWheelChange() > 0)
 			{
-				getClock().pause();
+				realisticScene.zoomIn(zoomFactor);
 			}
-			else
+			else if (InputManager.getMS().getWheelChange() < 0)
 			{
-				getClock().resume();
+				realisticScene.zoomOut(zoomFactor);
 			}
+			realisticScene.updateOffset(cdx,cdy);
+			realisticScene.updateScene(null);
 		}
-		if (paused)
+		if (testScene.isActive())
 		{
-			GfxManager.getMainLayerSet().addRenderer(mainMenuBtn, 9);
-			if (mainMenuBtn.getState().equals(Button.ButtonState.CLICKED))
+			if (InputManager.getMS().getWheelChange() > 0)
 			{
-				changeState(MainMenu.class);
-				return;
+				testScene.zoomIn(zoomFactor);
 			}
-		}
-		else
-		{
-			GfxManager.getMainLayerSet().removeRenderer(mainMenuBtn, 9);
-			sr.update();
-			sr_2.update();
-			spc.update();
+			else if (InputManager.getMS().getWheelChange() < 0)
+			{
+				testScene.zoomOut(zoomFactor);
+			}
+			testScene.updateOffset(cdx,cdy);
+			testScene.updateScene(null);
 		}
 	}
 
 	@Override
 	public void cleanupState()
 	{
-		DynamicSettings.setSetting("INVERT_SCROLL_WHEEL", false);
-		SoundManager.stopBGM(SoundManager.BGMTransition.IMMEDIATE);
-		sr2.destroy();
-		sr2_2.destroy();
-		spc.destroy();
-		controls.destroy();
-		ta.destroy();
-		mainMenuBtn.destroy();
-		entityLayers.destroy();
-		ls.layers.destroy();
-		ct.destroy();
 	}
 }

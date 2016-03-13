@@ -24,7 +24,9 @@ import java.awt.Graphics2D;
 public class TextDrawer
 {
 	/** The default font. */
-	public static final Font defFont = new Font("Dialog", Font.PLAIN, 12);
+	public static final Font defFont = 
+			(Font)
+			core.DeveloperSettings.getSetting(core.DeveloperSettings.DEF_FONT);
 	
 	/** Basic text drawing with default font and size.
 	 * @param g the surface to draw to

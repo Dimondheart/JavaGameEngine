@@ -22,21 +22,21 @@ import java.awt.Graphics2D;
  * to render to and the layer number currently being rendered.
  * @author Bryan Charles Bettis
  */
-public class RenderEvent
+public class RenderEvent implements Cloneable
 {
 	/** The graphics context used for drawing. */
-	private final Graphics2D g2;
+	private Graphics2D g;
 	/** The Layer currently being drawn. */
-	private final int layer;
+	private int layer;
 	
 	/** Basic render event constructor.
-	 * @param g2 the graphics context
+	 * @param g the graphics context
 	 * @param layer the layer currently being rendered
 	 */
-	public RenderEvent (Graphics2D g2, int layer)
+	public RenderEvent (Graphics2D g, int layer)
 	{
-		this.g2 = g2;
-		this.layer = layer;
+		setContext(g);
+		setLayer(layer);
 	}
 	
 	/** The graphics context to draw to.
@@ -44,7 +44,7 @@ public class RenderEvent
 	 */
 	public Graphics2D getContext()
 	{
-		return g2;
+		return g;
 	}
 	
 	/** The layer currently drawing to <b>in the most recent layer set.</b>
@@ -54,5 +54,30 @@ public class RenderEvent
 	public int getLayer()
 	{
 		return layer;
+	}
+	
+	void setContext(Graphics2D g)
+	{
+		this.g = g;
+	}
+	
+	void setLayer(int layer)
+	{
+		this.layer = layer;
+	}
+	
+	@Override
+	public RenderEvent clone()
+	{
+		try
+		{
+			return (RenderEvent) super.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

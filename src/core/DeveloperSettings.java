@@ -15,6 +15,7 @@
 
 package core;
 
+import java.awt.Font;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** Contains different settings that a developer can safely modify without
@@ -45,6 +46,11 @@ public class DeveloperSettings
 	 * <br> <i>Type:</i> a class (for example, game.gamestates.MainMenu.class)
 	 */
 	public static final String INIT_GAME_STATE = "INIT_GAME_STATE";
+	/** The default font to use for text drawing when a font is not specified.
+	 * <br>
+	 * <br> <i>Type:</i> a Font instance
+	 */
+	public static final String DEF_FONT = "DEF_FONT";
 	
 	/** The map of the different developer settings. */
 	protected static volatile ConcurrentHashMap<String, Object> settings;
@@ -72,6 +78,7 @@ public class DeveloperSettings
 		settings.put("INIT_MAIN_WIN_HEIGHT", 270);
 		// The game state to use when the game first starts
 		settings.put("INIT_GAME_STATE", game.gamestate.MainMenu.class);
+		settings.put("DEF_FONT", new Font("Dialog", Font.PLAIN, 12));
 	}
 	
 	/** Gets the specified developer setting, or returns null if the

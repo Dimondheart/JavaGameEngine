@@ -15,9 +15,40 @@
 
 package core.entity;
 
-/** This class is the base class for all maps.
+import core.StopWatch;
+
+/** This class is the base class for all scenes.
  * @author Bryan Charles Bettis
  */
-public abstract class Map
+public abstract class Scene
 {
+	protected StopWatch timer;
+	private boolean isActive;
+	
+	public Scene()
+	{
+		timer = new StopWatch();
+		timer.start();
+		setActive(false);
+	}
+	
+	public abstract void updateScene(SceneUpdateEvent event);
+	
+	public boolean isActive()
+	{
+		return isActive;
+	}
+	
+	public void setActive(boolean active)
+	{
+		isActive = active;
+		if (isActive())
+		{
+			timer.resume();
+		}
+		else
+		{
+			timer.pause();
+		}
+	}
 }

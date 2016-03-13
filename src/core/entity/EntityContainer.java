@@ -32,6 +32,7 @@ public class EntityContainer implements core.graphics.Renderer
 	 * on contained entities.
 	 */
 	protected boolean delayModification = false;
+	protected Predicate<? super Entity> postUpdateRemoveIf;
 	
 	/** Basic constructor. */
 	public EntityContainer()
@@ -46,7 +47,7 @@ public class EntityContainer implements core.graphics.Renderer
 	 * will not take place until the update has finished.
 	 * @param event the entity update event to pass in to each entity update
 	 */
-	public synchronized void updateEntities(EntityUpdateEvent event)
+	public void updateEntities(EntityUpdateEvent event)
 	{
 //		delayModification = true;
 //		entities.forEach((Entity e)->{e.update(event);});
@@ -56,14 +57,19 @@ public class EntityContainer implements core.graphics.Renderer
 		{
 			entities.get(i).update(event);
 		}
+		if (postUpdateRemoveIf != null)
+		{
+			removeIf(postUpdateRemoveIf);
+		}
 	}
 	
 	@Override
-	public synchronized void render(RenderEvent event)
+	public void render(RenderEvent event)
 	{
-		for (Entity entity : entities)
+		int numEntities = entities.size();
+		for (int i = 0; i < numEntities; ++i)
 		{
-			entity.render(event);
+			entities.get(i).render(event);
 		}
 	}
 	
@@ -127,6 +133,11 @@ public class EntityContainer implements core.graphics.Renderer
 	{
 		// TODO add ability to delay modification
 		return entities.removeIf(filter);
+	}
+	
+	public synchronized void setCycleRemoveIf(Predicate<? super Entity> filter)
+	{
+		this.postUpdateRemoveIf = filter;
 	}
 	
 	/** Gets all entities contained in this container. Removing, adding, moving,

@@ -36,6 +36,12 @@ public class Button extends GUIObject
 	private String text;
 	/** The Font object for rendering this button's text. */
 	private Font font;
+	/** The color of the button for certain regions when the button is
+	 * interacted with.
+	 */
+	private Color interactColor;
+	/** The color the button text will be drawn with. */
+	private Color fontColor;
 	
 	/** The different states a button can be in.
 	 * @author Bryan Charles Bettis
@@ -106,6 +112,8 @@ public class Button extends GUIObject
 		setDims(width, height);
 		setText(text);
 		setFont(font);
+		setBGColor(Color.gray);
+		fontColor = Color.white;
 	}
 	
 	/** Get the current state of this button.
@@ -122,7 +130,7 @@ public class Button extends GUIObject
 	 */
 	public synchronized boolean isInState(ButtonState state)
 	{
-		return getState().equals(state);
+		return this.state == state;
 	}
 	
 	/** Determines if this button is currently being pressed. This is
@@ -210,6 +218,39 @@ public class Button extends GUIObject
 		font = newFont;
 	}
 	
+	/** Set the background color of this button.
+	 * @param color the Color to fill the background with
+	 */
+	@Override
+	public synchronized void setBGColor(Color color)
+	{
+		super.setBGColor(color);
+		if (color == null)
+		{
+			interactColor = null;
+		}
+		else
+		{
+			interactColor = color.darker();
+		}
+	}
+	
+	/** Get the current color used to draw the button text.
+	 * @return the Color the button text is drawn with
+	 */
+	public synchronized Color getFontColor()
+	{
+		return fontColor;
+	}
+	
+	/** Change the color of the text drawn over this button.
+	 * @param color the Color to draw the button text with
+	 */
+	public synchronized void setFontColor(Color color)
+	{
+		fontColor = color;
+	}
+	
 	/** Check if the mouse is hovering over this button.
 	 * @return true if the mouse is over this button, false otherwise
 	 */
@@ -233,31 +274,42 @@ public class Button extends GUIObject
 	public synchronized void render(RenderEvent event)
 	{
 		Graphics2D g = event.getContext();
-		// Button pressed; adjust the background
-		if (state.equals(ButtonState.PRESSED))
+		// Button pressed
+		if (getBGColor() != null)
 		{
-			g.setColor(Color.darkGray);
-		}
-		else
-		{
-			g.setColor(Color.gray);
-		}
-		// Fill the button background
-		g.fillRect(x, y, width, height);
-		// Highlight the button center if hovering over
-		if (state.equals(ButtonState.HOVER))
-		{
-			g.setColor(Color.darkGray);
-			int tw = getWidth() - 8;
-			int th = getHeight() - 8;
-			int hx = getX() + 4;
-			int hy = getY() + 4;
-			g.fillRect(hx, hy, tw, th);
+			if (state == ButtonState.PRESSED)
+			{
+				g.setColor(interactColor);
+				// Fill the button background
+				g.fillRect(x, y, width, height);
+			}
+			// Hovering appearance
+			else if (state == ButtonState.HOVER)
+			{
+				g.setColor(interactColor);
+				g.fillRect(x, y, width, height);
+				g.setColor(getBGColor());
+				int tw = getWidth() - 8;
+				int th = getHeight() - 8;
+				int hx = getX() + 4;
+				int hy = getY() + 4;
+				g.fillRect(hx, hy, tw, th);
+			}
+			// Normal button appearance
+			else
+			{
+				g.setColor(getBGColor());
+				// Fill the button background
+				g.fillRect(x, y, width, height);
+			}
 		}
 		// Draw the text over the button
-		g.setColor(Color.white);
-		int[] centerCoords = {x + getWidth()/2, y + getHeight()/2};
-		int[] drawCoords = TextDrawer.centerOverPoint(g, text, centerCoords, font);
-		TextDrawer.drawText(g, text, drawCoords[0], drawCoords[1], font);
+		if (!text.isEmpty())
+		{
+			g.setColor(fontColor);
+			int[] centerCoords = {x + getWidth()/2, y + getHeight()/2};
+			int[] drawCoords = TextDrawer.centerOverPoint(g, text, centerCoords, font);
+			TextDrawer.drawText(g, text, drawCoords[0], drawCoords[1], font);
+		}
 	}
 }

@@ -68,7 +68,15 @@ public class StopWatch
 	/** Get the current time in millisecond precision.
 	 * @return the current stopwatch time in milliseconds
 	 */
-	public synchronized long getMSTime()
+	public synchronized long getTimeMS()
+	{
+		return getTimeNano()/1000000;
+	}
+	
+	/** Get the current time in millisecond precision.
+	 * @return the current stopwatch time in nanoseconds
+	 */
+	public synchronized long getTimeNano()
 	{
 		if (paused)
 		{
@@ -77,12 +85,12 @@ public class StopWatch
 		// When the parent clock is the static program clock
 		else if (parentTime == null)
 		{
-			return elapsed + (core.ProgramTime.getTime() - started);
+			return elapsed + (core.ProgramTime.getTimeNano() - started);
 		}
 		// Instantiated parent clocks
 		else
 		{
-			return elapsed + (parentTime.getMSTime() - started);
+			return elapsed + (parentTime.getTimeNano() - started);
 		}
 	}
 	
@@ -97,12 +105,12 @@ public class StopWatch
 		else if (parentTime == null)
 		{
 			paused = true;
-			elapsed += (core.ProgramTime.getTime() - started);
+			elapsed += (core.ProgramTime.getTimeNano() - started);
 		}
 		// Instantiated parent clocks
 		else
 		{
-			elapsed += (parentTime.getMSTime() - started);
+			elapsed += (parentTime.getTimeNano() - started);
 		}
 	}
 	
@@ -115,12 +123,12 @@ public class StopWatch
 			// When the parent clock is the static program clock
 			if (parentTime == null)
 			{
-				started = core.ProgramTime.getTime();
+				started = core.ProgramTime.getTimeNano();
 			}
 			// Instantiated parent clocks
 			else
 			{
-				started = parentTime.getMSTime();
+				started = parentTime.getTimeNano();
 			}
 		}
 	}

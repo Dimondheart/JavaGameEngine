@@ -1,6 +1,6 @@
 package game;
 
-import core.entity.Map;
+import core.entity.Scene;
 
 @SuppressWarnings("javadoc")
 public class SimpleBody extends core.entity.entitymodule.Body
@@ -28,7 +28,7 @@ public class SimpleBody extends core.entity.entitymodule.Body
 	}
 	
 	@Override
-	public boolean setMap(Map map)
+	public boolean setScene(Scene map)
 	{
 		if (!(map instanceof SimpleMap))
 		{

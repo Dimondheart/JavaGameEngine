@@ -15,12 +15,12 @@
 
 package core.entity.entitymodule;
 
-import core.entity.Map;
+import core.entity.Scene;
 
 /** 
  * @author Bryan Charles Bettis
  */
 public abstract class Body extends EntityModule
 {
-	public abstract boolean setMap(Map map);
+	public abstract boolean setScene(Scene scene);
 }

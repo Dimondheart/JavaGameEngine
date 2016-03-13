@@ -108,6 +108,14 @@ public class LayerSet implements Renderer
 		}
 	}
 	
+	/** Clear only the specified layer.
+	 * @param layer the index of the layer (starts at 0)
+	 */
+	public synchronized void clearLayer(int layer)
+	{
+		layers[layer].clear();
+	}
+	
 	/** Removes the specified Renderer from the specified layer, and then
 	 * calls this method on any layer sets inside that layer.
 	 * @param obj the renderer to recursively remove
@@ -148,7 +156,8 @@ public class LayerSet implements Renderer
 		// Render the layers
 		for (int i = 0; i < numLayers; ++i)
 		{
-			RenderEvent e = new RenderEvent(event.getContext(), i);
+			RenderEvent e = event.clone();
+			e.setLayer(i);
 			layers[i].render(e);
 		}
 	}

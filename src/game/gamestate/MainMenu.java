@@ -1,13 +1,19 @@
 package game.gamestate;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.util.concurrent.ConcurrentHashMap;
 
+import core.entity.Entity;
+import core.entity.EntityContainer;
+import core.entity.EntityUpdateEvent;
 import core.gamestate.GameState;
 import core.graphics.GfxManager;
 import core.userinput.InputManager;
 import core.userinput.inputdevice.gui.*;
+import game.Enemy;
 import game.GUIPanelTester;
+import game.Repulsor;
 import utility.FPSRenderer;
 
 //import static java.awt.event.KeyEvent.*;
@@ -25,6 +31,8 @@ public class MainMenu extends GameState
 	private Button quitBtn;
 	private GUIPanel buttonPanel;
 	private GUIPanelTester gpt;
+	private EntityContainer entities;
+	private game.Repulsor tokenRep;
 	
 	public MainMenu()
 	{
@@ -33,10 +41,11 @@ public class MainMenu extends GameState
 		startTestBtn = new Button(150, 100, 105, 30, "Old Test Mode", buttonFont);
 		startSampleBtn = new Button(150, 150, 105, 50, "New Play Mode", buttonFont);
 		quitBtn = new Button(150, 200, 105, 30);
+		quitBtn.setBGColor(null);
 		// Alternate way to set text & font
-		quitBtn.setText("Quit");
+		quitBtn.setText("Click to Quit");
 		quitBtn.setFont(buttonFont);
-		buttonPanel = new GUIPanel(150, 100, 105, 200);
+		buttonPanel = new GUIPanel(150, 100);
 		buttonPanel.addGUIObject(startTestBtn, "playMode1Btn");
 		buttonPanel.addGUIObject(startSampleBtn, "playMode2Btn", GUIPanel.RelativePosition.RIGHT_OF, "playMode1Btn");
 		buttonPanel.addGUIObject(quitBtn, "quitBtn", GUIPanel.RelativePosition.BELOW, "playMode1Btn");
@@ -65,6 +74,11 @@ public class MainMenu extends GameState
 //				startTestBtn
 //				);
 		gpt= new GUIPanelTester(buttonPanel);
+		buttonPanel.setBGColor(Color.blue);
+		tokenRep = new game.Repulsor();
+		tokenRep.getBody().setPos(200, 200);
+		tokenRep.getBody().setVector(1.2, -0.6);
+		entities = new EntityContainer();
 	}
 	
 	@Override
@@ -75,11 +89,39 @@ public class MainMenu extends GameState
 		GfxManager.getMainLayerSet().addRenderer(fpsRenderer, GfxManager.TOP_LAYER_INDEX);
 		GfxManager.getMainLayerSet().addRenderer(buttonPanel, 9);
 		GfxManager.getMainLayerSet().addRenderer(gpt, 9);
+//		GfxManager.getMainLayerSet().addRenderer(tokenEntity, 1);
+		entities.addEntity(new game.Enemy(100, 100, -1.3, 1.6, 200));
+		entities.addEntity(tokenRep);
+		entities.setCycleRemoveIf(
+				(Entity e)->{
+					if (e instanceof Enemy && ((Enemy) e).finishedDying())
+					{
+						e.destroy();
+						return true;
+					}
+					else if (e instanceof Repulsor && ((Repulsor) e).getHealth() <= 0)
+					{
+						e.destroy();
+						return true;
+					}
+					return false;
+				}
+				);
+		GfxManager.getMainLayerSet().addRenderer(entities, 1);
 	}
 
 	@Override
 	public void cycleState()
 	{
+		System.out.println(getClock().getTimeMS());
+		if (entities.numEntities() <= 3)
+		{
+			entities.addEntity(new game.Enemy(100, 100, -1.3, 1.6, 200));
+			entities.addEntity(new Repulsor(100, 100, -1.3, 1.6, 50));
+		}
+		EntityUpdateEvent event = new EntityUpdateEvent();
+		event.setEntities(entities);
+		entities.updateEntities(event);
 		if (((Button) buttonPanel.getGUIObject("playMode1Btn")).justReleased())
 		{
 			changeState(SamplePlay.class);
@@ -112,5 +154,6 @@ public class MainMenu extends GameState
 		fpsRenderer.destroy();
 		buttonPanel.destroy();
 		gpt.destroy();
+		entities.destroy();
 	}
 }

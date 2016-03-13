@@ -30,8 +30,9 @@ public class PlayerInteractor extends game.Repulsor
 	public synchronized void update(EntityUpdateEvent event)
 	{
 		body.setVector(0, 0);
-		health = 50;
+		health = 35;
 		super.update(event);
+		health = 35;
 		if (InputManager.getMS().justReleased(MouseEvent.BUTTON1))
 		{
 			if (isRepulsing)

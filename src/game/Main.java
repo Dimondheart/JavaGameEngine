@@ -13,7 +13,6 @@ public class Main
 		// Setup and start the game session
 		GameSession session = new GameSession();
 		session.start();
-		// When the game has stopped, stop the program
 		System.out.println("Quitting...");
 		System.exit(0);
 	}

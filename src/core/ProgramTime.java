@@ -23,7 +23,7 @@ public class ProgramTime
 {
 	/** Used to make sure this timer is only initialized once. */
 	private static boolean isSetup = false;
-	/** The system time from when the timer was last resumed. */
+	/** The nanosecond time from when the timer was last resumed. */
 	private static long started = 0;
 	/** Elapsed time, not including when InputManager is paused. */
 	private static long elapsed = 0;
@@ -34,7 +34,7 @@ public class ProgramTime
 	static synchronized void reset()
 	{
 		isSetup = true;
-		started = System.currentTimeMillis();
+		started = System.nanoTime();
 		elapsed = 0;
 		paused = true;
 		resume();
@@ -43,7 +43,15 @@ public class ProgramTime
 	/** Get the current program time.
 	 * @return the current program time in milliseconds
 	 */
-	public static synchronized long getTime()
+	public static synchronized long getTimeMS()
+	{
+		return getTimeNano()/1000000;
+	}
+	
+	/** Get the current program time.
+	 * @return the current program time in nanoseconds
+	 */
+	public static synchronized long getTimeNano()
 	{
 		if (paused)
 		{
@@ -51,7 +59,7 @@ public class ProgramTime
 		}
 		else
 		{
-			return elapsed + (System.currentTimeMillis() - started);
+			return elapsed + (System.nanoTime() - started);
 		}
 	}
 	
@@ -65,7 +73,7 @@ public class ProgramTime
 		else
 		{
 			paused = true;
-			elapsed += (System.currentTimeMillis() - started);
+			elapsed += (System.nanoTime() - started);
 		}
 	}
 	
@@ -75,7 +83,7 @@ public class ProgramTime
 		if (paused && isSetup)
 		{
 			paused = false;
-			started = System.currentTimeMillis();
+			started = System.nanoTime();
 		}
 		else
 		{

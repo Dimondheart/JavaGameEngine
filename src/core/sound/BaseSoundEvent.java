@@ -26,7 +26,7 @@ public abstract class BaseSoundEvent
 	/** Basic constructor. */
 	public BaseSoundEvent()
 	{
-		this.queueTime = core.ProgramTime.getTime();
+		this.queueTime = core.ProgramTime.getTimeMS();
 	}
 	
 	/** How long this event has been queued.
@@ -34,7 +34,7 @@ public abstract class BaseSoundEvent
 	 */
 	public final long getTimeInQueue()
 	{
-		return core.ProgramTime.getTime() - queueTime;
+		return core.ProgramTime.getTimeMS() - queueTime;
 	}
 	
 	/** Determines if this event has met any conditions that make

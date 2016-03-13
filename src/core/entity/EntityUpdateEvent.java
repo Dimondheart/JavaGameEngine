@@ -27,6 +27,11 @@ public class EntityUpdateEvent extends EntityEvent
 	 */
 	private EntityContainer entities;
 	
+	public EntityUpdateEvent()
+	{
+		entities = new EntityContainer();
+	}
+	
 	public EntityContainer getEntities()
 	{
 		return entities;
