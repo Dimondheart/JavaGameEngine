@@ -1,13 +1,12 @@
 package game;
 
-import java.awt.image.BufferedImage;
+import xyz.digitalcookies.objective.entity.Entity;
+import xyz.digitalcookies.objective.entity.EntityUpdateEvent;
+import xyz.digitalcookies.objective.graphics.GraphicsManager;
+import xyz.digitalcookies.objective.graphics.RenderEvent;
 
-import core.entity.Entity;
-import core.entity.EntityUpdateEvent;
-import core.graphics.GfxManager;
-import core.graphics.RenderEvent;
-
-public class Planet extends AstroObject implements core.entity.Entity
+@SuppressWarnings("javadoc")
+public class Planet extends AstroObject implements xyz.digitalcookies.objective.entity.Entity
 {
 	protected AstroBody body;
 	
@@ -23,9 +22,9 @@ public class Planet extends AstroObject implements core.entity.Entity
 		double x = body.getScreenX();
 		double y = body.getScreenY();
 		double r = body.getScreenRadius();
-		GfxManager.drawGraphic(
+		GraphicsManager.drawGraphic(
 				event.getContext(),
-				GfxManager.getResManager().getRes("planet6.png"),
+				GraphicsManager.getResManager().getRes("planet6.png"),
 				(int) (x-r),
 				(int) (y-r),
 				(int) (r*2),

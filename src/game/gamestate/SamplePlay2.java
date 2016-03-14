@@ -3,24 +3,23 @@ package game.gamestate;
 import static java.awt.event.KeyEvent.*;
 
 import java.awt.Color;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import core.DynamicSettings;
-import core.entity.Entity;
-import core.entity.EntityContainer;
-import core.entity.EntityUpdateEvent;
-import core.gamestate.GameState;
-import core.graphics.GfxManager;
-import core.graphics.LayerSet;
-import core.graphics.TextDrawer;
-import core.sound.SoundManager;
-import core.userinput.InputManager;
-import core.userinput.inputdevice.gui.Button;
 import game.CtrlRenderer;
 import game.Enemy;
 import game.Repulsor;
-import game.SimpleMap;
+import xyz.digitalcookies.objective.DevConfig;
+import xyz.digitalcookies.objective.Settings;
+import xyz.digitalcookies.objective.entity.Entity;
+import xyz.digitalcookies.objective.entity.EntityContainer;
+import xyz.digitalcookies.objective.entity.EntityUpdateEvent;
+import xyz.digitalcookies.objective.gamestate.GameState;
+import xyz.digitalcookies.objective.graphics.GraphicsManager;
+import xyz.digitalcookies.objective.graphics.LayerSet;
+import xyz.digitalcookies.objective.graphics.TextDrawer;
+import xyz.digitalcookies.objective.input.InputManager;
+import xyz.digitalcookies.objective.input.gui.Button;
+import xyz.digitalcookies.objective.sound.SoundManager;
 
 @SuppressWarnings("javadoc")
 public class SamplePlay2 extends GameState
@@ -34,7 +33,6 @@ public class SamplePlay2 extends GameState
 	private String[] toDraw;
 	private game.PlayerInteractor pi;
 	private game.Repulsor rep1;
-	private SimpleMap map;
 	private game.LayerSetTest layerSetTest;
 
 	public SamplePlay2()
@@ -60,19 +58,20 @@ public class SamplePlay2 extends GameState
 	@Override
 	public void setupState(ConcurrentHashMap<String, Object> args)
 	{
-		DynamicSettings.setSetting("INVERT_SCROLL_WHEEL", true);
-		GfxManager.getMainLayerSet().addRenderer(controls, GfxManager.TOP_LAYER_INDEX);
-		GfxManager.getMainLayerSet().addRenderer(entityLayers, 4);
+		Settings.setSetting("INVERT_SCROLL_WHEEL", true);
+		GraphicsManager.getMainLayerSet().addRenderer(controls, (int)
+				DevConfig.getSetting("NUM_MAIN_LAYERS") - 1);
+		GraphicsManager.getMainLayerSet().addRenderer(entityLayers, 4);
 //		SoundManager.playBGM("bgm/Into_the_Unknown.wav", SoundManager.BGMTransition.IMMEDIATE);
 //		entities.addEntity(new Enemy(50.0,50.0,0.0,0.0,50));
 //		entities.addEntity(new Enemy(50.0,0,0.0,0.0,50));
 		entities.addEntity(pi);
 //		entities.addEntity(rep1);
-		GfxManager.getMainLayerSet().addRenderer(btd, GfxManager.TOP_LAYER_INDEX);
+		GraphicsManager.getMainLayerSet().addRenderer(btd, (int)
+				DevConfig.getSetting("NUM_MAIN_LAYERS") - 1);
 		String[] td = {"Count", "Average Health", "Curr Num Dying", "AVG CPS"};
 		toDraw = td;
 		btd.setText(toDraw);
-		map = new SimpleMap(100,100);
 		entityLayers.addRenderer(entities, 0);
 	}
 
@@ -99,7 +98,7 @@ public class SamplePlay2 extends GameState
 		}
 		if (paused)
 		{
-			GfxManager.getMainLayerSet().addRenderer(mainMenuBtn, 9);
+			GraphicsManager.getMainLayerSet().addRenderer(mainMenuBtn, 9);
 			if (mainMenuBtn.getState().equals(Button.ButtonState.CLICKED))
 			{
 				changeState(MainMenu.class);
@@ -108,7 +107,7 @@ public class SamplePlay2 extends GameState
 		}
 		else
 		{
-			GfxManager.getMainLayerSet().removeRenderer(mainMenuBtn, 9);
+			GraphicsManager.getMainLayerSet().removeRenderer(mainMenuBtn, 9);
 			entities.setCycleRemoveIf(
 					(Entity e)->{
 						if (e instanceof Enemy && ((Enemy) e).finishedDying())
@@ -131,14 +130,13 @@ public class SamplePlay2 extends GameState
 		double count = entities.numEntities();
 		toDraw[0] = "Count (Approx.): " + Integer.toString((int) count);
 		toDraw[1] = "---";
-		toDraw[3] = "Average CPS: " + String.format("%.3f", core.GameSession.getAverageCPS());
 		btd.setText(toDraw);
 	}
 
 	@Override
 	public void cleanupState()
 	{
-		DynamicSettings.setSetting("INVERT_SCROLL_WHEEL", false);
+		Settings.setSetting("INVERT_SCROLL_WHEEL", false);
 		SoundManager.stopBGM(SoundManager.BGMTransition.IMMEDIATE);
 		controls.destroy();
 		mainMenuBtn.destroy();

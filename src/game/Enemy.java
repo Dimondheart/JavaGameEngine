@@ -1,18 +1,16 @@
 package game;
 
-import java.awt.Color;
 import java.util.LinkedList;
 import java.util.Random;
 
-import core.entity.Entity;
-import core.entity.EntityContainer;
-import core.entity.EntityUpdateEvent;
-import core.gamestate.GameState;
-import core.graphics.FrameAnimator;
-import core.graphics.TextDrawer;
+import xyz.digitalcookies.objective.entity.Entity;
+import xyz.digitalcookies.objective.entity.EntityContainer;
+import xyz.digitalcookies.objective.entity.EntityUpdateEvent;
+import xyz.digitalcookies.objective.gamestate.GameState;
+import xyz.digitalcookies.objective.graphics.FrameAnimator;
 
 @SuppressWarnings("javadoc")
-public class Enemy implements core.entity.Entity, core.graphics.Renderer
+public class Enemy implements xyz.digitalcookies.objective.entity.Entity, xyz.digitalcookies.objective.graphics.Renderer
 {
 	protected static final int HEAL_RATE = 250;
 	protected static final int FIGHT_DISTANCE = 16;
@@ -43,7 +41,7 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 	}
 	
 	@Override
-	public void render(core.graphics.RenderEvent e)
+	public void render(xyz.digitalcookies.objective.graphics.RenderEvent e)
 	{
 		int[] drawCoords = {(int) body.getX(), (int) body.getY()};
 //		e.getContext().setColor(Color.red);
@@ -54,7 +52,7 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 //			e.getContext().drawOval(drawCoords[0]-SPLIT_HEALTH/4, drawCoords[1]-SPLIT_HEALTH/4, SPLIT_HEALTH/2, SPLIT_HEALTH/2);
 //			e.getContext().setColor(Color.orange);
 //			e.getContext().drawOval(drawCoords[0]-FIGHT_DISTANCE, drawCoords[1]-FIGHT_DISTANCE, FIGHT_DISTANCE*2, FIGHT_DISTANCE*2);
-			core.graphics.GfxManager.drawGraphic(
+			xyz.digitalcookies.objective.graphics.GraphicsManager.drawGraphic(
 					e.getContext(),
 					"planet6.png",
 					drawCoords[0]-(int) getHealth()/4,
@@ -102,9 +100,9 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 			die();
 			return;
 		}
-		long currTime = core.gamestate.GameState.getClock().getTimeMS();
-		int maxX = core.graphics.GfxManager.getMainLayerSet().getLayerSetWidth();
-		int maxY = core.graphics.GfxManager.getMainLayerSet().getLayerSetHeight();
+		long currTime = xyz.digitalcookies.objective.gamestate.GameState.getClock().getTimeMS();
+		int maxX = xyz.digitalcookies.objective.graphics.GraphicsManager.getMainLayerSet().getLayerSetWidth();
+		int maxY = xyz.digitalcookies.objective.graphics.GraphicsManager.getMainLayerSet().getLayerSetHeight();
 		LinkedList<Enemy> nearEnemies = getNearEnemies(event.getEntities(), 8);
 		for (Enemy ne : nearEnemies)
 		{
@@ -267,7 +265,7 @@ public class Enemy implements core.entity.Entity, core.graphics.Renderer
 		}
 		dying = true;
 		deathAnimator = new FrameAnimator("explosion", 125);
-		core.sound.SoundManager.playSFX("sfx/explosion1.wav");
+		xyz.digitalcookies.objective.sound.SoundManager.playSFX("sfx/explosion1.wav");
 	}
 	
 	public boolean finishedDying()

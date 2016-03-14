@@ -2,9 +2,10 @@ package game;
 
 import java.util.LinkedList;
 
-import core.entity.Scene;
+import xyz.digitalcookies.objective.entity.Scene;
 
-public class AstroBody extends core.entity.entitymodule.Body
+@SuppressWarnings("javadoc")
+public class AstroBody extends xyz.digitalcookies.objective.entity.entitymodule.Body
 {
 	public static final double G = 6.674e-11;
 	protected AstroScene map;
@@ -26,7 +27,7 @@ public class AstroBody extends core.entity.entitymodule.Body
 	{
 		xAccel = new LinkedList<Double>();
 		yAccel = new LinkedList<Double>();
-		lastMovement = core.gamestate.GameState.getClock().getTimeNano();
+		lastMovement = xyz.digitalcookies.objective.gamestate.GameState.getClock().getTimeNano();
 		coords = new double[2];
 		vector = new double[2];
 		setMass(1.0);
@@ -190,7 +191,7 @@ public class AstroBody extends core.entity.entitymodule.Body
 	public void move()
 	{
 //		System.out.println(core.gamestate.GameState.getClock().getTimeNano()/1000000.0/1000.0);
-		long currTime = core.gamestate.GameState.getClock().getTimeNano();
+		long currTime = xyz.digitalcookies.objective.gamestate.GameState.getClock().getTimeNano();
 		double elapsed = (currTime - lastMovement)/1000000.0/1000.0;
 		double newVX = getVectorX();
 		double newVY = getVectorY();
@@ -205,8 +206,6 @@ public class AstroBody extends core.entity.entitymodule.Body
 		xAccel.clear();
 		yAccel.clear();
 		setVector(newVX, newVY);
-		double newX = getX() + getVectorX()*elapsed;
-		double newY = getY() + getVectorY()*elapsed;
 //		System.out.print("Elapsed:");
 //		System.out.print(elapsed);
 //		System.out.print(getX());

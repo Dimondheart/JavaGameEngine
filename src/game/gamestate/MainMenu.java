@@ -4,17 +4,17 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.concurrent.ConcurrentHashMap;
 
-import core.entity.Entity;
-import core.entity.EntityContainer;
-import core.entity.EntityUpdateEvent;
-import core.gamestate.GameState;
-import core.graphics.GfxManager;
-import core.userinput.InputManager;
-import core.userinput.inputdevice.gui.*;
 import game.Enemy;
 import game.GUIPanelTester;
 import game.Repulsor;
-import utility.FPSRenderer;
+import xyz.digitalcookies.objective.entity.Entity;
+import xyz.digitalcookies.objective.entity.EntityContainer;
+import xyz.digitalcookies.objective.entity.EntityUpdateEvent;
+import xyz.digitalcookies.objective.gamestate.GameState;
+import xyz.digitalcookies.objective.graphics.GraphicsManager;
+import xyz.digitalcookies.objective.input.InputManager;
+import xyz.digitalcookies.objective.input.gui.Button;
+import xyz.digitalcookies.objective.input.gui.GUIPanel;
 
 //import static java.awt.event.KeyEvent.*;
 //import static java.awt.event.MouseEvent.*;
@@ -25,7 +25,6 @@ import utility.FPSRenderer;
 @SuppressWarnings("javadoc")
 public class MainMenu extends GameState
 {
-	private FPSRenderer fpsRenderer;
 	private Button startTestBtn;
 	private Button startSampleBtn;
 	private Button quitBtn;
@@ -36,7 +35,6 @@ public class MainMenu extends GameState
 	
 	public MainMenu()
 	{
-		fpsRenderer = new FPSRenderer();
 		Font buttonFont = new Font("Serif", Font.ITALIC, 16);
 		startTestBtn = new Button(150, 100, 105, 30, "Old Test Mode", buttonFont);
 		startSampleBtn = new Button(150, 150, 105, 50, "New Play Mode", buttonFont);
@@ -86,9 +84,8 @@ public class MainMenu extends GameState
 	{
 		// Testing frame animator image dimensioning setup
 //		GfxManager.getMainLayerSet().addRenderer(new game.FrameAnimatorUT1(), 0);
-		GfxManager.getMainLayerSet().addRenderer(fpsRenderer, GfxManager.TOP_LAYER_INDEX);
-		GfxManager.getMainLayerSet().addRenderer(buttonPanel, 9);
-		GfxManager.getMainLayerSet().addRenderer(gpt, 9);
+		GraphicsManager.getMainLayerSet().addRenderer(buttonPanel, 9);
+		GraphicsManager.getMainLayerSet().addRenderer(gpt, 9);
 //		GfxManager.getMainLayerSet().addRenderer(tokenEntity, 1);
 		entities.addEntity(new game.Enemy(100, 100, -1.3, 1.6, 200));
 		entities.addEntity(tokenRep);
@@ -107,7 +104,7 @@ public class MainMenu extends GameState
 					return false;
 				}
 				);
-		GfxManager.getMainLayerSet().addRenderer(entities, 1);
+		GraphicsManager.getMainLayerSet().addRenderer(entities, 1);
 	}
 
 	@Override
@@ -151,7 +148,6 @@ public class MainMenu extends GameState
 	@Override
 	public void cleanupState()
 	{
-		fpsRenderer.destroy();
 		buttonPanel.destroy();
 		gpt.destroy();
 		entities.destroy();

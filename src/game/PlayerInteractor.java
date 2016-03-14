@@ -1,11 +1,10 @@
 package game;
 
-import java.awt.Color;
 import java.awt.event.MouseEvent;
 
-import core.entity.EntityUpdateEvent;
-import core.graphics.RenderEvent;
-import core.userinput.InputManager;
+import xyz.digitalcookies.objective.entity.EntityUpdateEvent;
+import xyz.digitalcookies.objective.graphics.RenderEvent;
+import xyz.digitalcookies.objective.input.InputManager;
 
 @SuppressWarnings("javadoc")
 public class PlayerInteractor extends game.Repulsor

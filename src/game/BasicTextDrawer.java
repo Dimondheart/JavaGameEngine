@@ -1,10 +1,11 @@
 package game;
 
-import core.graphics.GfxManager;
-import core.graphics.RenderEvent;
-import core.graphics.TextDrawer;
+import xyz.digitalcookies.objective.graphics.GraphicsManager;
+import xyz.digitalcookies.objective.graphics.RenderEvent;
+import xyz.digitalcookies.objective.graphics.TextDrawer;
 
-public class BasicTextDrawer implements core.graphics.Renderer
+@SuppressWarnings("javadoc")
+public class BasicTextDrawer implements xyz.digitalcookies.objective.graphics.Renderer
 {
 	private String[] toDraw;
 	
@@ -15,7 +16,7 @@ public class BasicTextDrawer implements core.graphics.Renderer
 		{
 			String line = toDraw[i];
 			int x =
-					GfxManager.getMainLayerSet().getLayerSetWidth()
+					GraphicsManager.getMainLayerSet().getLayerSetWidth()
 					- TextDrawer.getTextWidth(event.getContext(), line)
 					- 4;
 			int y = i * TextDrawer.getTextHeight(event.getContext(), line);

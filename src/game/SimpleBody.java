@@ -1,11 +1,10 @@
 package game;
 
-import core.entity.Scene;
+import xyz.digitalcookies.objective.entity.Scene;
 
 @SuppressWarnings("javadoc")
-public class SimpleBody extends core.entity.entitymodule.Body
+public class SimpleBody extends xyz.digitalcookies.objective.entity.entitymodule.Body
 {
-	private SimpleMap myMap;
 	private double[] coords;
 	private double[] vector;
 	
@@ -30,11 +29,6 @@ public class SimpleBody extends core.entity.entitymodule.Body
 	@Override
 	public boolean setScene(Scene map)
 	{
-		if (!(map instanceof SimpleMap))
-		{
-			return false;
-		}
-		myMap = (SimpleMap) map;
 		return true;
 	}
 	

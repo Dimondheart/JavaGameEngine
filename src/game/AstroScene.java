@@ -2,14 +2,15 @@ package game;
 
 import java.awt.Color;
 
-import core.StopWatch;
-import core.entity.EntityContainer;
-import core.entity.EntityUpdateEvent;
-import core.entity.SceneUpdateEvent;
-import core.graphics.GfxManager;
-import core.graphics.RenderEvent;
+import xyz.digitalcookies.objective.entity.EntityContainer;
+import xyz.digitalcookies.objective.entity.EntityUpdateEvent;
+import xyz.digitalcookies.objective.entity.SceneUpdateEvent;
+import xyz.digitalcookies.objective.graphics.GraphicsManager;
+import xyz.digitalcookies.objective.graphics.RenderEvent;
+import xyz.digitalcookies.objective.utility.StopWatch;
 
-public class AstroScene extends core.entity.Scene implements core.graphics.Renderer
+@SuppressWarnings("javadoc")
+public class AstroScene extends xyz.digitalcookies.objective.entity.Scene implements xyz.digitalcookies.objective.graphics.Renderer
 {
 	protected double rf1;
 	protected double rf2;
@@ -19,7 +20,7 @@ public class AstroScene extends core.entity.Scene implements core.graphics.Rende
 	public AstroScene()
 	{
 		super();
-		timer = new StopWatch(core.gamestate.GameState.getClock());
+		timer = new StopWatch(xyz.digitalcookies.objective.gamestate.GameState.getClock());
 		setScale(100.0, 1.0);
 		posOffset = new double[2];
 		setOffset(0,0);
@@ -158,12 +159,12 @@ public class AstroScene extends core.entity.Scene implements core.graphics.Rende
 		// X-axis
 		int[] xa = new int[3];
 		xa[0] = (int) 0;
-		xa[1] = (int) GfxManager.getMainLayerSet().getLayerSetWidth();
+		xa[1] = (int) GraphicsManager.getMainLayerSet().getLayerSetWidth();
 		xa[2] = (int) getOffsetY();
 		event.getContext().drawLine(xa[0], xa[2], xa[1], xa[2]);
 		int[] ya = new int[3];
 		ya[0] = (int) 0;
-		ya[1] = (int) GfxManager.getMainLayerSet().getLayerSetHeight();
+		ya[1] = (int) GraphicsManager.getMainLayerSet().getLayerSetHeight();
 		ya[2] = (int) getOffsetX();
 		event.getContext().drawLine(ya[2], ya[0], ya[2], ya[1]);
 	}

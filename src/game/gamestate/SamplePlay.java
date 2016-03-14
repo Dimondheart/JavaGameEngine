@@ -5,17 +5,12 @@ import static java.awt.event.KeyEvent.*;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import core.DynamicSettings;
-import core.entity.EntityContainer;
-import core.entity.EntityUpdateEvent;
-import core.gamestate.GameState;
-import core.graphics.GfxManager;
-import core.sound.SoundManager;
-import core.userinput.InputManager;
-import core.userinput.inputdevice.gui.Button;
-import game.AstroBody;
 import game.AstroScene;
-import game.Planet;
+import xyz.digitalcookies.objective.Settings;
+import xyz.digitalcookies.objective.entity.EntityContainer;
+import xyz.digitalcookies.objective.gamestate.GameState;
+import xyz.digitalcookies.objective.graphics.GraphicsManager;
+import xyz.digitalcookies.objective.input.InputManager;
 
 /** A sample game state with sample stuff.
  * @author Bryan Charles Bettis
@@ -37,11 +32,11 @@ public class SamplePlay extends GameState
 	@Override
 	public void setupState(ConcurrentHashMap<String, Object> args)
 	{
-		DynamicSettings.setSetting(DynamicSettings.INVERT_SCROLL_WHEEL, true);
+		Settings.setSetting(Settings.INVERT_SCROLL_WHEEL, true);
 		realisticScene.setup(0);
 		testScene.setup(1);
-		GfxManager.getMainLayerSet().addRenderer(realisticScene, 2);
-		GfxManager.getMainLayerSet().addRenderer(testScene, 2);
+		GraphicsManager.getMainLayerSet().addRenderer(realisticScene, 2);
+		GraphicsManager.getMainLayerSet().addRenderer(testScene, 2);
 		realisticScene.setActive(false);
 		testScene.setActive(true);
 //		AstroBody b1 = new AstroBody();

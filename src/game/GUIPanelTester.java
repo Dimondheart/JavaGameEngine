@@ -4,14 +4,13 @@ import static java.awt.event.MouseEvent.BUTTON1;
 
 import java.awt.Color;
 
-import core.graphics.GfxManager;
-import core.graphics.RenderEvent;
-import core.graphics.TextDrawer;
-import core.userinput.InputManager;
-import core.userinput.inputdevice.gui.GUIPanel;
+import xyz.digitalcookies.objective.graphics.RenderEvent;
+import xyz.digitalcookies.objective.graphics.TextDrawer;
+import xyz.digitalcookies.objective.input.InputManager;
+import xyz.digitalcookies.objective.input.gui.GUIPanel;
 
 @SuppressWarnings("javadoc")
-public class GUIPanelTester implements core.graphics.Renderer
+public class GUIPanelTester implements xyz.digitalcookies.objective.graphics.Renderer
 {
 	private GUIPanel panel;
 	private int x;

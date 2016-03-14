@@ -1,10 +1,10 @@
 package game;
 
-import core.graphics.FrameAnimator;
-import core.graphics.RenderEvent;
+import xyz.digitalcookies.objective.graphics.FrameAnimator;
+import xyz.digitalcookies.objective.graphics.RenderEvent;
 
-/** Unit test object for frame animator image dimensioning setup. */
-public class FrameAnimatorUT1 implements core.graphics.Renderer
+@SuppressWarnings("javadoc")
+public class FrameAnimatorUT1 implements xyz.digitalcookies.objective.graphics.Renderer
 {
 	private FrameAnimator fa;
 	

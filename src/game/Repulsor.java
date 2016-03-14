@@ -1,24 +1,22 @@
 package game;
 
 import java.awt.Color;
-import java.util.Random;
 
-import core.entity.Entity;
-import core.entity.EntityUpdateEvent;
-import core.gamestate.GameState;
-import core.graphics.FrameAnimator;
-import core.graphics.RenderEvent;
-import core.graphics.TextDrawer;
+import xyz.digitalcookies.objective.entity.Entity;
+import xyz.digitalcookies.objective.entity.EntityUpdateEvent;
+import xyz.digitalcookies.objective.gamestate.GameState;
+import xyz.digitalcookies.objective.graphics.FrameAnimator;
+import xyz.digitalcookies.objective.graphics.RenderEvent;
 
 @SuppressWarnings("javadoc")
-public class Repulsor implements core.entity.Entity
+public class Repulsor implements xyz.digitalcookies.objective.entity.Entity
 {
 	protected Color repulseColor = new Color(0,0,255,65);
 	protected int outerPulseRadius = 64;
 	protected int innerPulseRadius = 32;
 	protected FrameAnimator pulseAnimator;
 	protected boolean isRepulsing = false;
-	private core.StopWatch effectClock;
+	private xyz.digitalcookies.objective.utility.StopWatch effectClock;
 	private long lastCycleUpdate;
 	protected long effectTime = 20;
 	protected SimpleBody body;
@@ -35,7 +33,7 @@ public class Repulsor implements core.entity.Entity
 	{
 		body = new SimpleBody(x, y, vectorX, vectorY);
 		pulseAnimator = new FrameAnimator("bluering", 60);
-		effectClock = new core.StopWatch(core.gamestate.GameState.getClock());
+		effectClock = new xyz.digitalcookies.objective.utility.StopWatch(xyz.digitalcookies.objective.gamestate.GameState.getClock());
 		effectClock.start();
 		lastCycleUpdate = effectClock.getTimeMS();
 		pulseAnimator.setLooping(false);
@@ -113,8 +111,8 @@ public class Repulsor implements core.entity.Entity
 	@Override
 	public void update(EntityUpdateEvent event)
 	{
-		int maxX = core.graphics.GfxManager.getMainLayerSet().getLayerSetWidth();
-		int maxY = core.graphics.GfxManager.getMainLayerSet().getLayerSetHeight();
+		int maxX = xyz.digitalcookies.objective.graphics.GraphicsManager.getMainLayerSet().getLayerSetWidth();
+		int maxY = xyz.digitalcookies.objective.graphics.GraphicsManager.getMainLayerSet().getLayerSetHeight();
 		if (health >= 100)
 		{
 			event.getEntities().addEntity(split());
@@ -153,7 +151,7 @@ public class Repulsor implements core.entity.Entity
 			health = 0;
 			return;
 		}
-		long currTime = core.gamestate.GameState.getClock().getTimeMS();
+		long currTime = xyz.digitalcookies.objective.gamestate.GameState.getClock().getTimeMS();
 		if (lastDegradeUpdate - currTime >= 10)
 		{
 			lastDegradeUpdate = currTime;

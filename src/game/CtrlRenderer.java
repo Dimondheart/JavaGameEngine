@@ -3,9 +3,9 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import core.graphics.RenderEvent;
-import core.graphics.Renderer;
-import core.graphics.TextDrawer;
+import xyz.digitalcookies.objective.graphics.RenderEvent;
+import xyz.digitalcookies.objective.graphics.Renderer;
+import xyz.digitalcookies.objective.graphics.TextDrawer;
 
 /** Renders controls text to the screen for testing purposes.
 * @author Bryan Charles Bettis
