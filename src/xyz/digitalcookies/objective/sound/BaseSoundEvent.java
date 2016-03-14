@@ -18,7 +18,7 @@ package xyz.digitalcookies.objective.sound;
 /** Base class for all sound system events.
  * @author Bryan Charles Bettis
  */
-public abstract class BaseSoundEvent
+abstract class BaseSoundEvent
 {
 	/** The core.ProgramClock time when the sound effect was queued. */
 	private final long queueTime;

@@ -57,7 +57,7 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 			mainWin.dispose();
 		}
 		// Setup the main window
-		mainWin = new JFrame("Unnamed Java Game Engine");
+		mainWin = new JFrame("Objective - Java Game Engine");
 		// Setup the main layer container
 		Integer numMainLayers =
 				(Integer) DevConfig.getSetting("NUM_MAIN_LAYERS");

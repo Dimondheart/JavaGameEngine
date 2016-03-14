@@ -29,7 +29,19 @@ public class EntityUpdateEvent extends EntityEvent
 	
 	public EntityUpdateEvent()
 	{
-		entities = new EntityContainer();
+		this(new EntityContainer());
+	}
+	
+	public EntityUpdateEvent(EntityContainer entities)
+	{
+		if (entities == null)
+		{
+			this.entities = new EntityContainer();
+		}
+		else
+		{
+			this.entities = entities;
+		}
 	}
 	
 	public EntityContainer getEntities()

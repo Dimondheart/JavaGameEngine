@@ -18,6 +18,6 @@ package xyz.digitalcookies.objective.sound;
 /** TODO document
  * @author Bryan Charles Bettis
  */
-public class StopAllSFXEvent extends BaseSoundEvent
+class StopAllSFXEvent extends BaseSoundEvent
 {
 }
