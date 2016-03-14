@@ -51,4 +51,9 @@ public abstract class Scene
 			timer.pause();
 		}
 	}
+	
+	public StopWatch getTimer()
+	{
+		return timer;
+	}
 }
