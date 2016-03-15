@@ -47,6 +47,8 @@ public class DevConfig
 	 * <br> <i>Type:</i> a Font instance
 	 */
 	public static final String DEF_FONT = "DEF_FONT";
+	public static final String SOUND_RES_DIR = "SOUND_RES_DIR";
+	public static final String GRAPHICS_RES_DIR = "GRAPHICS_RES_DIR";
 	
 	/** The map of the different developer settings. */
 	protected static volatile ConcurrentHashMap<String, Object> settings;
@@ -73,6 +75,8 @@ public class DevConfig
 		// The initial height of the main window
 		settings.put("INIT_MAIN_WIN_HEIGHT", 270);
 		settings.put("DEF_FONT", new Font("Dialog", Font.PLAIN, 12));
+		settings.put("SOUND_RES_DIR", "xyz/digitalcookies/ogetest/res/sound/");
+		settings.put("GRAPHICS_RES_DIR", "xyz/digitalcookies/ogetest/res/graphics/");
 	}
 	
 	/** Gets the specified developer setting, or returns null if the

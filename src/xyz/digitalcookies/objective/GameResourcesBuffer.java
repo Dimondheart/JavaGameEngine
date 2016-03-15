@@ -29,9 +29,6 @@ import java.util.zip.ZipInputStream;
  */
 public abstract class GameResourcesBuffer
 {
-	/** Where all game resources are stored. */
-	public static final String RES_DIR = "game/resources/";
-	
 	/** Loads all resources for a subclass. */
 	public abstract void loadAll();
 	

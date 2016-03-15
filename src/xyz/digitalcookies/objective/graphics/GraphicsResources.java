@@ -22,13 +22,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 
+import xyz.digitalcookies.objective.DevConfig;
+
 /** Manages all graphics/image files and relevant data.
  * @author Bryan Charles Bettis
  */
 public class GraphicsResources extends xyz.digitalcookies.objective.GameResourcesBuffer
 {
 	/** The root directory of all graphics resources. */
-	private static final String ROOT_DIR = RES_DIR + "graphics/";
+	private static final String ROOT_DIR = 
+			(String)
+			DevConfig.getSetting(DevConfig.GRAPHICS_RES_DIR);
 	/** List of supported extensions for image files. */
 	private static final String[] EXT_SUPPORTED = {
 			".png",

@@ -20,13 +20,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
+import xyz.digitalcookies.objective.DevConfig;
+
 /** Manages all sound files and relevant data.
  * @author Bryan Charles Bettis
  */
 public class SoundResources extends xyz.digitalcookies.objective.GameResourcesBuffer
 {
 	/** The root directory of all sound resources. */
-	private static final String ROOT_DIR = RES_DIR + "sounds/";
+	private static final String ROOT_DIR = 
+			(String)
+			DevConfig.getSetting(DevConfig.SOUND_RES_DIR);
 	/** List of supported extensions for sound files. */
 	private static final String[] EXT_SUPPORTED = {
 			".wav"
