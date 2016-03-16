@@ -16,6 +16,7 @@
 package xyz.digitalcookies.objective.graphics;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
@@ -45,12 +46,13 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 	public GraphicsManager()
 	{
 		super(DEFAULT_RENDER_INTERVAL, "Graphics Manager Render Loop");
-		System.out.println("Setting Up Graphics System...");
 	}
 	
 	@Override
 	protected void setupSystem()
 	{
+		System.out.println("Setting Up Graphics System...");
+		TextDrawer.setDefaultFont((Font) DevConfig.getSetting(DevConfig.DEF_FONT)); 
 		// Cleanup any previous main window
 		if (mainWin != null)
 		{
@@ -60,16 +62,22 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 		mainWin = new JFrame("Objective - Java Game Engine");
 		// Setup the main layer container
 		Integer numMainLayers =
-				(Integer) DevConfig.getSetting("NUM_MAIN_LAYERS");
+				(Integer) DevConfig.getSetting(DevConfig.NUM_MAIN_LAYERS);
 		int width = 
-				(int) DevConfig.getSetting("INIT_MAIN_WIN_WIDTH");
+				(int) DevConfig.getSetting(DevConfig.INIT_MAIN_WIN_WIDTH);
 		int height = 
-				(int) DevConfig.getSetting("INIT_MAIN_WIN_HEIGHT");
+				(int) DevConfig.getSetting(DevConfig.INIT_MAIN_WIN_HEIGHT);
 		Dimension mainWinDims = new Dimension(width, height);
-		mainLayers = new MainLayerSetContainer(mainWin, mainWinDims, numMainLayers);
+		mainLayers = new MainLayerSetContainer(
+				mainWin,
+				mainWinDims,
+				numMainLayers
+				);
 		mainWin.add(mainLayers);
 		// Create the graphics resource manager
-		grm = new GraphicsResources();
+		grm = new GraphicsResources(
+				(String) DevConfig.getSetting(DevConfig.GRAPHICS_RES_DIR)
+				);
 	}
 	
 	@Override
@@ -122,11 +130,11 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 	/** Gets the main layer set, which is drawn to the screen. To be able to
 	 * draw to the screen, a subclass of Renderer (LayerSet, your own
 	 * subclasses, etc.) must be added to this layer set, or to a different
-	 * Renderer "container" (LayerSet, etc.) that has been/will be added to
+	 * Renderer container (LayerSet, etc.) that has been/will be added to
 	 * this main layer set.
 	 * <br>
 	 * <br>The number of layers in this layer set is specified in
-	 * DeveloperSettings, as the setting "NUM_MAIN_LAYERS".
+	 * the properties file, as the setting NUM_MAIN_LAYERS.
 	 * @return the LayerSet for the main drawing layers
 	 */
 	public static LayerSet getMainLayerSet()

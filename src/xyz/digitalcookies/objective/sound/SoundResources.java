@@ -20,30 +20,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
-import xyz.digitalcookies.objective.DevConfig;
-
 /** Manages all sound files and relevant data.
  * @author Bryan Charles Bettis
  */
 public class SoundResources extends xyz.digitalcookies.objective.GameResourcesBuffer
 {
-	/** The root directory of all sound resources. */
-	private static final String ROOT_DIR = 
-			(String)
-			DevConfig.getSetting(DevConfig.SOUND_RES_DIR);
-	/** List of supported extensions for sound files. */
-	private static final String[] EXT_SUPPORTED = {
+	/** List of currently supported extensions for sound files. */
+	public static final String[] EXT_SUPPORTED = {
 			".wav"
 			};
+	/** The root directory of all sound resources. */
+	private String rootDir;
 	
 	/** All the sound data, associated with their relative path in the sounds
 	 * resources folder.
 	 */
 	private static ConcurrentHashMap<String, String> sounds;
 	
-	/** Preloads all sounds. */
-	public SoundResources()
+	/** Preloads all sounds. 
+	 * @param rootResDir the root directory for all sound files
+	 */
+	public SoundResources(String rootResDir)
 	{
+		rootDir = rootResDir;
 		sounds = new ConcurrentHashMap<String, String>();
 		loadAll();
 	}
@@ -51,19 +50,20 @@ public class SoundResources extends xyz.digitalcookies.objective.GameResourcesBu
 	@Override
 	public void loadAll()
 	{
-		loadAll(ROOT_DIR, "sounds");
+		loadAll(rootDir, "sounds");
 	}
 
 	@Override
 	public void load(String filePath)
 	{
+		System.out.println("Loading sound file" + filePath);
 		// File is not a supported format
 		if (!extensionSupported(EXT_SUPPORTED, filePath))
 		{
 			return;
 		}
 		// Get the file input stream to check if it exists
-		InputStream is = getInputStream("/" + ROOT_DIR + filePath);
+		InputStream is = getInputStream("/" + rootDir + filePath);
 		if (is != null)
 		{
 			sounds.put(filePath, filePath);
@@ -83,7 +83,7 @@ public class SoundResources extends xyz.digitalcookies.objective.GameResourcesBu
 		// If the resource exists, return an input stream for reading it
 		if (resExists(sound))
 		{
-			InputStream is = getInputStream("/" + ROOT_DIR + sound);
+			InputStream is = getInputStream("/" + rootDir + sound);
 			return new BufferedInputStream(is);
 		}
 		// Resource doesn't exist, return null

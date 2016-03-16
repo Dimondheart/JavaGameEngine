@@ -15,6 +15,8 @@
 
 package xyz.digitalcookies.objective;
 
+import java.util.Properties;
+
 import xyz.digitalcookies.objective.gamestate.GameState;
 import xyz.digitalcookies.objective.gamestate.GameStateManager;
 import xyz.digitalcookies.objective.graphics.GraphicsManager;
@@ -43,13 +45,15 @@ public class GameSession
 	 */
 	private Settings.ThreadingSetting lastThreadingSetting;
 	
-	/** Sets up all game engine subsystems, and sets the first game state
-	 * to be an instance of the specified game state class.
-	 * @param initGameState the game state to setup and run when this
-	 * 		game session has been started.
+	/** Does generic setup operations, including initializing the game state
+	 * manager and setting its initial game state to an instance of the
+	 * specified class.
+	 * @param initGameState the class of the first game state to setup
+	 * @param props the Properties object used to configure the game engine
 	 */
-	public GameSession(Class<? extends GameState> initGameState)
+	public GameSession(Class<? extends GameState> initGameState, Properties props)
 	{
+		DevConfig.setupSettings(props);
 		// Create subsystem managers
 		gfx = new GraphicsManager();
 		input = new InputManager();
@@ -70,7 +74,10 @@ public class GameSession
 		return clock.getAvgCPS();
 	}
 	
-	/** Start all subsystems then begin playing. */
+	/** Initializes all engine subsystems, then starts playing the game.
+	 * This function will not return until the game has changed to a quit
+	 * state.
+	 */
 	public void start()
 	{
 		// Setup subsystems

@@ -82,7 +82,7 @@ public class Button extends GUIObject
 	 */
 	public Button(int x, int y, int width, int height, String text)
 	{
-		this(x, y, width, height, text, TextDrawer.defFont);
+		this(x, y, width, height, text, TextDrawer.getDefaultFont());
 	}
 	
 	/** Takes arguments for position, dimensions, and the text font.

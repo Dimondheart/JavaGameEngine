@@ -18,6 +18,7 @@ package xyz.digitalcookies.objective.sound;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import xyz.digitalcookies.objective.DevConfig;
 import xyz.digitalcookies.objective.input.InputManager;
 
 /** Manages the sound system.
@@ -71,18 +72,19 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 	public SoundManager()
 	{
 		super(10, "Sound Manager Event Queue");
-		System.out.println("Setting Up Sound System...");
-		srm = new SoundResources();
-		// Setup queues
-		sfxQueue = new ConcurrentLinkedDeque<SFXEvent>();
-		genQueue = new ConcurrentLinkedDeque<BaseSoundEvent>();
-		playingSFX = new ConcurrentLinkedQueue<SFX>();
-		currVolLvls = new int[3];
 	}
 	
 	@Override
 	protected void setupSystem()
 	{
+		System.out.println("Setting Up Sound System...");
+		srm = new SoundResources((String) DevConfig.getSetting("SOUND_RES_DIR"));
+		// Setup queues
+		sfxQueue = new ConcurrentLinkedDeque<SFXEvent>();
+		genQueue = new ConcurrentLinkedDeque<BaseSoundEvent>();
+		playingSFX = new ConcurrentLinkedQueue<SFX>();
+		// Setup the list used to check when volume levels need adjusted
+		currVolLvls = new int[3];
 		currVolLvls[0] = 
 				(int) xyz.digitalcookies.objective.Settings.getSetting("MASTER_VOLUME");
 		currVolLvls[1] = 

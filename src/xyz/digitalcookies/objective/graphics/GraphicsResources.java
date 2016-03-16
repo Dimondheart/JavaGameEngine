@@ -22,34 +22,33 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 
-import xyz.digitalcookies.objective.DevConfig;
-
 /** Manages all graphics/image files and relevant data.
  * @author Bryan Charles Bettis
  */
 public class GraphicsResources extends xyz.digitalcookies.objective.GameResourcesBuffer
 {
-	/** The root directory of all graphics resources. */
-	private static final String ROOT_DIR = 
-			(String)
-			DevConfig.getSetting(DevConfig.GRAPHICS_RES_DIR);
 	/** List of supported extensions for image files. */
-	private static final String[] EXT_SUPPORTED = {
+	public static final String[] EXT_SUPPORTED = {
 			".png",
 			".bmp",
 			".jpg",
 			".jpeg"
 			};
+	/** The root directory of all graphics resources. */
+	private String rootDir;
 	
 	/** All the graphics, associated with their relative path in the graphics
 	 * resources folder.
 	 */
 	private static ConcurrentHashMap<String, BufferedImage> graphics;
 	
-	/** Basic constructor. */
-	public GraphicsResources()
+	/** Basic constructor.
+	 * @param rootResDir the root directory of all graphics resources
+	 */
+	public GraphicsResources(String rootResDir)
 	{
 		graphics = new ConcurrentHashMap<String, BufferedImage>();
+		rootDir = rootResDir;
 		// Preload all graphics
 		loadAll();
 	}
@@ -57,7 +56,7 @@ public class GraphicsResources extends xyz.digitalcookies.objective.GameResource
 	@Override
 	public void loadAll()
 	{
-		loadAll(ROOT_DIR, "graphics");
+		loadAll(rootDir, "graphics");
 	}
 	
 	/** Loads an image given the path relative to GraphicsResources.ROOT_DIR.
@@ -73,7 +72,7 @@ public class GraphicsResources extends xyz.digitalcookies.objective.GameResource
 			return;
 		}
 		// Get an input stream for the file
-		InputStream is = getInputStream("/" + ROOT_DIR + imagePath);
+		InputStream is = getInputStream("/" + rootDir + imagePath);
 		// Try to read the image
 		try
 		{
