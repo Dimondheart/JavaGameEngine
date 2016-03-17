@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective;
+package xyz.digitalcookies.objective.resources;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

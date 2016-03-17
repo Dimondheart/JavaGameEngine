@@ -25,7 +25,7 @@ import javax.imageio.ImageIO;
 /** Manages all graphics/image files and relevant data.
  * @author Bryan Charles Bettis
  */
-public class GraphicsResources extends xyz.digitalcookies.objective.GameResourcesBuffer
+public class GraphicsResources extends xyz.digitalcookies.objective.resources.GameResourcesBuffer
 {
 	/** List of supported extensions for image files. */
 	public static final String[] EXT_SUPPORTED = {

@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /** Manages all sound files and relevant data.
  * @author Bryan Charles Bettis
  */
-public class SoundResources extends xyz.digitalcookies.objective.GameResourcesBuffer
+public class SoundResources extends xyz.digitalcookies.objective.resources.GameResourcesBuffer
 {
 	/** List of currently supported extensions for sound files. */
 	public static final String[] EXT_SUPPORTED = {
