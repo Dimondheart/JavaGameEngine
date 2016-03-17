@@ -78,7 +78,6 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 	protected void setupSystem()
 	{
 		System.out.println("Setting Up Sound System...");
-		srm = new SoundResources((String) DevConfig.getSetting("SOUND_RES_DIR"));
 		// Setup queues
 		sfxQueue = new ConcurrentLinkedDeque<SFXEvent>();
 		genQueue = new ConcurrentLinkedDeque<BaseSoundEvent>();
@@ -91,6 +90,10 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 				(int) xyz.digitalcookies.objective.Settings.getSetting("BGM_VOLUME");
 		currVolLvls[2] = 
 				(int) xyz.digitalcookies.objective.Settings.getSetting("SFX_VOLUME");
+		// Setup general sound resource manager
+		srm = new SoundResources((String) DevConfig.getSetting("SOUND_RES_DIR"));
+		// Supported extensions for sound files in this system
+//		".wav"
 	}
 	
 	@Override

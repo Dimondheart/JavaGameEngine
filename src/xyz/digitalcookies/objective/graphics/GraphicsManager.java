@@ -78,6 +78,11 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 		grm = new GraphicsResources(
 				(String) DevConfig.getSetting(DevConfig.GRAPHICS_RES_DIR)
 				);
+		// Supported extensions for graphics files in this system
+//		".png",
+//		".bmp",
+//		".jpg",
+//		".jpeg"
 	}
 	
 	@Override
