@@ -17,6 +17,7 @@ package xyz.digitalcookies.objective.resources;
 
 import java.io.File;
 import java.net.URI;
+import java.util.LinkedList;
 
 /** TODO Document
  * @author Bryan Charles Bettis
@@ -27,10 +28,17 @@ public class ResourcePackManager
 	private static String defPack = null;
 	private static String currPack = null;
 	private static boolean isBuffering = false;
+	private static URI resPackDir = null;
+	private static LinkedList<String> packs = new LinkedList<String>();
 	
 	/** Constructor hidden to prevent instantiation. */
 	private ResourcePackManager()
 	{
+	}
+	
+	public static URI getResPackDir()
+	{
+		return resPackDir;
 	}
 	
 	public static void indexResourcePacks(URI resDir)
@@ -38,9 +46,12 @@ public class ResourcePackManager
 		File dir = new File(resDir);
 		if (dir.isDirectory())
 		{
+			packs.clear();
+			resPackDir = resDir;
 			for (File file : dir.listFiles())
 			{
-				// TODO index
+				System.out.println(file.getName());
+				packs.add(file.getName());
 			}
 		}
 		else

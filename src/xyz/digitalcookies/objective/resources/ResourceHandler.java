@@ -15,8 +15,11 @@
 
 package xyz.digitalcookies.objective.resources;
 
-import java.util.Enumeration;
-import java.util.concurrent.ConcurrentHashMap;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /** Base class for all resource handlers. A resource handler loads,
  * buffers, and other management-related operations for a collection of
@@ -31,7 +34,7 @@ public abstract class ResourceHandler<T>
 	/** Relative path containing resources managed. */
 	private String rootResDir;
 	/** Map of resource indexes to buffered resources. */
-	private ConcurrentHashMap<String, T> resources;
+	private HashMap<String, T> resources;
 	/** If this resource handler's bufferResources(...) method has been called
 	 * and finished normally (meaning it tried to buffer all indexed
 	 * resources.)
@@ -44,7 +47,7 @@ public abstract class ResourceHandler<T>
 	protected ResourceHandler()
 	{
 		rootResDir = null;
-		resources = new ConcurrentHashMap<String, T>();
+		resources = new HashMap<String, T>();
 		supportedExt = null;
 		isBuffered = false;
 		supportsBuffering = false;
@@ -52,10 +55,10 @@ public abstract class ResourceHandler<T>
 	
 	/** Load data from the specified file and return the data that
 	 * should be buffered as a resource.
-	 * @param toBuffer the file to buffer
+	 * @param toLoad the file to buffer
 	 * @return the resource data that will be buffered
 	 **/
-	protected abstract T loadResource(Object toBuffer);
+	protected abstract T loadResource(File toLoad);
 	/** Get the default value when a resource could not be loaded or
 	 * a requested resource is not currently indexed.
 	 * @return a generic default object/value
@@ -188,7 +191,6 @@ public abstract class ResourceHandler<T>
 	 */
 	public void initialize(String rootResDir, String... supportedExt)
 	{
-		System.out.println("Initializing resource handler...");
 		this.rootResDir = rootResDir;
 		this.supportedExt = supportedExt;
 		initialize();
@@ -288,6 +290,29 @@ public abstract class ResourceHandler<T>
 		supportsBuffering = isSupported;
 	}
 	
+	protected boolean isExtensionSupported(String file)
+	{
+		// All extensions are supported
+		if (getSupportedExtensions() == null)
+		{
+			return true;
+		}
+		// Only files w/o extensions supported
+		if (getSupportedExtensions().length <= 0)
+		{
+			return !file.contains(".");
+		}
+		// Check for each supported extension
+		for (String ext : getSupportedExtensions())
+		{
+			if (file.toLowerCase().contains(ext))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/** Set the buffered value of a resource.
 	 * @param resource the access name of the resource
 	 * @param value the value to store
@@ -318,7 +343,7 @@ public abstract class ResourceHandler<T>
 			indexPack(primaryPack);
 		}
 		// Then index any additional resources in current pack
-		if (secondaryPack != null)
+		if (secondaryPack != null && !secondaryPack.equals(primaryPack))
 		{
 			indexPack(secondaryPack);
 		}
@@ -337,16 +362,66 @@ public abstract class ResourceHandler<T>
 		else
 		{
 			System.out.println("Indexing res pack .zip \'" + pack + "\'");
+			System.out.println(
+					"WARNING: Resource packs as zip files are "
+					+ "not yet supported."
+					);
 			// TODO index .zip contents here
 		}
 	}
 	
 	/** Index the contents of a pack formatted as a directory. Mainly provided
 	 * as a convenience method for heavy development stages.
-	 * @param path the name of the pack directory to index
+	 * @param packDir the name of the pack directory to index
 	 */
-	private void indexDirectory(String path)
+	private void indexDirectory(String packDir)
 	{
+		File resPackDir = new File(ResourcePackManager.getResPackDir());
+		System.out.println("Res Pack Dir: " + resPackDir.getPath());
+		File myResDir = new File(resPackDir.getPath() + File.separator + packDir + File.separator + getRootResDir());
+		System.out.println("Res Pack Path: " + myResDir.getPath());
+		LinkedList<File> dirToCheck = new LinkedList<File>();
+		dirToCheck.add(myResDir);
+		while (true)
+		{
+			if (dirToCheck.isEmpty())
+			{
+				break;
+			}
+			File nextDir = dirToCheck.poll();
+			for (File node : nextDir.listFiles())
+			{
+				if (node.isDirectory())
+				{
+					System.out.println("Found Subdir: " + node.getName());
+					dirToCheck.add(node);
+				}
+				else
+				{
+					if (!isExtensionSupported(node.getPath()))
+					{
+						continue;
+					}
+					String relRoot = nextDir.getPath().replace(myResDir.getPath(), "");
+					if (relRoot.startsWith(File.separator))
+					{
+						relRoot = relRoot.substring(1, relRoot.length());
+					}
+					// Change to a cross-platform standard
+					relRoot = relRoot.replace(File.separator, "/");
+					if (relRoot.equals(""))
+					{
+						System.out.println("Found File: " + relRoot + node.getName());
+						setResValue(relRoot + node.getName(), null);
+					}
+					else
+					{
+						System.out.println("Found File: " + relRoot + "/" + node.getName());
+						setResValue(relRoot + "/" + node.getName(), null);
+					}
+				}
+			}
+		}
 		// TODO implement directory indexing
 	}
 	
@@ -366,11 +441,12 @@ public abstract class ResourceHandler<T>
 			return;
 		}
 		System.out.println("Buffering resources...");
-		Enumeration<String> keys = resources.keys();
-		while (keys.hasMoreElements())
+		Iterator<String> keys = resources.keySet().iterator();
+		while (keys.hasNext())
 		{
-			String key = keys.nextElement();
+			String key = keys.next();
 			// Try to load the resource from the two packs
+			System.out.println("Buffering resource \'" + key + "\'...");
 			T resObj = loadResFromPacks(primaryPack, secondaryPack, key);
 			// Resource not found in either pack, use default value
 			if (resObj == null)
@@ -378,7 +454,7 @@ public abstract class ResourceHandler<T>
 				resObj = getDefaultValue();
 			}
 			// Set the resource value
-			setResValue(key, getDefaultValue());
+			setResValue(key, resObj);
 		}
 		isBuffered = true;
 	}
@@ -392,16 +468,61 @@ public abstract class ResourceHandler<T>
 	 */
 	private T loadResFromPacks(String primaryPack, String secondaryPack, String resource)
 	{
-		T resObj = loadResource(primaryPack + getRootResDir() + resource);
-		if (resObj != null)
+		T resObj = null;
+		// Resource not found in primary, check secondary
+		if (!primaryPack.contains(".zip"))
 		{
-			return resObj;
+			try
+			{
+				
+				resObj = loadResource(
+						new File(
+								ResourcePackManager.getResPackDir().toURL().getPath().replace(
+										File.separator, "/"
+										)
+								+ "/"
+								+ primaryPack
+								+ "/"
+								+ getRootResDir()
+								+ resource
+								)
+						);
+			}
+			catch (MalformedURLException e)
+			{
+				resObj = null;
+			}
+			if (resObj != null)
+			{
+				return resObj;
+			}
 		}
 		// Resource not found in primary, check secondary
-		resObj = loadResource(secondaryPack + getRootResDir() + resource);
-		if (resObj != null)
+		if (!secondaryPack.contains(".zip"))
 		{
-			return resObj;
+			try
+			{
+				resObj = loadResource(
+						new File(
+								ResourcePackManager.getResPackDir().toURL().getPath().replace(
+										File.separator, "/"
+										)
+								+ "/"
+								+ secondaryPack
+								+ "/"
+								+ getRootResDir()
+								+ resource
+								)
+						);
+			}
+			catch (MalformedURLException e)
+			{
+				resObj = null;
+			}
+			if (resObj != null)
+			{
+				return resObj;
+			}
 		}
 		return null;
 	}

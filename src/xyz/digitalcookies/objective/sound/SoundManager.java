@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import xyz.digitalcookies.objective.DevConfig;
 import xyz.digitalcookies.objective.input.InputManager;
+import xyz.digitalcookies.objective.resources.SoundResources;
 
 /** Manages the sound system.
 * @author Bryan Charles Bettis
@@ -91,9 +92,8 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 		currVolLvls[2] = 
 				(int) xyz.digitalcookies.objective.Settings.getSetting("SFX_VOLUME");
 		// Setup general sound resource manager
-		srm = new SoundResources((String) DevConfig.getSetting("SOUND_RES_DIR"));
-		// Supported extensions for sound files in this system
-//		".wav"
+		srm = new SoundResources();
+		srm.initialize("sounds/", ".wav");
 	}
 	
 	@Override

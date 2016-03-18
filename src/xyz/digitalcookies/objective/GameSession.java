@@ -21,6 +21,7 @@ import xyz.digitalcookies.objective.gamestate.GameState;
 import xyz.digitalcookies.objective.gamestate.GameStateManager;
 import xyz.digitalcookies.objective.graphics.GraphicsManager;
 import xyz.digitalcookies.objective.input.InputManager;
+import xyz.digitalcookies.objective.resources.ResourcePackManager;
 import xyz.digitalcookies.objective.sound.SoundManager;
 
 /** Starts up all subsystems for managing a game session and handles
@@ -54,6 +55,8 @@ public class GameSession
 	public GameSession(Class<? extends GameState> initGameState, Properties props)
 	{
 		DevConfig.setupSettings(props);
+		ResourcePackManager.setDefaultPack(props.getProperty("DEF_RES_PACK", null));
+		ResourcePackManager.setCurrentPack(props.getProperty("INIT_RES_PACK", null));
 		// Create subsystem managers
 		gfx = new GraphicsManager();
 		input = new InputManager();

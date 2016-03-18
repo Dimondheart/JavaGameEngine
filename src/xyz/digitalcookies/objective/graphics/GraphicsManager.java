@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 
 import xyz.digitalcookies.objective.DevConfig;
+import xyz.digitalcookies.objective.resources.GraphicsResources;
 
 /** Handles the rendering thread.
  * @author Bryan Charles Bettis
@@ -75,14 +76,8 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 				);
 		mainWin.add(mainLayers);
 		// Create the graphics resource manager
-		grm = new GraphicsResources(
-				(String) DevConfig.getSetting(DevConfig.GRAPHICS_RES_DIR)
-				);
-		// Supported extensions for graphics files in this system
-//		".png",
-//		".bmp",
-//		".jpg",
-//		".jpeg"
+		grm = new GraphicsResources();
+		grm.initialize("graphics/", ".png", ".bmp", ".jpg", ".jpeg");
 	}
 	
 	@Override

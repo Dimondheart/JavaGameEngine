@@ -16,7 +16,18 @@
 package xyz.digitalcookies.objective.resources;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
+
+/** TODO Document
+ * @author Bryan Charles Bettis
+ */
 public class GraphicsResources extends ResourceHandler<BufferedImage>
 {
 	public GraphicsResources()
@@ -26,10 +37,33 @@ public class GraphicsResources extends ResourceHandler<BufferedImage>
 	}
 	
 	@Override
-	protected BufferedImage loadResource(Object toBuffer)
+	protected BufferedImage loadResource(File toLoad)
 	{
-		// TODO load graphic
-		return null;
+		System.out.println("Loading graphic resource \'" + toLoad.getPath() + "\'...");
+		BufferedImage image = null;
+		FileInputStream fis = null;
+		// Get an input stream for the file
+		try
+		{
+			fis = new FileInputStream(toLoad);
+		}
+		catch (FileNotFoundException e)
+		{
+			System.out.println("ERROR LOADING GRAPHIC FILE: File not found");
+			return null;
+		}
+		InputStream is = new BufferedInputStream(fis);
+		// Try to read the image
+		try
+		{
+			image = ImageIO.read(is);
+		}
+		catch (IOException e)
+		{
+			System.out.println("ERROR LOADING GRAPHIC FILE: Invalid image data");
+			image = null;
+		}
+		return image;
 	}
 	
 	@Override

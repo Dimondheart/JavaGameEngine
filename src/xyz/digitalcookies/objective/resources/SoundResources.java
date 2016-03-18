@@ -15,8 +15,16 @@
 
 package xyz.digitalcookies.objective.resources;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+/** TODO Document
+ * @author Bryan Charles Bettis
+ */
 public class SoundResources extends ResourceHandler<InputStream>
 {
 	public SoundResources()
@@ -26,10 +34,23 @@ public class SoundResources extends ResourceHandler<InputStream>
 	}
 	
 	@Override
-	protected InputStream loadResource(Object toBuffer)
+	protected InputStream loadResource(File toLoad)
 	{
-		// TODO acquire buffered input stream
-		return null;
+		System.out.println("Loading sound resource \'" + toLoad.getPath() + "\'...");
+		BufferedImage image = null;
+		FileInputStream fis = null;
+		// Get an input stream for the file
+		try
+		{
+			fis = new FileInputStream(toLoad);
+		}
+		catch (FileNotFoundException e)
+		{
+			System.out.println("ERROR LOADING GRAPHIC FILE: File not found");
+			return null;
+		}
+		// Return a buffered input stream
+		return new BufferedInputStream(fis);
 	}
 	
 	@Override
