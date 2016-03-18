@@ -56,11 +56,17 @@ public class RenderEvent implements Cloneable
 		return layer;
 	}
 	
+	/** Set the graphics context.
+	 * @param g the new graphics context
+	 */
 	void setContext(Graphics2D g)
 	{
 		this.g = g;
 	}
 	
+	/** Set the layer currently rendering.
+	 * @param layer the index of the current layer in the layer set
+	 */
 	void setLayer(int layer)
 	{
 		this.layer = layer;

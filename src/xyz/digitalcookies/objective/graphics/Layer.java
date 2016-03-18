@@ -25,7 +25,7 @@ import xyz.digitalcookies.objective.input.gui.GUIObject;
  * has been told to render itself to the specified graphics context.
  * @author Bryan Charles Bettis
  */
-public class Layer implements Renderer
+class Layer implements Renderer
 {
 	/** The Renderer(s) rendering to this layer. */
 	private LinkedList<Renderer> renderers;

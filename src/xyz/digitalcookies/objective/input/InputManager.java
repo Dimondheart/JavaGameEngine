@@ -61,6 +61,11 @@ public class InputManager extends xyz.digitalcookies.objective.Subsystem
 	public InputManager()
 	{
 		super(8, "Input Manager Event Queue");
+	}
+	
+	@Override
+	protected void setupSystem()
+	{
 		System.out.println("Setting Up User Input System...");
 		// Setup the event queue
 		queue = new ConcurrentLinkedDeque<InputManagerEvent>();
@@ -69,11 +74,6 @@ public class InputManager extends xyz.digitalcookies.objective.Subsystem
 		mouse = new Mouse();
 		window = new WindowMonitor();
 		gui = new GUIMonitor();
-	}
-	
-	@Override
-	protected void setupSystem()
-	{
 		state = InputManagerState.PAUSED;
 		// Setup the main input device managers
 		Window win = GraphicsManager.getMainWin();

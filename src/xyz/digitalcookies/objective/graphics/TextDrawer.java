@@ -24,9 +24,12 @@ import java.awt.Graphics2D;
 public class TextDrawer
 {
 	/** The default font. */
-	public static final Font defFont = 
-			(Font)
-			xyz.digitalcookies.objective.DevConfig.getSetting(xyz.digitalcookies.objective.DevConfig.DEF_FONT);
+	private static Font defFont;
+	
+	/** Constructor hidden because this is an exclusively-static class. */
+	private TextDrawer()
+	{
+	}
 	
 	/** Basic text drawing with default font and size.
 	 * @param g the surface to draw to
@@ -205,5 +208,23 @@ public class TextDrawer
 		coords[0] = centerOver[0] - offsets[0];
 		coords[1] = centerOver[1] - offsets[1];
 		return coords;
+	}
+	
+	/** Get the current default font.
+	 * @return the default font specified in the engine config/properties
+	 */
+	public static Font getDefaultFont()
+	{
+		return defFont;
+	}
+	
+	/** Set the default font; usually only use this function internally
+	 * at the beginning, because it will not affect classes that have
+	 * stored a local reference to the previous default font.
+	 * @param font the font object to make the default font
+	 */
+	static void setDefaultFont(Font font)
+	{
+		defFont = font;
 	}
 }

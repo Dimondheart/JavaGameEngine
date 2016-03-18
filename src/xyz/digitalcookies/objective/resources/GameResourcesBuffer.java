@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective;
+package xyz.digitalcookies.objective.resources;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -29,9 +29,6 @@ import java.util.zip.ZipInputStream;
  */
 public abstract class GameResourcesBuffer
 {
-	/** Where all game resources are stored. */
-	public static final String RES_DIR = "game/resources/";
-	
 	/** Loads all resources for a subclass. */
 	public abstract void loadAll();
 	

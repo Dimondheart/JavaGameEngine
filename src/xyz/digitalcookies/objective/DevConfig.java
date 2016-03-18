@@ -16,13 +16,13 @@
 package xyz.digitalcookies.objective;
 
 import java.awt.Font;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** TODO Replace DeveloperSettings with some kind of config system.
- * Contains different settings that a developer can safely modify. However,
- * these settings cannot safely be changed once the program has been started up.
- * The core engine settings have string constants provided for them as public
- * constants.
+/** Contains different settings that a developer can safely modify. However,
+ * these settings cannot safely be changed once the program has been started
+ * up. The core engine settings have string constants provided for them as
+ * public constants.
  * @author Bryan Charles Bettis
  */
 public class DevConfig
@@ -44,9 +44,15 @@ public class DevConfig
 	public static final String INIT_MAIN_WIN_HEIGHT = "INIT_MAIN_WIN_HEIGHT";
 	/** The default font to use for text drawing when a font is not specified.
 	 * <br>
-	 * <br> <i>Type:</i> a Font instance
+	 * <br> <i>Type:</i> a String corresponding to a supported font
 	 */
 	public static final String DEF_FONT = "DEF_FONT";
+	/** The size of the default font. */
+	public static final String DEF_FONT_SIZE = "DEF_FONT_SIZE";
+	/** The root directory for sound resources. */
+	public static final String SOUND_RES_DIR = "SOUND_RES_DIR";
+	/** The root directory for graphics resources. */
+	public static final String GRAPHICS_RES_DIR = "GRAPHICS_RES_DIR";
 	
 	/** The map of the different developer settings. */
 	protected static volatile ConcurrentHashMap<String, Object> settings;
@@ -55,7 +61,6 @@ public class DevConfig
 	static
 	{
 		settings = new ConcurrentHashMap<String, Object>();
-		setupSettings();
 	}
 	
 	/** Setup the initial developer settings. Note that once a developer
@@ -63,16 +68,41 @@ public class DevConfig
 	 * during runtime. If developers want to add a setting that can
 	 * be modified during runtime, they should add it to the
 	 * DynamicSettings class.
+	 * @param props the engine properties/config data
 	 */
-	private static void setupSettings()
+	static void setupSettings(Properties props)
 	{
 		// The number of layers in the main layer set
-		settings.put("NUM_MAIN_LAYERS", 10);
+		settings.put(
+				NUM_MAIN_LAYERS,
+				Integer.parseInt((String) props.getOrDefault(NUM_MAIN_LAYERS, "10"))
+				);
 		// The initial width of the main window
-		settings.put("INIT_MAIN_WIN_WIDTH", 480);
+		settings.put(
+				INIT_MAIN_WIN_WIDTH,
+				Integer.parseInt((String) props.getOrDefault(INIT_MAIN_WIN_WIDTH, "480"))
+				);
 		// The initial height of the main window
-		settings.put("INIT_MAIN_WIN_HEIGHT", 270);
-		settings.put("DEF_FONT", new Font("Dialog", Font.PLAIN, 12));
+		settings.put(
+				INIT_MAIN_WIN_HEIGHT,
+				Integer.parseInt((String) props.getOrDefault(INIT_MAIN_WIN_HEIGHT, "270"))
+				);
+		settings.put(
+				DEF_FONT,
+				new Font(
+						(String) props.getOrDefault(DEF_FONT, "Dialog"),
+						Font.PLAIN,
+						Integer.parseInt((String) props.getOrDefault(DEF_FONT_SIZE, "12"))
+						)
+				);
+		settings.put(
+			SOUND_RES_DIR,
+			(String) props.getOrDefault(SOUND_RES_DIR, "sound_dir_not_specified")
+			);
+		settings.put(
+				GRAPHICS_RES_DIR,
+				(String) props.getOrDefault(GRAPHICS_RES_DIR, "graphics_dir_not_specified")
+				);
 	}
 	
 	/** Gets the specified developer setting, or returns null if the

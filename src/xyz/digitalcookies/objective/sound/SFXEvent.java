@@ -44,7 +44,6 @@ public class SFXEvent extends BaseSoundEvent
 	
 	/** Set the name of the sound effect to play.
 	 * @param sfx the sound effect to play
-	 * @see game.resources
 	 */
 	public void setSFX(String sfx)
 	{

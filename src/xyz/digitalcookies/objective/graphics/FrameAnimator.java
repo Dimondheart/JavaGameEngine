@@ -51,7 +51,8 @@ public class FrameAnimator extends Animator
 	
 	
 	/** Different special dimension situations for image dimensions,
-	 * such as scaling a dimension to maintain aspect ratio.
+	 * such as scaling a dimension to maintain the aspect ratio of the
+	 * original image.
 	 * @author Bryan Charles Bettis
 	 */
 	public enum SpecialDimension
@@ -129,7 +130,6 @@ public class FrameAnimator extends Animator
 		// Get the actual image
 		BufferedImage img =
 				GraphicsManager.getResManager().getRes(currFramePath);
-		String theCase = "1";
 		int imgWidth = this.imgWidth;
 		int imgHeight = this.imgHeight;
 		// Width needs to be scaled
@@ -138,14 +138,12 @@ public class FrameAnimator extends Animator
 			// Use both original image dimensions
 			if (specialHeight == SpecialDimension.SCALE || specialHeight == SpecialDimension.ORIGINAL)
 			{
-				theCase = "8,9";
 				imgWidth = img.getWidth();
 				imgHeight = img.getHeight();
 			}
 			// Scale only the width
 			else
 			{
-				theCase = "7";
 				imgWidth = imgHeight * img.getWidth() / img.getHeight();
 			}
 		}
@@ -156,36 +154,30 @@ public class FrameAnimator extends Animator
 			if (specialWidth == SpecialDimension.ORIGINAL)
 			{
 				
-				theCase = "6";
 				imgWidth = img.getWidth();
 				imgHeight = img.getHeight();
 			}
 			// Scale only the height
 			else
 			{
-				theCase = "3";
 				imgHeight = imgWidth * img.getHeight() / img.getWidth();
 			}
 		}
 		// Use the original image width
 		else if (specialWidth == SpecialDimension.ORIGINAL)
 		{
-			theCase = "4";
 			imgWidth = img.getWidth();
 			// Use the original image height
 			if (specialHeight == SpecialDimension.ORIGINAL)
 			{
-				theCase = "5";
 				imgHeight = img.getHeight();
 			}
 		}
 		// Use the original image height
 		else if (specialHeight == SpecialDimension.ORIGINAL)
 		{
-			theCase = "2";
 			imgHeight = img.getHeight();
 		}
-//		System.out.println("FrAnim case " + theCase);
 //		System.out.print("Original Width:");
 //		System.out.print(img.getWidth());
 //		System.out.print(", Original Height:");
@@ -342,6 +334,10 @@ public class FrameAnimator extends Animator
 		imgWidth = width;
 	}
 	
+	/** Set the width of the animation images to the specified special
+	 * dimension.
+	 * @param width one of the {@link SpecialDimension} values
+	 */
 	public void setImageWidth(SpecialDimension width)
 	{
 		specialWidth = width;
@@ -358,6 +354,10 @@ public class FrameAnimator extends Animator
 		imgHeight = height;
 	}
 	
+	/** Set the height of the animation images to the specified special
+	 * dimension.
+	 * @param height one of the {@link SpecialDimension} values
+	 */
 	public void setImageHeight(SpecialDimension height)
 	{
 		specialHeight = height;
