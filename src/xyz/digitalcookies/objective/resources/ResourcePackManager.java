@@ -28,7 +28,7 @@ public class ResourcePackManager
 	private static String defPack = null;
 	private static String currPack = null;
 	private static boolean isBuffering = false;
-	private static URI resPackDir = null;
+	private static String resPackDir = null;
 	private static LinkedList<String> packs = new LinkedList<String>();
 	
 	/** Constructor hidden to prevent instantiation. */
@@ -36,12 +36,12 @@ public class ResourcePackManager
 	{
 	}
 	
-	public static URI getResPackDir()
+	public static String getResPackDir()
 	{
 		return resPackDir;
 	}
 	
-	public static void indexResourcePacks(URI resDir)
+	public static void indexResourcePacks(String resDir)
 	{
 		File dir = new File(resDir);
 		if (dir.isDirectory())

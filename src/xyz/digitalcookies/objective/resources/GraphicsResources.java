@@ -30,6 +30,8 @@ import javax.imageio.ImageIO;
  */
 public class GraphicsResources extends ResourceHandler<BufferedImage>
 {
+	private final BufferedImage defImg = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
+	
 	public GraphicsResources()
 	{
 		super();
@@ -39,7 +41,6 @@ public class GraphicsResources extends ResourceHandler<BufferedImage>
 	@Override
 	protected BufferedImage loadResource(File toLoad)
 	{
-		System.out.println("Loading graphic resource \'" + toLoad.getPath() + "\'...");
 		BufferedImage image = null;
 		FileInputStream fis = null;
 		// Get an input stream for the file
@@ -50,6 +51,7 @@ public class GraphicsResources extends ResourceHandler<BufferedImage>
 		catch (FileNotFoundException e)
 		{
 			System.out.println("ERROR LOADING GRAPHIC FILE: File not found");
+			e.printStackTrace();
 			return null;
 		}
 		InputStream is = new BufferedInputStream(fis);
@@ -70,6 +72,6 @@ public class GraphicsResources extends ResourceHandler<BufferedImage>
 	protected BufferedImage getDefaultValue()
 	{
 		// TODO create a default image
-		return null;
+		return defImg;
 	}
 }

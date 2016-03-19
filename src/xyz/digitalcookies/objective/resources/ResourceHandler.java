@@ -128,17 +128,10 @@ public abstract class ResourceHandler<T>
 				setResValue(resource, res);
 				return resources.getOrDefault(resource, getDefaultValue());
 			}
-			// Unknown situation
+			// This specific resource is already buffered
 			else
 			{
-				System.out.println(
-						"INFO: Internal resource handeler issue in locating "
-						+ "the resource \'"
-						+ resource
-						+ "\'. returning null. "
-						
-						);
-				return null;
+				return resources.getOrDefault(resource, getDefaultValue());
 			}
 		}
 		System.out.println(
@@ -153,7 +146,7 @@ public abstract class ResourceHandler<T>
 	 * default and current resource packs in ResourcePackManager, and then
 	 * if ResourcePackManager has been told to pre-load all resources, buffer
 	 * all indexed resources (if this resource handler supports buffering.)
-	 * This method can also be reused to refreash this resource handler, such
+	 * This method can also be reused to refresh this resource handler, such
 	 * as when default or current ResourcePackManager packs have changed, or
 	 * when the contents of the resource packs have been changed.
 	 */
@@ -376,10 +369,26 @@ public abstract class ResourceHandler<T>
 	 */
 	private void indexDirectory(String packDir)
 	{
-		File resPackDir = new File(ResourcePackManager.getResPackDir());
-		System.out.println("Res Pack Dir: " + resPackDir.getPath());
-		File myResDir = new File(resPackDir.getPath() + File.separator + packDir + File.separator + getRootResDir());
-		System.out.println("Res Pack Path: " + myResDir.getPath());
+		File resPackDir = null;
+		try
+		{
+			resPackDir = new File(ResourcePackManager.getResPackDir());
+		}
+		catch (NullPointerException e)
+		{
+			System.out.println(
+					"WARNING: Resource packs not indexed. "
+					+ "Unable to locate and index resources."
+							);
+			return;
+		}
+		File myResDir = new File(
+				resPackDir.getPath()
+				+ File.separator
+				+ packDir
+				+ File.separator
+				+ getRootResDir()
+				);
 		LinkedList<File> dirToCheck = new LinkedList<File>();
 		dirToCheck.add(myResDir);
 		while (true)
@@ -472,26 +481,18 @@ public abstract class ResourceHandler<T>
 		// Resource not found in primary, check secondary
 		if (!primaryPack.contains(".zip"))
 		{
-			try
-			{
-				
-				resObj = loadResource(
-						new File(
-								ResourcePackManager.getResPackDir().toURL().getPath().replace(
-										File.separator, "/"
-										)
-								+ "/"
-								+ primaryPack
-								+ "/"
-								+ getRootResDir()
-								+ resource
-								)
-						);
-			}
-			catch (MalformedURLException e)
-			{
-				resObj = null;
-			}
+			resObj = loadResource(
+					new File(
+							ResourcePackManager.getResPackDir().replace(
+									File.separator, "/"
+									)
+							+ "/"
+							+ primaryPack
+							+ "/"
+							+ getRootResDir()
+							+ resource
+							)
+					);
 			if (resObj != null)
 			{
 				return resObj;
@@ -500,25 +501,18 @@ public abstract class ResourceHandler<T>
 		// Resource not found in primary, check secondary
 		if (!secondaryPack.contains(".zip"))
 		{
-			try
-			{
-				resObj = loadResource(
-						new File(
-								ResourcePackManager.getResPackDir().toURL().getPath().replace(
-										File.separator, "/"
-										)
-								+ "/"
-								+ secondaryPack
-								+ "/"
-								+ getRootResDir()
-								+ resource
-								)
-						);
-			}
-			catch (MalformedURLException e)
-			{
-				resObj = null;
-			}
+			resObj = loadResource(
+					new File(
+							ResourcePackManager.getResPackDir().replace(
+									File.separator, "/"
+									)
+							+ "/"
+							+ secondaryPack
+							+ "/"
+							+ getRootResDir()
+							+ resource
+							)
+					);
 			if (resObj != null)
 			{
 				return resObj;

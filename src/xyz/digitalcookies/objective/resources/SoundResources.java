@@ -46,7 +46,7 @@ public class SoundResources extends ResourceHandler<InputStream>
 		}
 		catch (FileNotFoundException e)
 		{
-			System.out.println("ERROR LOADING GRAPHIC FILE: File not found");
+			System.out.println("ERROR LOADING SOUND FILE: File not found");
 			return null;
 		}
 		// Return a buffered input stream
