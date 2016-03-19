@@ -16,8 +16,10 @@
 package xyz.digitalcookies.objective.resources;
 
 import java.io.File;
-import java.net.URI;
 import java.util.LinkedList;
+
+import xyz.digitalcookies.objective.DevConfig;
+import xyz.digitalcookies.objective.utility.SetupOperations;
 
 /** TODO Document
  * @author Bryan Charles Bettis
@@ -34,6 +36,14 @@ public class ResourcePackManager
 	/** Constructor hidden to prevent instantiation. */
 	private ResourcePackManager()
 	{
+	}
+	
+	public static void setup()
+	{
+		SetupOperations.setResDir((String) DevConfig.getSetting(DevConfig.RES_PACK_DIR));
+		ResourcePackManager.setBufferResources((boolean) DevConfig.getSetting(DevConfig.INIT_BUFFER_RES));
+		ResourcePackManager.setDefaultPack((String) DevConfig.getSetting(DevConfig.DEF_RES_PACK));
+		ResourcePackManager.setCurrentPack((String) DevConfig.getSetting(DevConfig.INIT_RES_PACK));
 	}
 	
 	public static String getResPackDir()

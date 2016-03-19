@@ -15,7 +15,6 @@
 
 package xyz.digitalcookies.objective;
 
-import java.awt.Font;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DevConfig
 {
+	public static final String MAIN_WIN_TITLE = "MAIN_WIN_TITLE";
 	/** How many layers to setup in the main layer set.
 	 * <br>
 	 * <br> <i>Type:</i> integer greater than 0
@@ -53,18 +53,17 @@ public class DevConfig
 	public static final String SOUND_RES_DIR = "SOUND_RES_DIR";
 	/** The root directory for graphics resources. */
 	public static final String GRAPHICS_RES_DIR = "GRAPHICS_RES_DIR";
+	public static final String INIT_BUFFER_RES = "INIT_BUFFER_RES";
+	public static final String DEF_RES_PACK = "DEF_RES_PACK";
+	public static final String INIT_RES_PACK = "INIT_RES_PACK";
+	public static final String RES_PACK_DIR = "RES_PACK_DIR";
 	
 	/** The map of the different developer settings. */
-	protected static volatile ConcurrentHashMap<String, Object> settings;
-	
-	/* Setup static stuff. */
-	static
-	{
-		settings = new ConcurrentHashMap<String, Object>();
-	}
+	protected static volatile ConcurrentHashMap<String, Object> settings =
+			new ConcurrentHashMap<String, Object>();
 	
 	/** Setup the initial developer settings. Note that once a developer
-	 * setting has been added, it cannot (and should not) be changed
+	 * setting has been added, it cannot be changed
 	 * during runtime. If developers want to add a setting that can
 	 * be modified during runtime, they should add it to the
 	 * DynamicSettings class.
@@ -72,36 +71,73 @@ public class DevConfig
 	 */
 	static void setupSettings(Properties props)
 	{
+		// The name of the main game window
+				settings.put(
+						MAIN_WIN_TITLE,
+						(String) props.getOrDefault(MAIN_WIN_TITLE, "Unnamed Game")
+						);
 		// The number of layers in the main layer set
 		settings.put(
 				NUM_MAIN_LAYERS,
-				Integer.parseInt((String) props.getOrDefault(NUM_MAIN_LAYERS, "10"))
+				Integer.parseInt(
+						(String) props.getOrDefault(NUM_MAIN_LAYERS, "10")
+						)
 				);
 		// The initial width of the main window
 		settings.put(
 				INIT_MAIN_WIN_WIDTH,
-				Integer.parseInt((String) props.getOrDefault(INIT_MAIN_WIN_WIDTH, "480"))
+				Integer.parseInt(
+						(String) props.getOrDefault(INIT_MAIN_WIN_WIDTH, "480")
+						)
 				);
 		// The initial height of the main window
 		settings.put(
 				INIT_MAIN_WIN_HEIGHT,
-				Integer.parseInt((String) props.getOrDefault(INIT_MAIN_WIN_HEIGHT, "270"))
-				);
-		settings.put(
-				DEF_FONT,
-				new Font(
-						(String) props.getOrDefault(DEF_FONT, "Dialog"),
-						Font.PLAIN,
-						Integer.parseInt((String) props.getOrDefault(DEF_FONT_SIZE, "12"))
+				Integer.parseInt(
+						(String) props.getOrDefault(INIT_MAIN_WIN_HEIGHT, "270")
 						)
 				);
 		settings.put(
-			SOUND_RES_DIR,
-			(String) props.getOrDefault(SOUND_RES_DIR, "sound_dir_not_specified")
-			);
+				DEF_FONT,
+				(String) props.getOrDefault(DEF_FONT, "Dialog")
+				);
+		settings.put(
+				DEF_FONT_SIZE,
+				Integer.parseInt(
+						(String) props.getOrDefault(DEF_FONT_SIZE, "12")
+						)
+				);
+		settings.put(
+				SOUND_RES_DIR,
+				(String) props.getOrDefault(
+						SOUND_RES_DIR,
+						"none_specified"
+						)
+				);
 		settings.put(
 				GRAPHICS_RES_DIR,
-				(String) props.getOrDefault(GRAPHICS_RES_DIR, "graphics_dir_not_specified")
+				(String) props.getOrDefault(
+						GRAPHICS_RES_DIR,
+						"none_specified"
+						)
+				);
+		settings.put(
+				INIT_BUFFER_RES,
+				Boolean.parseBoolean(
+						(String) props.getOrDefault(INIT_BUFFER_RES, "true")
+						)
+				);
+		settings.put(
+				DEF_RES_PACK,
+				(String) props.getOrDefault(DEF_RES_PACK, "none_specified")
+				);
+		settings.put(
+				INIT_RES_PACK,
+				(String) props.getOrDefault(INIT_RES_PACK, "none_specified")
+				);
+		settings.put(
+				RES_PACK_DIR,
+				(String) props.getOrDefault(RES_PACK_DIR, "none_specified")
 				);
 	}
 	

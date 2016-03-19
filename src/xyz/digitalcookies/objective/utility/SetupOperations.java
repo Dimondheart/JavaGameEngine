@@ -20,21 +20,58 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Properties;
 
-/** Perform general setup operations.
+/** Perform general setup operations for different engine systems.
  * @author Bryan Charles Bettis
  */
 public class SetupOperations
 {
-	/** Sets the root directory for all resource packs in ResourcePackManager.
-	 * @param sourceLoc the location of the source of the non-game engine
+	/** The source location of the project using this game engine. */
+	private static URI sourceLoc = null;
+	/** The name of the game engine properties file. */
+	private static String propFileName = "objective.properties";
+	
+	/** TODO Document
+	 * @param source the location of the source of the non-game engine
 	 * 		files
+	 */
+	public static void setCodeSource(URL source)
+	{
+		URI codeSource = null;
+		try
+		{
+			codeSource = source.toURI();
+		}
+		catch (java.net.URISyntaxException e)
+		{
+			System.out.println("ERROR GETTING CODE SOURCE LOCATION");
+			System.exit(0);
+		}
+		sourceLoc = codeSource;
+	}
+	
+	/** Set the name of the config/properties file for the Objective
+	 * game engine. This value defaults to "objective.properties",
+	 * which is the recommended name. You should only have to use this
+	 * function if your project setup requires you to use a file name
+	 * different from this default name.
+	 * @param name relative path to the file (e.g. in same root
+	 * 		directory as your source code directory or in the top directory
+	 * 		of a .jar file)
+	 */
+	public static void setOJGEPropFileName(String name)
+	{
+		propFileName = name;
+	}
+	
+	/** Sets the root directory for all resource packs in ResourcePackManager.
 	 * @param relResDir the root directory for all resource packs, within the
 	 * 		root location of the code source (e.g. in same root directory as
 	 * 		your source code directory or in the top directory of a .jar file)
 	 */
-	public static void setResDir(URI sourceLoc, String relResDir)
+	public static void setResDir(String relResDir)
 	{
 		String rootResDir = null;
 		String scheme = sourceLoc.getScheme();
@@ -88,14 +125,9 @@ public class SetupOperations
 	/** Get the properties file for the game engine to use. Calls
 	 * System.exit(0) if the properties failed to load (to prevent
 	 * this issue from only showing up in the game engine classes.)
-	 * @param sourceLoc the location of the source of the non-game engine
-	 * 		files
-	 * @param propFileName relative path to the file (e.g. in same root
-	 * 		directory as your source code directory or in the top directory
-	 * 		of a .jar file)
 	 * @return the Properties object for the game engine to use
 	 */
-	public static Properties getOJGEProperties(URI sourceLoc, String propFileName)
+	public static Properties getOJGEProperties()
 	{
 		Properties props = new Properties();
 		String scheme = sourceLoc.getScheme();

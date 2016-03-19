@@ -25,25 +25,27 @@ public class GameStateManager
 {
 	/** The current game state object. */
 	protected GameState currGS;
+	/** The initial game state; the first one this game state manager setup. */
+	private Class<? extends GameState> initGameState;
 	
 	/** Used by the cycle method to limit debug output when a game state
 	 * is not currently set.
 	 */
 	private boolean noGSSetIndicated;
 	
-	/** Basic constructor. Sets up the first game state as an instance of the
-	 * specified class.
+	/** Basic constructor.
 	 * @param initGameState the game state to initially setup
 	 */
 	public GameStateManager(Class<? extends GameState> initGameState)
 	{
 		noGSSetIndicated = false;
-		setNewGameState(initGameState);
+		this.initGameState = initGameState;
 	}
 	
 	/** Setup this game state manager. */
 	public void setup()
 	{
+		setNewGameState(initGameState);
 		currGS.setup(new ConcurrentHashMap<String, Object>());
 	}
 	

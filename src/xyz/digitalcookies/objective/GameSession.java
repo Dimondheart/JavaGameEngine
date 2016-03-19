@@ -23,6 +23,7 @@ import xyz.digitalcookies.objective.graphics.GraphicsManager;
 import xyz.digitalcookies.objective.input.InputManager;
 import xyz.digitalcookies.objective.resources.ResourcePackManager;
 import xyz.digitalcookies.objective.sound.SoundManager;
+import xyz.digitalcookies.objective.utility.SetupOperations;
 
 /** Starts up all subsystems for managing a game session and handles
  * the main game loop (calls the game state manager). Only one instance
@@ -50,13 +51,12 @@ public class GameSession
 	 * manager and setting its initial game state to an instance of the
 	 * specified class.
 	 * @param initGameState the class of the first game state to setup
-	 * @param props the Properties object used to configure the game engine
 	 */
-	public GameSession(Class<? extends GameState> initGameState, Properties props)
+	public GameSession(Class<? extends GameState> initGameState)
 	{
+		Properties props = SetupOperations.getOJGEProperties();
 		DevConfig.setupSettings(props);
-		ResourcePackManager.setDefaultPack(props.getProperty("DEF_RES_PACK", null));
-		ResourcePackManager.setCurrentPack(props.getProperty("INIT_RES_PACK", null));
+		ResourcePackManager.setup();
 		// Create subsystem managers
 		gfx = new GraphicsManager();
 		input = new InputManager();

@@ -53,14 +53,20 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 	protected void setupSystem()
 	{
 		System.out.println("Setting Up Graphics System...");
-		TextDrawer.setDefaultFont((Font) DevConfig.getSetting(DevConfig.DEF_FONT)); 
+		TextDrawer.setDefaultFont(
+				new Font(
+						(String) DevConfig.getSetting(DevConfig.DEF_FONT),
+						Font.PLAIN,
+						(Integer) DevConfig.getSetting(DevConfig.DEF_FONT_SIZE)
+						)
+				); 
 		// Cleanup any previous main window
 		if (mainWin != null)
 		{
 			mainWin.dispose();
 		}
 		// Setup the main window
-		mainWin = new JFrame("Objective - Java Game Engine");
+		mainWin = new JFrame((String) DevConfig.getSetting(DevConfig.MAIN_WIN_TITLE));
 		// Setup the main layer container
 		Integer numMainLayers =
 				(Integer) DevConfig.getSetting(DevConfig.NUM_MAIN_LAYERS);

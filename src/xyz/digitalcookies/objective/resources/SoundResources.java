@@ -36,7 +36,6 @@ public class SoundResources extends ResourceHandler<InputStream>
 	@Override
 	protected InputStream loadResource(File toLoad)
 	{
-		System.out.println("Loading sound resource \'" + toLoad.getPath() + "\'...");
 		BufferedImage image = null;
 		FileInputStream fis = null;
 		// Get an input stream for the file

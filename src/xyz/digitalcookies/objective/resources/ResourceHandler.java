@@ -16,7 +16,6 @@
 package xyz.digitalcookies.objective.resources;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -283,6 +282,11 @@ public abstract class ResourceHandler<T>
 		supportsBuffering = isSupported;
 	}
 	
+	/** Check if the extension of the specified file is supported by this
+	 * resource handler.
+	 * @param file the file to check the extension of
+	 * @return true if the file's extension is supported, false otherwise
+	 */
 	protected boolean isExtensionSupported(String file)
 	{
 		// All extensions are supported
