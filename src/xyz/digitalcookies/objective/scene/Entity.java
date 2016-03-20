@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective.entity;
+package xyz.digitalcookies.objective.scene;
 
 /** TODO add documentation
  * @author Bryan Charles Bettis

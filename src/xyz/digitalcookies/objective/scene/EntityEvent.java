@@ -13,12 +13,11 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective.entity.entitymodule;
+package xyz.digitalcookies.objective.scene;
 
-/** 
+/** Base class for any event in the entity system.
  * @author Bryan Charles Bettis
  */
-public abstract class EntityModule
+public abstract class EntityEvent
 {
-
 }

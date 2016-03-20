@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective.entity.entitymodule;
+package xyz.digitalcookies.objective.scene.entitymodule;
 
-import xyz.digitalcookies.objective.entity.Scene;
+import xyz.digitalcookies.objective.scene.Scene;
 
 /** A body represents the physical aspects of an entity that exist within
  * a specific scene. This class may be integrated with Entity in the future,

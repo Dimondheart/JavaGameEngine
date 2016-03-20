@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective.entity;
+package xyz.digitalcookies.objective.scene;
 
 import xyz.digitalcookies.objective.graphics.Renderer;
 import xyz.digitalcookies.objective.utility.StopWatch;

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective.entity;
+package xyz.digitalcookies.objective.scene;
 
 import java.util.LinkedList;
 import java.util.function.Predicate;

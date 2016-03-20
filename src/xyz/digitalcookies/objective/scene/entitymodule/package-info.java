@@ -13,7 +13,9 @@
  * limitations under the License.
  */
 
-/** Contains classes related to the entity system of this game engine.
+/** Entity modules are different aspects of entities, such as a body or
+ * an inventory.
  * @author Bryan Charles Bettis
+ *
  */
-package xyz.digitalcookies.objective.entity;
+package xyz.digitalcookies.objective.scene.entitymodule;
