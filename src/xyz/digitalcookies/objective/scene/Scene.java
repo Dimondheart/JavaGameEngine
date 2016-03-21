@@ -27,12 +27,14 @@ public abstract class Scene implements Renderer
 	 * is activated or deactivated.
 	 */
 	private StopWatch timer;
-	/** If this scene is active or not; affects updating and rendering
+	/** If this scene is paused or not; affects updating
 	 * of this scene.
 	 */
-	private boolean isActive;
+	private boolean isPaused;
+	private boolean doRender;
 	/** The x-offset of this scene, in pixels. */
 	private int offsetX;
+	/** The y-offset of this scene, in pixels. */
 	private int offsetY;
 	private double pixelsPerUnit;
 	
@@ -40,29 +42,44 @@ public abstract class Scene implements Renderer
 	{
 		timer = new StopWatch();
 		timer.start();
-		setActive(false);
+		setPaused(true);
+		setRendering(false);
 		setOffset(0, 0);
 		setScale(1);
 	}
 	
 	public abstract void updateScene(SceneUpdateEvent event);
 	
-	public boolean isActive()
+	public boolean isPaused()
 	{
-		return isActive;
+		return isPaused;
 	}
 	
-	public void setActive(boolean active)
+	public void setPaused(boolean pause)
 	{
-		isActive = active;
-		if (isActive())
+		if (isPaused == pause)
 		{
-			timer.resume();
+			return;
 		}
-		else
+		isPaused = pause;
+		if (isPaused())
 		{
 			timer.pause();
 		}
+		else
+		{
+			timer.resume();
+		}
+	}
+	
+	public boolean isRendering()
+	{
+		return doRender;
+	}
+	
+	public void setRendering(boolean doRender)
+	{
+		this.doRender = doRender;
 	}
 	
 	public StopWatch getTimer()

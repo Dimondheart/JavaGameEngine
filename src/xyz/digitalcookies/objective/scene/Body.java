@@ -13,12 +13,20 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective.scene.entitymodule;
+package xyz.digitalcookies.objective.scene;
 
-/** 
+/** A body represents the physical aspects of an entity that exist within
+ * a specific scene. This class may be integrated with Entity in the future,
+ * or with a physics system.
  * @author Bryan Charles Bettis
  */
-public abstract class EntityModule
+public abstract class Body
 {
-
+	/** Set the scene that this body is part of.
+	 * @param scene the scene containing various properties that this
+	 * 		body can use
+	 * @return true if the scene was set successfully, false otherwise
+	 * 		(for example if the scene is not of a supported type)
+	 */
+	public abstract boolean setScene(Scene scene);
 }

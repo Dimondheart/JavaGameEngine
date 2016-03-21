@@ -32,7 +32,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * on contained entities.
 	 */
 	protected boolean delayModification = false;
-	protected Predicate<? super Entity> postUpdateRemoveIf;
+	protected Predicate<Entity> postUpdateRemoveIf;
 	
 	/** Basic constructor. */
 	public EntityContainer()
@@ -129,13 +129,13 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @param filter the filter to use to test each entity
 	 * @return true if any elements were removed
 	 */
-	public synchronized boolean removeIf(Predicate<? super Entity> filter)
+	public synchronized boolean removeIf(Predicate<Entity> filter)
 	{
 		// TODO add ability to delay modification
 		return entities.removeIf(filter);
 	}
 	
-	public synchronized void setCycleRemoveIf(Predicate<? super Entity> filter)
+	public synchronized void setCycleRemoveIf(Predicate<Entity> filter)
 	{
 		this.postUpdateRemoveIf = filter;
 	}

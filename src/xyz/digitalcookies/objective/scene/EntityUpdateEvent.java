@@ -48,9 +48,4 @@ public class EntityUpdateEvent extends EntityEvent
 	{
 		return entities;
 	}
-	
-	public void setEntities(EntityContainer entities)
-	{
-		this.entities = entities;
-	}
 }
