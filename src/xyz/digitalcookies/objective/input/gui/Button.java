@@ -21,7 +21,7 @@ import java.awt.Graphics2D;
 
 import xyz.digitalcookies.objective.graphics.RenderEvent;
 import xyz.digitalcookies.objective.graphics.TextDrawer;
-import xyz.digitalcookies.objective.input.InputManager;
+import xyz.digitalcookies.objective.input.Mouse;
 
 import static java.awt.event.MouseEvent.*;
 
@@ -160,11 +160,11 @@ public class Button extends GUIObject
 		// Mouse is hovering over, interact with button
 		if (isMouseOver())
 		{
-			if (InputManager.getMS().justReleased(BUTTON1))
+			if (Mouse.justReleased(BUTTON1))
 			{
 				state = ButtonState.CLICKED;
 			}
-			else if (InputManager.getMS().isDown(BUTTON1))
+			else if (Mouse.isDown(BUTTON1))
 			{
 				state = ButtonState.PRESSED;
 			}
@@ -256,8 +256,8 @@ public class Button extends GUIObject
 	 */
 	public boolean isMouseOver()
 	{
-		int mx = InputManager.getMS().getUnpolledX();
-		int my = InputManager.getMS().getUnpolledY();
+		int mx = Mouse.getUnpolledX();
+		int my = Mouse.getUnpolledY();
 		if (
 				mx < getX()
 				|| mx > getX() + getWidth()

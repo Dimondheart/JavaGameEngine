@@ -23,15 +23,17 @@ import java.util.Arrays;
 /** Handles processing of keyboard events.
  * @author Bryan Charles Bettis
  */
-public class Keyboard implements InputDevice, KeyListener
+public class Keyboard implements KeyListener
 {
 	/** Number of key values used. */
 	private static final short KEY_COUNT = 256;
 	
 	/** Current state of the keys (pressed/released). */
-	private volatile boolean[] rawStates;
+	private static volatile boolean[] rawStates =
+			new boolean[KEY_COUNT];
 	/** Processed key states (KeyState). */
-	private volatile KeyState[] processedStates;
+	private static volatile KeyState[] processedStates =
+			new KeyState[KEY_COUNT];
 	
 	/** States each key can be in.
 	 * @author Bryan Charles Bettis
@@ -47,17 +49,8 @@ public class Keyboard implements InputDevice, KeyListener
 	}
 	
 	/** Basic constructor. */
-	public Keyboard()
+	Keyboard()
 	{
-		clear();
-	}
-	
-	/** Setup different device-dependent stuff.
-	 * @param comp the component to listen to
-	 */
-	public void setup(Component comp)
-	{
-		comp.addKeyListener(this);
 	}
 	
 	/** Checks if the specified key is pressed down.
@@ -65,7 +58,7 @@ public class Keyboard implements InputDevice, KeyListener
 	 * @return True if the key is pressed
 	 * @see java.awt.event.KeyEvent
 	 */
-	public boolean isDown(int keyCode)
+	public static boolean isDown(int keyCode)
 	{
 		return (
 				processedStates[keyCode].equals(KeyState.PRESSED)
@@ -79,7 +72,7 @@ public class Keyboard implements InputDevice, KeyListener
 	 * @return True if the key was first pressed this cycle
 	 * @see java.awt.event.KeyEvent
 	 */
-	public boolean justPressed(int keyCode)
+	public static boolean justPressed(int keyCode)
 	{
 		return processedStates[keyCode].equals(KeyState.ONCE);
 	}
@@ -90,48 +83,9 @@ public class Keyboard implements InputDevice, KeyListener
 	 * @return True if the key was released first during the last poll
 	 * @see java.awt.event.KeyEvent
 	 */
-	public boolean justReleased(int keyCode)
+	public static boolean justReleased(int keyCode)
 	{
 		return (processedStates[keyCode].equals(KeyState.ONCE));
-	}
-	
-	@Override
-	public synchronized void poll()
-	{
-		// For all used key IDs
-		for (int i = 0; i < KEY_COUNT; ++i)
-		{
-			// Set the key state if it has been pressed
-			if (rawStates[i])
-			{
-				// If key is down not but not the previous frame, set to once
-				if (processedStates[i].equals(KeyState.RELEASED))
-				{
-					processedStates[i] = KeyState.ONCE;
-				}
-				// Otherwise set to pressed
-				else
-				{
-					processedStates[i] = KeyState.PRESSED;
-				}
-			}
-			// Otherwise set the key state to released
-			else
-			{
-				processedStates[i] = KeyState.RELEASED;
-			}
-		}
-	}
-	
-	@Override
-	public synchronized void clear()
-	{
-		// current pressed/released state of keys
-		rawStates = new boolean[KEY_COUNT];
-		// Key state beyond just pressed/released
-		processedStates = new KeyState[KEY_COUNT];
-		// Set all keys as released
-		Arrays.fill(processedStates, KeyState.RELEASED);
 	}
 	
 	@Override
@@ -166,5 +120,48 @@ public class Keyboard implements InputDevice, KeyListener
 	public void keyTyped(KeyEvent e)
 	{
 		// Not used
+	}
+	
+	/** Setup different device-dependent stuff.
+	 * @param comp the component to listen to
+	 */
+	void setup(Component comp)
+	{
+		clear();
+		comp.addKeyListener(this);
+	}
+	
+	synchronized void poll()
+	{
+		// For all used key IDs
+		for (int i = 0; i < KEY_COUNT; ++i)
+		{
+			// Set the key state if it has been pressed
+			if (rawStates[i])
+			{
+				// If key is down not but not the previous frame, set to once
+				if (processedStates[i].equals(KeyState.RELEASED))
+				{
+					processedStates[i] = KeyState.ONCE;
+				}
+				// Otherwise set to pressed
+				else
+				{
+					processedStates[i] = KeyState.PRESSED;
+				}
+			}
+			// Otherwise set the key state to released
+			else
+			{
+				processedStates[i] = KeyState.RELEASED;
+			}
+		}
+	}
+	
+	synchronized void clear()
+	{
+		// Set all keys as released
+		Arrays.fill(rawStates, false);
+		Arrays.fill(processedStates, KeyState.RELEASED);
 	}
 }

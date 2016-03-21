@@ -17,6 +17,7 @@ package xyz.digitalcookies.objective.graphics;
 
 import java.util.LinkedList;
 
+import xyz.digitalcookies.objective.input.GUIMonitor;
 import xyz.digitalcookies.objective.input.InputManager;
 import xyz.digitalcookies.objective.input.gui.GUIObject;
 
@@ -59,7 +60,7 @@ class Layer implements Renderer
 		// Add GUI elements to the GUI manager
 		if (obj instanceof GUIObject)
 		{
-			InputManager.getGUI().addGUIElement((GUIObject) obj);
+			GUIMonitor.addGUIElement((GUIObject) obj);
 		}
 	}
 	
@@ -77,7 +78,7 @@ class Layer implements Renderer
 		// Remove GUI elements from the GUI manager
 		if (obj instanceof GUIObject)
 		{
-			InputManager.getGUI().removeGUIElement((GUIObject) obj);
+			GUIMonitor.removeGUIElement((GUIObject) obj);
 		}
 	}
 	

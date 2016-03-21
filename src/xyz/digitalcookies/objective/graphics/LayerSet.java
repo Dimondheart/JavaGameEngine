@@ -73,47 +73,54 @@ public class LayerSet implements Renderer
 	 * @param obj the Renderer to add
 	 * @param layer the layer to add the Renderer to
 	 */
-	public synchronized void addRenderer(Renderer obj, int layer)
+	public void addRenderer(Renderer obj, int layer)
 	{
-		layers[layer].addRenderer(obj);
+		Layer l = layers[layer];
+		synchronized(l)
+		{
+			l.addRenderer(obj);
+		}
+	}
+	
+	/** Add the specified renderer to all layers.
+	 * @param obj the Renderer to add
+	 */
+	public void addRenderer(Renderer obj)
+	{
+		for (Layer layer : layers)
+		{
+			synchronized(layer)
+			{
+				layer.addRenderer(obj);
+			}
+		}
 	}
 	
 	/** Remove specified renderer from specified layer.
 	 * @param obj the Renderer to remove
 	 * @param layer the layer to remove the Renderer from
 	 */
-	public synchronized void removeRenderer(Renderer obj, int layer)
+	public void removeRenderer(Renderer obj, int layer)
 	{
-		layers[layer].removeRenderer(obj);
-	}
-	
-	/** Remove the specified renderer from all layers.
-	 * @param obj the Renderer to hide
-	 */
-	public synchronized void removeRenderer(Renderer obj)
-	{
-		for (Layer l : layers)
+		Layer l = layers[layer];
+		synchronized(l)
 		{
 			l.removeRenderer(obj);
 		}
 	}
 	
-	/** Removes all Renderer(s) from all layers. */
-	public synchronized void clearAllLayers()
-	{
-		// Clear each layer
-		for (Layer layer : layers)
-		{
-			layer.clear();
-		}
-	}
-	
-	/** Clear only the specified layer.
-	 * @param layer the index of the layer (starts at 0)
+	/** Remove the specified renderer from all layers.
+	 * @param obj the Renderer to hide
 	 */
-	public synchronized void clearLayer(int layer)
+	public void removeRenderer(Renderer obj)
 	{
-		layers[layer].clear();
+		for (Layer l : layers)
+		{
+			synchronized(l)
+			{
+				l.removeRenderer(obj);
+			}
+		}
 	}
 	
 	/** Removes the specified Renderer from the specified layer, and then
@@ -121,20 +128,52 @@ public class LayerSet implements Renderer
 	 * @param obj the renderer to recursively remove
 	 * @param layer the layer to recursively remove the renderer from
 	 */
-	public synchronized void recursiveRemoveRenderer(Renderer obj, int layer)
+	public void recursiveRemoveRenderer(Renderer obj, int layer)
 	{
-		layers[layer].recursiveRemoveRenderer(obj);
+		Layer l = layers[layer];
+		synchronized(l)
+		{
+			l.recursiveRemoveRenderer(obj);
+		}
 	}
 	
 	/** Removes the specified Renderer from all layers, and also calls
 	 * this method on any layer sets within the layers.
 	 * @param obj the renderer to recursively remove
 	 */
-	public synchronized void recursiveRemoveRenderer(Renderer obj)
+	public void recursiveRemoveRenderer(Renderer obj)
 	{
 		for (Layer layer : layers)
 		{
-			layer.recursiveRemoveRenderer(obj);
+			synchronized(layer)
+			{
+				layer.recursiveRemoveRenderer(obj);
+			}
+		}
+	}
+	
+	/** Clear only the specified layer.
+	 * @param layer the index of the layer (first index at 0)
+	 */
+	public void clearLayer(int layer)
+	{
+		Layer l = layers[layer];
+		synchronized(l)
+		{
+			l.clear();
+		}
+	}
+	
+	/** Removes all Renderer(s) from all layers. */
+	public void clearAllLayers()
+	{
+		// Clear each layer
+		for (Layer layer : layers)
+		{
+			synchronized(layer)
+			{
+				layer.clear();
+			}
 		}
 	}
 	
@@ -144,7 +183,7 @@ public class LayerSet implements Renderer
 	 * @param width the new width of the layers
 	 * @param height the new height of the layers
 	 */
-	public synchronized void resizeLayers(int width, int height)
+	public void resizeLayers(int width, int height)
 	{
 		this.width = width;
 		this.height = height;
@@ -158,7 +197,11 @@ public class LayerSet implements Renderer
 		{
 			RenderEvent e = event.clone();
 			e.setLayer(i);
-			layers[i].render(e);
+			Layer layer = layers[i];
+			synchronized(layer)
+			{
+				layer.render(e);
+			}
 		}
 	}
 }
