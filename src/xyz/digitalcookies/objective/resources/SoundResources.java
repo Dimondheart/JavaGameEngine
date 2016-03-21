@@ -36,7 +36,6 @@ public class SoundResources extends ResourceHandler<InputStream>
 	@Override
 	protected InputStream loadResource(File toLoad)
 	{
-		System.out.println("Loading sound resource \'" + toLoad.getPath() + "\'...");
 		BufferedImage image = null;
 		FileInputStream fis = null;
 		// Get an input stream for the file
@@ -46,7 +45,7 @@ public class SoundResources extends ResourceHandler<InputStream>
 		}
 		catch (FileNotFoundException e)
 		{
-			System.out.println("ERROR LOADING GRAPHIC FILE: File not found");
+			System.out.println("ERROR LOADING SOUND FILE: File not found");
 			return null;
 		}
 		// Return a buffered input stream

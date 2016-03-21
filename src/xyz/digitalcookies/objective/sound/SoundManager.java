@@ -18,7 +18,7 @@ package xyz.digitalcookies.objective.sound;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import xyz.digitalcookies.objective.DevConfig;
+import xyz.digitalcookies.objective.Settings;
 import xyz.digitalcookies.objective.input.InputManager;
 import xyz.digitalcookies.objective.resources.SoundResources;
 
@@ -110,7 +110,7 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 		{
 			if (InputManager.isPaused())
 			{
-				currTrack.stop();
+				currTrack.pause();
 				return true;
 			}
 			else
@@ -172,6 +172,8 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 						);
 			}
 		}
+		// Update volume levels
+		updateVolume();
 		return true;
 	}
 	
@@ -280,7 +282,6 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 		if (playingSFX.size() < MAX_PLAYING_SFX)
 		{
 			SFX newSFX = new SFX(event);
-			newSFX.play();
 			playingSFX.add(newSFX);
 		}
 	}
@@ -320,33 +321,37 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 		for (SFX sfx : playingSFX)
 		{
 			sfx.stop();
-			
 		}
 		playingSFX.clear();
 	}
 	
-	/** Checks if the volume settings have been changed since they were last
-	 * used to update the volumes of playing sounds.
-	 * @return true if the dynamic volume settings have changed since the
-	 * 		the last time they were used to update playing sounds' volumes
-	 */
-	@SuppressWarnings("unused")
-	private boolean hasVolumeChanged()
+	/** Updates the actual volume levels of playing sounds. */
+	private void updateVolume()
 	{
-		int[] settings = {0,0,0};
-		settings[0] = (int) xyz.digitalcookies.objective.Settings.getSetting(
-				"MASTER_VOLUME"
-				);
-		settings[1] = (int) xyz.digitalcookies.objective.Settings.getSetting(
-				"BGM_VOLUME"
-				);
-		settings[2] = (int) xyz.digitalcookies.objective.Settings.getSetting(
-				"SFX_VOLUME"
-				);
-		return (
-				settings[0] != currVolLvls[0]
-				|| settings[1] != currVolLvls[1]
-				|| settings[2] != currVolLvls[2]
-						);
+		int newM = (int) Settings.getSetting(Settings.MASTER_VOLUME);
+		int newBGM = (int) Settings.getSetting(Settings.BGM_VOLUME);
+		int newSFX = (int) Settings.getSetting(Settings.SFX_VOLUME);
+		if (
+			currVolLvls[0] == newM
+			&& currVolLvls[1] == newBGM
+			&& currVolLvls[2] == newSFX
+			)
+		{
+			return;
+		}
+		if (currVolLvls[0] != newM || currVolLvls[1] != newBGM)
+		{
+			int effectiveBGM = (int) (newBGM * (newM / 100.0));
+			currTrack.setVolume(effectiveBGM);
+			currVolLvls[1] = newBGM;
+		}
+		if (currVolLvls[0] != newM || currVolLvls[2] != newSFX)
+		{
+			int effectiveSFX = (int) (newSFX * (newM / 100.0));
+			playingSFX.forEach((SFX sfx)->{sfx.setVolume(effectiveSFX);});
+			currVolLvls[2] = newSFX;
+		}
+		// Update the stored master volume
+		currVolLvls[0] = newM;
 	}
 }

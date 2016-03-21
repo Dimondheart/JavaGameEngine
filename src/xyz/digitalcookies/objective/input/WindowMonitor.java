@@ -26,30 +26,20 @@ import xyz.digitalcookies.objective.graphics.GraphicsManager;
 /** Event listener for window-related events.
  * @author Bryan Charles Bettis
  */
-public class WindowMonitor implements InputDevice, WindowListener, ComponentListener
+public class WindowMonitor implements WindowListener, ComponentListener
 {
 	/** The window this manager is listening to. */
-	private Window myWin;
+	private static Window myWin;
 	
 	/** Basic constructor. */
-	public WindowMonitor()
+	WindowMonitor()
 	{
-	}
-	
-	/** Setup different device-dependent stuff.
-	 * @param window the window to listen to
-	 */
-	public void setup(Window window)
-	{
-		myWin = window;
-		myWin.addWindowListener(this);
-		myWin.addComponentListener(this);
 	}
 	
 	/** Checks if this window is active/has input focus.
 	 * @return true if window is in focus, false otherwise
 	 */
-	public boolean isActive()
+	public static boolean isActive()
 	{
 		// No window has been set yet
 		if (myWin == null)
@@ -57,16 +47,6 @@ public class WindowMonitor implements InputDevice, WindowListener, ComponentList
 			return false;
 		}
 		return myWin.isActive();
-	}
-	
-	@Override
-	public void poll()
-	{
-	}
-	
-	@Override
-	public void clear()
-	{
 	}
 	
 	@Override
@@ -135,6 +115,25 @@ public class WindowMonitor implements InputDevice, WindowListener, ComponentList
 
 	@Override
 	public void componentShown(ComponentEvent e)
+	{
+	}
+	
+	/** Setup different device-dependent stuff.
+	 * @param window the window to listen to
+	 */
+	void setup(Window window)
+	{
+		clear();
+		myWin = window;
+		myWin.addWindowListener(this);
+		myWin.addComponentListener(this);
+	}
+	
+	void poll()
+	{
+	}
+	
+	void clear()
 	{
 	}
 	

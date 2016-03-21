@@ -13,9 +13,11 @@
  * limitations under the License.
  */
 
-/** Entity modules are different aspects of entities, such as a body or
- * an inventory.
+package xyz.digitalcookies.objective.scene;
+
+/** Base class for any event in the entity system.
  * @author Bryan Charles Bettis
- *
  */
-package xyz.digitalcookies.objective.entity.entitymodule;
+public abstract class EntityEvent
+{
+}

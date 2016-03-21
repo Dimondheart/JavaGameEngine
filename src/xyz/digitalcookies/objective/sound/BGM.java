@@ -15,9 +15,6 @@
 
 package xyz.digitalcookies.objective.sound;
 
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineEvent;
-
 /** Handles playing and control for a background music track.
  * @author Bryan Charles Bettis
  */
@@ -29,27 +26,6 @@ class BGM extends Sound
 	public BGM(BGMEvent event)
 	{
 		super(event.getTrack());
-		// Resume the track with the proper loop settings
-		resume();
-	}
-	
-	/** Stops this track from playing. */
-	public void stop()
-	{
-		clip.stop();
-	}
-	
-	/** Resumes the track. */
-	public void resume()
-	{
-		// Set the track to loop
-		clip.loop(Clip.LOOP_CONTINUOUSLY);
-		// Reset the loop segment back to the whole track
-		clip.setLoopPoints(0, -1);
-	}
-	
-	@Override
-	public synchronized void update(LineEvent e)
-	{
+		setLooping(true);
 	}
 }

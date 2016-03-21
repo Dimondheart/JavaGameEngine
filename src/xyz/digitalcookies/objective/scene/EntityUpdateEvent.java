@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective.entity;
+package xyz.digitalcookies.objective.scene;
 
 /** Entity update events are passed in to entities when calling the entities'
  * update methods. These events provide contextual information that the entity
@@ -47,10 +47,5 @@ public class EntityUpdateEvent extends EntityEvent
 	public EntityContainer getEntities()
 	{
 		return entities;
-	}
-	
-	public void setEntities(EntityContainer entities)
-	{
-		this.entities = entities;
 	}
 }

@@ -15,8 +15,6 @@
 
 package xyz.digitalcookies.objective;
 
-import java.util.Properties;
-
 import xyz.digitalcookies.objective.gamestate.GameState;
 import xyz.digitalcookies.objective.gamestate.GameStateManager;
 import xyz.digitalcookies.objective.graphics.GraphicsManager;
@@ -44,19 +42,22 @@ public class GameSession
 	/** The last engine threading setting, used to detect when it has
 	 * been changed so it can be applied.
 	 */
-	private Settings.ThreadingSetting lastThreadingSetting;
+	private static Settings.ThreadingSetting lastThreadingSetting;
+	
+	/** Hidden to prevent instantiation. */
+	private GameSession()
+	{
+	}
 	
 	/** Does generic setup operations, including initializing the game state
 	 * manager and setting its initial game state to an instance of the
 	 * specified class.
 	 * @param initGameState the class of the first game state to setup
-	 * @param props the Properties object used to configure the game engine
 	 */
-	public GameSession(Class<? extends GameState> initGameState, Properties props)
+	public static void setup(Class<? extends GameState> initGameState)
 	{
-		DevConfig.setupSettings(props);
-		ResourcePackManager.setDefaultPack(props.getProperty("DEF_RES_PACK", null));
-		ResourcePackManager.setCurrentPack(props.getProperty("INIT_RES_PACK", null));
+		DevConfig.setup();
+		ResourcePackManager.setup();
 		// Create subsystem managers
 		gfx = new GraphicsManager();
 		input = new InputManager();
@@ -67,27 +68,19 @@ public class GameSession
 		lastThreadingSetting = 
 				(Settings.ThreadingSetting)
 				Settings.getSetting("ENGINE_THREADING");
-	}
-	
-	/** Gets the average number of cycles per second of the main loop.
-	 * @return the average CPS of the main loop
-	 */
-	public double getAverageCPS()
-	{
-		return clock.getAvgCPS();
+		// Setup subsystems
+		gfx.setup();
+		input.setup();
+		sound.setup();
+		gsm.setup();
 	}
 	
 	/** Initializes all engine subsystems, then starts playing the game.
 	 * This function will not return until the game has changed to a quit
 	 * state.
 	 */
-	public void start()
+	public static void start()
 	{
-		// Setup subsystems
-		gfx.setup();
-		input.setup();
-		sound.setup();
-		gsm.setup();
 		// Reset the program timer
 		ProgramTime.reset();
 		while (true)
@@ -166,11 +159,19 @@ public class GameSession
 			play(numThreads);
 		}
 	}
+	
+	/** Gets the average number of cycles per second of the main loop.
+	 * @return the average CPS of the main loop
+	 */
+	public static double getAverageCPS()
+	{
+		return clock.getAvgCPS();
+	}
 
 	/** Starts playing the game.
 	 * @param numThreads the number of threads the game has been setup to use
 	 */
-	private void play(int numThreads)
+	private static void play(int numThreads)
 	{
 		// Select how to run based on how subsystems are setup
 		switch (numThreads)
@@ -199,7 +200,7 @@ public class GameSession
 	}
 	
 	/** Play with 3 subsystems running in separate threads. */
-	private void play4Threads()
+	private static void play4Threads()
 	{
 		while(true)
 		{
@@ -212,7 +213,7 @@ public class GameSession
 	}
 	
 	/** Play with 2 subsystems running in separate threads. */
-	private void play3Threads()
+	private static void play3Threads()
 	{
 		while(true)
 		{
@@ -226,7 +227,7 @@ public class GameSession
 	}
 	
 	/** Play with 1 subsystem running in a separate thread. */
-	private void play2Threads()
+	private static void play2Threads()
 	{
 		while(true)
 		{
@@ -241,7 +242,7 @@ public class GameSession
 	}
 	
 	/** Play with all three subsystems running with the main loop. */
-	private void play1Thread()
+	private static void play1Thread()
 	{
 		while(true)
 		{
@@ -259,7 +260,7 @@ public class GameSession
 	/** The main loop of the game.  Updates the game state manager.
 	 * @return true if the main loop should keep running, false otherwise
 	 */
-	private boolean mainLoop()
+	private static boolean mainLoop()
 	{
 		if (!lastThreadingSetting.equals(Settings.getSetting("ENGINE_THREADING")))
 		{

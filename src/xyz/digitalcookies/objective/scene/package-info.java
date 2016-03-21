@@ -13,15 +13,11 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective.input;
-
-/** Interface for input devices.
+/** Classes dealing with the entity-scene system. A scene is something like
+ * a level or a stage in a game that contains a collection of entities and
+ * camera control (such as pan or zoom.) Not all games will make use of a
+ * scene, an example of a game that would probably not utilize scenes, but
+ * could still use some parts of the entity-scene system is tic tac toe.
  * @author Bryan Charles Bettis
  */
-interface InputDevice
-{
-	/** Update processed input data. */
-	void poll();
-	/** Clear all stored input data. */
-	void clear();
-}
+package xyz.digitalcookies.objective.scene;

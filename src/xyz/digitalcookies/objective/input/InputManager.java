@@ -155,39 +155,6 @@ public class InputManager extends xyz.digitalcookies.objective.Subsystem
 		return state == InputManagerState.QUIT;
 	}
 	
-	/** Get the keyboard object.
-	 * @return the Keyboard object
-	 */
-	public static Keyboard getKB()
-	{
-		return keyboard;
-	}
-	
-	/** Get the mouse object.
-	 * @return the Mouse object
-	 */
-	public static Mouse getMS()
-	{
-		return mouse;
-	}
-	
-	/** Gets the object that monitors the main window.
-	 * @return the object that manages/monitors the main window
-	 */
-	public static WindowMonitor getWin()
-	{
-		return window;
-	}
-	
-	/** Gets the manager of graphical user input devices, such as on-screen
-	 * buttons.
-	 * @return the GUI manager object
-	 */
-	public static GUIMonitor getGUI()
-	{
-		return gui;
-	}
-	
 	/** Update processed state information for all input devices. */
 	public static void poll()
 	{

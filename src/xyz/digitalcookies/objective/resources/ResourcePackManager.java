@@ -16,8 +16,10 @@
 package xyz.digitalcookies.objective.resources;
 
 import java.io.File;
-import java.net.URI;
 import java.util.LinkedList;
+
+import xyz.digitalcookies.objective.DevConfig;
+import xyz.digitalcookies.objective.EngineSetupData;
 
 /** TODO Document
  * @author Bryan Charles Bettis
@@ -28,7 +30,7 @@ public class ResourcePackManager
 	private static String defPack = null;
 	private static String currPack = null;
 	private static boolean isBuffering = false;
-	private static URI resPackDir = null;
+	private static String resPackDir = null;
 	private static LinkedList<String> packs = new LinkedList<String>();
 	
 	/** Constructor hidden to prevent instantiation. */
@@ -36,12 +38,20 @@ public class ResourcePackManager
 	{
 	}
 	
-	public static URI getResPackDir()
+	public static void setup()
+	{
+		setResDir((String) DevConfig.getSetting(DevConfig.RES_PACK_DIR));
+		ResourcePackManager.setBufferResources((boolean) DevConfig.getSetting(DevConfig.INIT_BUFFER_RES));
+		ResourcePackManager.setDefaultPack((String) DevConfig.getSetting(DevConfig.DEF_RES_PACK));
+		ResourcePackManager.setCurrentPack((String) DevConfig.getSetting(DevConfig.INIT_RES_PACK));
+	}
+	
+	public static String getResPackDir()
 	{
 		return resPackDir;
 	}
 	
-	public static void indexResourcePacks(URI resDir)
+	public static void indexResourcePacks(String resDir)
 	{
 		File dir = new File(resDir);
 		if (dir.isDirectory())
@@ -107,5 +117,60 @@ public class ResourcePackManager
 	{
 		isBuffering = doBuffer;
 		// TODO Un-buffer resources, etc.
+	}
+	
+	/** Sets the root directory for all resource packs in ResourcePackManager.
+	 * @param relResDir the root directory for all resource packs, within the
+	 * 		root location of the code source (e.g. in same root directory as
+	 * 		your source code directory or in the top directory of a .jar file)
+	 */
+	private static void setResDir(String relResDir)
+	{
+		String rootResDir = null;
+		String scheme = EngineSetupData.getCodeSource().getScheme();
+		// Fail...
+		if (scheme == null)
+		{
+			System.out.println("ERROR: Unknown code source setup");
+			System.exit(0);
+		}
+		// A "runnable" JAR file setup
+		else if (scheme.contains("rsrc"))
+		{
+			String resDir = ClassLoader.getSystemResource("").getPath().replace("%20", " ");
+			// Create the URI referencing the resource folder
+			rootResDir = new File(
+					resDir
+					+ relResDir.replace(
+							File.separator, "/"
+							)
+					).getPath();
+		}
+		// A 'non-runnable' JAR or normal directory setup
+		else if (scheme.contains("file"))
+		{
+			// 'Non-runnable' JAR
+			if (EngineSetupData.getCodeSource().getPath().toLowerCase().contains(".jar"))
+			{
+				String resDir = ClassLoader.getSystemResource("")
+						.getPath().replace("%20", " ");
+				// Create the URI referencing the resource folder
+				rootResDir = new File(
+						resDir
+						+ relResDir.replace(
+								File.separator, "/"
+								)
+						).getAbsoluteFile().getAbsolutePath();
+			}
+			// Normal directory
+			else
+			{
+				File ft = new File(EngineSetupData.getCodeSource()).getParentFile();
+				ft = new File(ft, relResDir);
+				rootResDir = ft.getAbsolutePath();
+			}
+		}
+		// Index resource packs
+		indexResourcePacks(rootResDir);
 	}
 }

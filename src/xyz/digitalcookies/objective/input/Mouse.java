@@ -25,23 +25,23 @@ import xyz.digitalcookies.objective.graphics.GraphicsManager;
 /** Handles mouse input events.
  * @author Bryan Charles Bettis
  */
-public class Mouse implements InputDevice, MouseListener, MouseWheelListener, MouseMotionListener
+public class Mouse implements MouseListener, MouseWheelListener, MouseMotionListener
 {
 	/** Number of button values used. */
 	private static final int BUTTONS_USED = 10;
 		
 	/** Raw/Unprocessed state updates to the mouse buttons. */
-	private volatile boolean[] unpolledStates;
+	private static volatile boolean[] unpolledStates;
 	/** Processed button states. */
-	private volatile BtnState[] polledStates;
+	private static volatile BtnState[] polledStates;
 	/** The change in the scroll wheel between polls. */
-	private volatile int unpolledScrollChange = 0;
+	private static volatile int unpolledScrollChange = 0;
 	/** The change in the scroll wheel, updated each poll. */
-	private volatile int polledScrollChange = 0;
+	private static volatile int polledScrollChange = 0;
 	/** The x coordinate of the mouse cursor. */
-	private volatile int unpolledX = 0;
+	private static volatile int unpolledX = 0;
 	/** The y coordinate of the mouse cursor. */
-	private volatile int unpolledY = 0;
+	private static volatile int unpolledY = 0;
 	
 	/** States each button can be in.
 	 * @author Bryan Charles Bettis
@@ -65,19 +65,8 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	}
 	
 	/** Basic constructor. */
-	public Mouse()
+	Mouse()
 	{
-		clear();
-	}
-	
-	/** Setup different device-dependent stuff.
-	 * @param comp the component to listen to
-	 */
-	public void setup(Component comp)
-	{
-		comp.addMouseListener(this);
-		comp.addMouseWheelListener(this);
-		comp.addMouseMotionListener(this);
 	}
 	
 	/** Checks if the specified button is pressed down.
@@ -85,7 +74,7 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	 * @return True if the button is pressed
 	 * @see java.awt.event.MouseEvent
 	 */
-	public boolean isDown(int btnCode)
+	public static boolean isDown(int btnCode)
 	{
 		return (
 				polledStates[btnCode].equals(BtnState.PRESSED)
@@ -99,7 +88,7 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	 * @return True if the button was first pressed during the last poll.
 	 * @see java.awt.event.MouseEvent
 	 */
-	public boolean justPressed(int btnCode)
+	public static boolean justPressed(int btnCode)
 	{
 		return (polledStates[btnCode].equals(BtnState.ONCE));
 	}
@@ -110,7 +99,7 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	 * @return True if the button was released first during the last poll
 	 * @see java.awt.event.MouseEvent
 	 */
-	public boolean justReleased(int btnCode)
+	public static boolean justReleased(int btnCode)
 	{
 		return (polledStates[btnCode].equals(BtnState.CLICKED));
 	}
@@ -119,7 +108,7 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	 * (does not change between polls, it is updated at each poll).
 	 * @return the number of scroll wheel ticks moved
 	 */
-	public int getWheelChange()
+	public static int getWheelChange()
 	{
 		return polledScrollChange;
 	}
@@ -128,7 +117,7 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	 * constrained to the edges of the main window.
 	 * @return the x position of the mouse over the game window
 	 */
-	public int getUnpolledX()
+	public static int getUnpolledX()
 	{
 		return unpolledX;
 	}
@@ -137,65 +126,9 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	 * constrained to the edges of the main window.
 	 * @return the y position of the mouse over the game window
 	 */
-	public int getUnpolledY()
+	public static int getUnpolledY()
 	{
 		return unpolledY;
-	}
-	
-	@Override
-	public synchronized void poll()
-	{
-		// Update the scroll wheel
-		if ((boolean) Settings.getSetting("INVERT_SCROLL_WHEEL"))
-		{
-			polledScrollChange = -unpolledScrollChange;
-		}
-		else
-		{
-			polledScrollChange = unpolledScrollChange;
-		}
-		unpolledScrollChange = 0;
-		// Update button processed values
-		for (int i = 0; i < BUTTONS_USED; ++i)
-		{
-			// Button is currently depressed
-			if (unpolledStates[i])
-			{
-				// Key was just pressed
-				if (polledStates[i].equals(BtnState.RELEASED))
-				{
-					polledStates[i] = BtnState.ONCE;
-				}
-				// Key has been pressed for a while
-				else
-				{
-					polledStates[i] = BtnState.PRESSED;
-				}
-			}
-			// The button has been "clicked" (just released)
-			else if (polledStates[i].equals(BtnState.PRESSED) || polledStates[i].equals(BtnState.ONCE))
-			{
-				polledStates[i] = BtnState.CLICKED;
-			}
-			// Otherwise key is released
-			else
-			{
-				polledStates[i] = BtnState.RELEASED;
-			}
-		}
-	}
-	
-	@Override
-	public synchronized void clear()
-	{
-		polledScrollChange = 0;
-		unpolledScrollChange = 0;
-		// current pressed/released state of keys
-		unpolledStates = new boolean[BUTTONS_USED];
-		// Key state beyond just pressed/released
-		polledStates = new BtnState[BUTTONS_USED];
-		// Init all keys as released
-		Arrays.fill(polledStates, BtnState.RELEASED);
 	}
 	
 	@Override
@@ -257,6 +190,71 @@ public class Mouse implements InputDevice, MouseListener, MouseWheelListener, Mo
 	public void mouseMoved(MouseEvent e)
 	{
 		updateCursorPos(e);
+	}
+	
+	/** Setup different device-dependent stuff.
+	 * @param comp the component to listen to
+	 */
+	void setup(Component comp)
+	{
+		clear();
+		comp.addMouseListener(this);
+		comp.addMouseWheelListener(this);
+		comp.addMouseMotionListener(this);
+	}
+	
+	synchronized void poll()
+	{
+		// Update the scroll wheel
+		if ((boolean) Settings.getSetting("INVERT_SCROLL_WHEEL"))
+		{
+			polledScrollChange = -unpolledScrollChange;
+		}
+		else
+		{
+			polledScrollChange = unpolledScrollChange;
+		}
+		unpolledScrollChange = 0;
+		// Update button processed values
+		for (int i = 0; i < BUTTONS_USED; ++i)
+		{
+			// Button is currently depressed
+			if (unpolledStates[i])
+			{
+				// Key was just pressed
+				if (polledStates[i].equals(BtnState.RELEASED))
+				{
+					polledStates[i] = BtnState.ONCE;
+				}
+				// Key has been pressed for a while
+				else
+				{
+					polledStates[i] = BtnState.PRESSED;
+				}
+			}
+			// The button has been "clicked" (just released)
+			else if (polledStates[i].equals(BtnState.PRESSED) || polledStates[i].equals(BtnState.ONCE))
+			{
+				polledStates[i] = BtnState.CLICKED;
+			}
+			// Otherwise key is released
+			else
+			{
+				polledStates[i] = BtnState.RELEASED;
+			}
+		}
+	}
+	
+	synchronized void clear()
+	{
+		polledScrollChange = 0;
+		unpolledScrollChange = 0;
+		// current pressed/released state of keys
+		unpolledStates = new boolean[BUTTONS_USED];
+		// Key state beyond just pressed/released
+		polledStates = new BtnState[BUTTONS_USED];
+		// Init all keys as released
+		Arrays.fill(polledStates, BtnState.RELEASED);
 	}
 	
 	/** Update the position of the mouse cursor.
