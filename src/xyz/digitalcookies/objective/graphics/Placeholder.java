@@ -13,17 +13,15 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective.input.gui;
+package xyz.digitalcookies.objective.graphics;
 
-import xyz.digitalcookies.objective.graphics.RenderEvent;
-
-/** A simple, invisible placeholder GUI element for occupying space (such as
- * in a GUIPanel.)
+/** A simple, invisible placeholder element for occupying space (such as
+ * in a RendererPanel.)
  * @author Bryan Charles Bettis
  */
-public class Placeholder extends GUIObject
+public class Placeholder extends BoundedRenderer
 {
-	/** Basic constructor.
+	/** Standard constructor.
 	 * @param x the x coordinate of the upper left corner
 	 * @param y the y coordinate of the upper left corner
 	 * @param width the width of the placeholder
@@ -34,16 +32,9 @@ public class Placeholder extends GUIObject
 		setPos(x, y);
 		setDims(width, height);
 	}
-	
+
 	@Override
 	public void render(RenderEvent event)
 	{
-		// Placeholder element should not draw anything
-	}
-
-	@Override
-	public void poll()
-	{
-		// Placeholder element should not respond to interaction
 	}
 }

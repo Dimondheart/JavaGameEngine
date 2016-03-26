@@ -129,10 +129,12 @@ public class WindowMonitor implements WindowListener, ComponentListener
 		myWin.addComponentListener(this);
 	}
 	
+	/** Poll any window data that needs polled. */
 	void poll()
 	{
 	}
 	
+	/** Clear any stored window data that needs cleared. */
 	void clear()
 	{
 	}

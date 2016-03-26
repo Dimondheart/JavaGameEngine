@@ -203,6 +203,7 @@ public class Mouse implements MouseListener, MouseWheelListener, MouseMotionList
 		comp.addMouseMotionListener(this);
 	}
 	
+	/** Polls all the different mouse data. */
 	synchronized void poll()
 	{
 		// Update the scroll wheel
@@ -245,6 +246,7 @@ public class Mouse implements MouseListener, MouseWheelListener, MouseMotionList
 		}
 	}
 	
+	/** Clears all stored input data. */
 	synchronized void clear()
 	{
 		polledScrollChange = 0;
@@ -269,18 +271,18 @@ public class Mouse implements MouseListener, MouseWheelListener, MouseMotionList
 		{
 			newX = 0;
 		}
-		else if (newX > GraphicsManager.getMainLayerSet().getLayerSetWidth())
+		else if (newX > GraphicsManager.getMainLayerSet().getWidth())
 		{
-			newX = GraphicsManager.getMainLayerSet().getLayerSetWidth();
+			newX = GraphicsManager.getMainLayerSet().getWidth();
 		}
 		// Limit the x coordinate to inside the main window
 		if (newY < 0)
 		{
 			newY = 0;
 		}
-		else if (newY > GraphicsManager.getMainLayerSet().getLayerSetHeight())
+		else if (newY > GraphicsManager.getMainLayerSet().getHeight())
 		{
-			newY = GraphicsManager.getMainLayerSet().getLayerSetHeight();
+			newY = GraphicsManager.getMainLayerSet().getHeight();
 		}
 		// Update the unpolled mouse position values
 		unpolledX = newX;

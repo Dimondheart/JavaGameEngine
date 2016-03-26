@@ -157,8 +157,12 @@ public class Button extends GUIObject
 	@Override
 	public synchronized void poll()
 	{
+		if (!isEnabled())
+		{
+			state = ButtonState.IDLE;
+		}
 		// Mouse is hovering over, interact with button
-		if (isMouseOver())
+		else if (isMouseOver())
 		{
 			if (Mouse.justReleased(BUTTON1))
 			{
@@ -273,6 +277,7 @@ public class Button extends GUIObject
 	@Override
 	public synchronized void render(RenderEvent event)
 	{
+		super.render(event);
 		Graphics2D g = event.getContext();
 		// Button pressed
 		if (getBGColor() != null)

@@ -31,7 +31,7 @@ public class LayerSet implements Renderer
 	/** Height of the layers. */
 	private int height;
 	
-	/** Basic constructor.
+	/** Standard constructor.
 	 * @param numLayers the number of layers to setup
 	 */
 	public LayerSet(int numLayers)
@@ -54,17 +54,17 @@ public class LayerSet implements Renderer
 	}
 	
 	/** Get the width of this set of layers.
-	 * @return the width of a layer in this set
+	 * @return the width of the layers in this set
 	 */
-	public int getLayerSetWidth()
+	public int getWidth()
 	{
 		return width;
 	}
 	
 	/** Get the height of this set of layers.
-	 * @return the height of a layer in this set
+	 * @return the height of the layers in this set
 	 */
-	public int getLayerSetHeight()
+	public int getHeight()
 	{
 		return height;
 	}
@@ -75,6 +75,25 @@ public class LayerSet implements Renderer
 	 */
 	public void addRenderer(Renderer obj, int layer)
 	{
+		if (obj == null)
+		{
+			System.out.println(
+					"WARNING: specified null when adding a "
+					+ "renderer to a layer set."
+					);
+			Thread.dumpStack();
+			return;
+		}
+		if (layer >= numLayers)
+		{
+			System.out.println(
+					"ERROR: Attempted to add a renderer to an invalid layer"
+					+ "index: "
+					+ Integer.toString(layer)
+					);
+			Thread.dumpStack();
+			return;
+		}
 		Layer l = layers[layer];
 		synchronized(l)
 		{
@@ -87,12 +106,18 @@ public class LayerSet implements Renderer
 	 */
 	public void addRenderer(Renderer obj)
 	{
-		for (Layer layer : layers)
+		if (obj == null)
 		{
-			synchronized(layer)
-			{
-				layer.addRenderer(obj);
-			}
+			System.out.println(
+					"WARNING: specified null when adding a "
+					+ "renderer to a layer set."
+					);
+			Thread.dumpStack();
+			return;
+		}
+		for (int i = 0; i < numLayers; ++i)
+		{
+			addRenderer(obj, i);
 		}
 	}
 	
@@ -102,6 +127,25 @@ public class LayerSet implements Renderer
 	 */
 	public void removeRenderer(Renderer obj, int layer)
 	{
+		if (obj == null)
+		{
+			System.out.println(
+					"WARNING: specified null when removing a "
+					+ "renderer from a layer set."
+					);
+			Thread.dumpStack();
+			return;
+		}
+		if (layer >= numLayers)
+		{
+			System.out.println(
+					"ERROR: Attempted to remove a renderer from an invalid "
+					+ "layer index: "
+					+ Integer.toString(layer)
+					);
+			Thread.dumpStack();
+			return;
+		}
 		Layer l = layers[layer];
 		synchronized(l)
 		{
@@ -114,12 +158,18 @@ public class LayerSet implements Renderer
 	 */
 	public void removeRenderer(Renderer obj)
 	{
-		for (Layer l : layers)
+		if (obj == null)
 		{
-			synchronized(l)
-			{
-				l.removeRenderer(obj);
-			}
+			System.out.println(
+					"WARNING: specified null when removing a "
+					+ "renderer from a layer set."
+					);
+			Thread.dumpStack();
+			return;
+		}
+		for (int i = 0; i < numLayers; ++i)
+		{
+			removeRenderer(obj, i);
 		}
 	}
 	
@@ -130,6 +180,25 @@ public class LayerSet implements Renderer
 	 */
 	public void recursiveRemoveRenderer(Renderer obj, int layer)
 	{
+		if (obj == null)
+		{
+			System.out.println(
+					"WARNING: specified null when recursively removing a "
+					+ "renderer from a layer set."
+					);
+			Thread.dumpStack();
+			return;
+		}
+		if (layer >= numLayers)
+		{
+			System.out.println(
+					"ERROR: Attempted to recursively remove a renderer from an "
+					+ "invalid layer index: "
+					+ Integer.toString(layer)
+					);
+			Thread.dumpStack();
+			return;
+		}
 		Layer l = layers[layer];
 		synchronized(l)
 		{
@@ -143,12 +212,18 @@ public class LayerSet implements Renderer
 	 */
 	public void recursiveRemoveRenderer(Renderer obj)
 	{
-		for (Layer layer : layers)
+		if (obj == null)
 		{
-			synchronized(layer)
-			{
-				layer.recursiveRemoveRenderer(obj);
-			}
+			System.out.println(
+					"WARNING: specified null when recursively removing a "
+					+ "renderer from a layer set."
+					);
+			Thread.dumpStack();
+			return;
+		}
+		for (int i = 0; i < numLayers; ++i)
+		{
+			recursiveRemoveRenderer(obj, i);
 		}
 	}
 	
@@ -157,6 +232,16 @@ public class LayerSet implements Renderer
 	 */
 	public void clearLayer(int layer)
 	{
+		if (layer >= numLayers)
+		{
+			System.out.println(
+					"ERROR: Attempted to clear an invalid layer "
+					+ "index: "
+					+ Integer.toString(layer)
+					);
+			Thread.dumpStack();
+			return;
+		}
 		Layer l = layers[layer];
 		synchronized(l)
 		{
@@ -167,19 +252,16 @@ public class LayerSet implements Renderer
 	/** Removes all Renderer(s) from all layers. */
 	public void clearAllLayers()
 	{
-		// Clear each layer
-		for (Layer layer : layers)
+		for (int i = 0; i < numLayers; ++i)
 		{
-			synchronized(layer)
-			{
-				layer.clear();
-			}
+			clearLayer(i);
 		}
 	}
 	
-	/** Resizes all layers in this layer set. Calling this method on the
-	 * main layer set will have no effect, as the main layers are adjusted
-	 * to fit the entire display area/window.
+	/** Resizes this layer set. Calling this method on the
+	 * main layer set will have no effect, because the main layer sizes
+	 * are internally adjusted by the game engine to fit the entire
+	 * display area of the window.
 	 * @param width the new width of the layers
 	 * @param height the new height of the layers
 	 */

@@ -17,115 +17,39 @@ package xyz.digitalcookies.objective.input.gui;
 
 import java.awt.Color;
 
-import xyz.digitalcookies.objective.graphics.Renderer;
+import xyz.digitalcookies.objective.graphics.BoundedRenderer;
 
-/** Base class for user inputs that are rendered on the screen, and interaction
- * with these inputs is through simple input devices such as a mouse.
+/** Base class for individual GUI elements, such as a button or text box.
  * @author Bryan Charles Bettis
  */
-public abstract class GUIObject implements Renderer
+public abstract class GUIObject extends BoundedRenderer implements GUIElement
 {
-	/** The x coordinate of this object. */
-	protected int x;
-	/** The y coordinate of this object. */
-	protected int y;
-	/** The width of this object. */
-	protected int width;
-	/** The height of this object. */
-	protected int height;
 	/** The fill color of this GUI Object. */
 	private Color bgColor;
+	/** The enabled state of this GUIObject. */
+	private boolean isEnabled;
 	
-	/** Update the GUI object. */
-	public abstract void poll();
-	
-	/** Clear stored data for this GUI object. */
-	public void clear()
+	public GUIObject()
 	{
+		setVisible(true);
+		setEnabled(true);
 	}
 	
-	/** Update the position of this element.
-	 * @param x the new x coordinate
-	 * @param y the new y coordinate
-	 */
-	public void setPos(int x, int y)
+	@Override
+	public boolean isEnabled()
 	{
-		setX(x);
-		setY(y);
+		return isEnabled;
 	}
 	
-	/** Update the x coordinate of this element.
-	 * @param x the new x coordinate
-	 */
-	public void setX(int x)
+	@Override
+	public void setEnabled(boolean enabled)
 	{
-		this.x = x;
-	}
-	
-	/** Update the y coordinate of this element.
-	 * @param y the new y coordinate
-	 */
-	public void setY(int y)
-	{
-		this.y = y;
-	}
-	
-	/** Update the dimensions of this element.
-	 * @param width the new width
-	 * @param height the new height
-	 */
-	public void setDims(int width, int height)
-	{
-		setWidth(width);
-		setHeight(height);
-	}
-	
-	/** Update the width of this element.
-	 * @param width the new width
-	 */
-	public void setWidth(int width)
-	{
-		this.width = width;
-	}
-	
-	/** Update the height of this element.
-	 * @param height the new height
-	 */
-	public void setHeight(int height)
-	{
-		this.height = height;
-	}
-	
-	/** Get the x coordinate.
-	 * @return the screen x coordinate
-	 */
-	public int getX()
-	{
-		return x;
-	}
-	
-	/** Get the y coordinate.
-	 * @return the screen y coordinate
-	 */
-	public int getY()
-	{
-		return y;
-	}
-	
-	/** Get the width.
-	 * @return the width on the screen
-	 */
-	public int getWidth()
-	{
-		return width;
-	}
-	
-	/** Get the height.
-	 * @return the height on the screen
-	 */
-	public int getHeight()
-	{
-		return height;
+		isEnabled = enabled;
+		// Should not be enabled and not visible
+		if (isEnabled)
+		{
+			setVisible(true);
+		}
 	}
 	
 	/** Gets the current background fill color.

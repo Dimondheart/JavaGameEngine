@@ -31,6 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DevConfig
 {
+	/** The title of the main game window. */
 	public static final String MAIN_WIN_TITLE = "MAIN_WIN_TITLE";
 	/** How many layers to setup in the main layer set.
 	 * <br>
@@ -58,9 +59,13 @@ public class DevConfig
 	public static final String SOUND_RES_DIR = "SOUND_RES_DIR";
 	/** The root directory for graphics resources. */
 	public static final String GRAPHICS_RES_DIR = "GRAPHICS_RES_DIR";
+	/** If buffer-able resources should be buffered on startup. */
 	public static final String INIT_BUFFER_RES = "INIT_BUFFER_RES";
+	/** The default resource pack. */
 	public static final String DEF_RES_PACK = "DEF_RES_PACK";
+	/** The initial primary resource pack (can be the same as the default.) */
 	public static final String INIT_RES_PACK = "INIT_RES_PACK";
+	/** The relative root directory of the resource pack directory. */
 	public static final String RES_PACK_DIR = "RES_PACK_DIR";
 	
 	/** The map of the different developer settings. */

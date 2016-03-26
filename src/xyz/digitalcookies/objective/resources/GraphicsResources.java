@@ -25,17 +25,20 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
-/** TODO Document
+/** Handles the graphics resources managed for the graphics system.
  * @author Bryan Charles Bettis
  */
 public class GraphicsResources extends ResourceHandler<BufferedImage>
 {
+	/** The default image. */
 	private final BufferedImage defImg = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
 	
+	/** Standard constructor. */
 	public GraphicsResources()
 	{
 		super();
 		setSupportsBuffering(true);
+		// TODO setup a better default image here
 	}
 	
 	@Override
