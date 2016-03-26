@@ -18,8 +18,7 @@ package xyz.digitalcookies.objective.graphics;
 import java.util.LinkedList;
 
 import xyz.digitalcookies.objective.input.GUIMonitor;
-import xyz.digitalcookies.objective.input.InputManager;
-import xyz.digitalcookies.objective.input.gui.GUIObject;
+import xyz.digitalcookies.objective.input.gui.GUIElement;
 
 /** A single layer used for organizing screen drawing.
  * Each layer holds Renderer(s) that will be called in order once the layer
@@ -58,9 +57,9 @@ class Layer implements Renderer
 			layerSets.addLast((LayerSet) obj);
 		}
 		// Add GUI elements to the GUI manager
-		if (obj instanceof GUIObject)
+		if (obj instanceof GUIElement)
 		{
-			GUIMonitor.addGUIElement((GUIObject) obj);
+			GUIMonitor.addGUIElement((GUIElement) obj);
 		}
 	}
 	
@@ -76,9 +75,9 @@ class Layer implements Renderer
 			layerSets.remove((LayerSet) obj);
 		}
 		// Remove GUI elements from the GUI manager
-		if (obj instanceof GUIObject)
+		if (obj instanceof GUIElement)
 		{
-			GUIMonitor.removeGUIElement((GUIObject) obj);
+			GUIMonitor.removeGUIElement((GUIElement) obj);
 		}
 	}
 	
@@ -102,7 +101,18 @@ class Layer implements Renderer
 		// Draw each Renderer
 		for (Renderer r : renderers)
 		{
-			r.render(e);
+			// Only draw bounded renderers when they are visible
+			if (r instanceof BoundedRenderer)
+			{
+				if (((BoundedRenderer) r).isVisible())
+				{
+					r.render(e);
+				}
+			}
+			else
+			{
+				r.render(e);
+			}
 		}
 	}
 	

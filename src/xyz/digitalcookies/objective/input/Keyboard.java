@@ -131,6 +131,7 @@ public class Keyboard implements KeyListener
 		comp.addKeyListener(this);
 	}
 	
+	/** Polls all the the key values. */
 	synchronized void poll()
 	{
 		// For all used key IDs
@@ -158,6 +159,7 @@ public class Keyboard implements KeyListener
 		}
 	}
 	
+	/** Clears all stored input data. */
 	synchronized void clear()
 	{
 		// Set all keys as released

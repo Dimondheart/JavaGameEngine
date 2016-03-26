@@ -17,7 +17,7 @@ package xyz.digitalcookies.objective.input;
 
 import java.util.LinkedList;
 
-import xyz.digitalcookies.objective.input.gui.GUIObject;
+import xyz.digitalcookies.objective.input.gui.GUIElement;
 
 /** TODO document
  * @author Bryan Charles Bettis
@@ -25,20 +25,20 @@ import xyz.digitalcookies.objective.input.gui.GUIObject;
 public class GUIMonitor
 {
 	/** List of all GUI objects added to a layer. */
-	private static LinkedList<GUIObject> guiObjects =
-			new LinkedList<GUIObject>();
+	private static LinkedList<GUIElement> guiObjects =
+			new LinkedList<GUIElement>();
 	
 	/** Basic constructor. */
 	GUIMonitor()
 	{
 	}
 	
-	/** Add a new GUI object to the list of active GUI objects. This is done
+	/** Add a new GUI element to the list of active GUI elements. This is done
 	 * automatically by the layering system.  Each GUI element can only be
 	 * added once.
-	 * @param element the GUI object to add
+	 * @param element the GUI element to add
 	 */
-	public static void addGUIElement(GUIObject element)
+	public static void addGUIElement(GUIElement element)
 	{
 		synchronized(guiObjects)
 		{
@@ -53,7 +53,7 @@ public class GUIMonitor
 	 * automatically by the layering system.
 	 * @param element the GUI object to remove
 	 */
-	public static void removeGUIElement(GUIObject element)
+	public static void removeGUIElement(GUIElement element)
 	{
 		synchronized(guiObjects)
 		{
@@ -67,12 +67,13 @@ public class GUIMonitor
 		clear();
 	}
 	
+	/** Poll all registered GUI elements. */
 	void poll()
 	{
 		synchronized(guiObjects)
 		{
 			guiObjects.forEach(
-					(GUIObject element)->
+					(GUIElement element)->
 					{
 						synchronized(element)
 						{
@@ -83,12 +84,13 @@ public class GUIMonitor
 		}
 	}
 
+	/** Clear all registered GUI elements. */
 	void clear()
 	{
 		synchronized(guiObjects)
 		{
 			guiObjects.forEach(
-					(GUIObject element)->
+					(GUIElement element)->
 					{
 						synchronized(element)
 						{

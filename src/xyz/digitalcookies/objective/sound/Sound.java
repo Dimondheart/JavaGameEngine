@@ -20,11 +20,7 @@ import java.io.InputStream;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.Control;
 import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -42,9 +38,11 @@ class Sound implements Runnable
 	public String sound;
 	/** Indicates when this sound is done playing. */
 	private boolean isDone;
+	/** If the playing of this sound has been paused. */
 	private boolean paused;
+	/** If this sound should keep looping after it plays the sound. */
 	private boolean looping;
-	private boolean allDataBuffered;
+	/** The daemon thread for this sound to run with. */
 	private Thread thread;
 	
 	/** Basic constructor.
@@ -55,7 +53,6 @@ class Sound implements Runnable
 		// The sound to be played
 		this.sound = sound;
 		isDone  = false;
-		allDataBuffered = false;
 		paused = false;
 		looping = false;
 		// Get an input stream for the sound effect
@@ -119,12 +116,21 @@ class Sound implements Runnable
 	@Override
 	public void run()
 	{
+		// If the end of the input stream has been reached and will not loop
+		boolean allDataBuffered = false;
 		byte[] toBuffer = new byte[ais.getFormat().getFrameSize()*800];
 		line.start();
 		while (true)
 		{
-			if (allDataBuffered)
+			// Line closed; means this sound effect has been stopped
+			if (!line.isOpen())
 			{
+				break;
+			}
+			// All data has been buffered
+			else if (allDataBuffered)
+			{
+				// Line has emptied buffer; all sound data played
 				if (!line.isActive())
 				{
 					cleanup();
@@ -188,25 +194,43 @@ class Sound implements Runnable
 		cleanup();
 	}
 	
+	/** Pause this sound. */
 	public void pause()
 	{
 		paused = true;
 	}
 	
+	/** Resume playing this sound. */
 	public void resume()
 	{
 		paused = false;
 	}
 	
-	public void setLooping(boolean doLoop)
+	/** Set if this sound should loop after each time it plays.
+	 * @param loop true to loop this sound indefinitely, false to
+	 * 		stop after the next time the sound has finished playing
+	 */
+	public void setLooping(boolean loop)
 	{
-		looping = doLoop;
+		looping = loop;
 	}
 	
+	/** Adjust the volume of this sound to the given value.
+	 * @param percent the percent of the default volume to set the sound to
+	 */
 	public void setVolume(int percent)
 	{
 		FloatControl vc = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
 		float tnr = (float)(100-percent)/100.0f*vc.getMinimum();
+		// Truncate the level to the possible bounds
+		if (tnr < vc.getMinimum())
+		{
+			tnr = vc.getMinimum();
+		}
+		else if (tnr > vc.getMaximum())
+		{
+			tnr = vc.getMaximum();
+		}
 		vc.setValue(tnr);
 	}
 	
@@ -224,6 +248,9 @@ class Sound implements Runnable
 		isDone = true;
 	}
 	
+	/** Set the audio input stream, using the specified input stream.
+	 * @param is the input stream to open the new audio input stream using
+	 */
 	private void setAIS(InputStream is)
 	{
 		if (ais != null)
@@ -242,13 +269,13 @@ class Sound implements Runnable
 		}
 		catch (UnsupportedAudioFileException e)
 		{
-			System.out.println("Unsupported audio file: " + sound);
+			System.out.println("WARNING: Unsupported audio file: " + sound);
 			isDone  = true;
 			return;
 		}
 		catch (IOException e)
 		{
-			System.out.println("Error reading sound file: " + sound);
+			System.out.println("WARNING: Error reading sound file: " + sound);
 			isDone  = true;
 			return;
 		}

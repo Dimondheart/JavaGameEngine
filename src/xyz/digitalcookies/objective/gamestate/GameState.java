@@ -17,6 +17,8 @@ package xyz.digitalcookies.objective.gamestate;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import xyz.digitalcookies.objective.input.InputManager;
+
 /** Base Class for a game state.
  * @author Bryan Charles Bettis
  */
@@ -113,5 +115,9 @@ public abstract class GameState
 	protected void changeState(Class<? extends GameState> newState)
 	{
 		this.newState = newState;
+		if (newState == null)
+		{
+			InputManager.quit();
+		}
 	}
 }

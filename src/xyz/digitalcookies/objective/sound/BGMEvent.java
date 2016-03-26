@@ -63,7 +63,6 @@ public class BGMEvent extends BaseSoundEvent
 	
 	/** Change the background music track.
 	 * @param newTrack the name/path to the new track
-	 * @see game.resources
 	 */
 	public void setTrack(String newTrack)
 	{

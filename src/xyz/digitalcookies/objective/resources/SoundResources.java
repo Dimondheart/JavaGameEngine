@@ -15,18 +15,18 @@
 
 package xyz.digitalcookies.objective.resources;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-/** TODO Document
+/** Handles the graphics resources managed for the sound system.
  * @author Bryan Charles Bettis
  */
 public class SoundResources extends ResourceHandler<InputStream>
 {
+	/** Standard constructor. */
 	public SoundResources()
 	{
 		super();
@@ -36,20 +36,20 @@ public class SoundResources extends ResourceHandler<InputStream>
 	@Override
 	protected InputStream loadResource(File toLoad)
 	{
-		BufferedImage image = null;
-		FileInputStream fis = null;
-		// Get an input stream for the file
+		// Initialize variable (conclude that I don't have any fish)
+		FileInputStream fish = null;
+		// Get an input stream for the file (catch a fish)
 		try
 		{
-			fis = new FileInputStream(toLoad);
+			fish = new FileInputStream(toLoad);
 		}
 		catch (FileNotFoundException e)
 		{
 			System.out.println("ERROR LOADING SOUND FILE: File not found");
 			return null;
 		}
-		// Return a buffered input stream
-		return new BufferedInputStream(fis);
+		// Return a buffered input stream (put the fish in a cooler)
+		return new BufferedInputStream(fish);
 	}
 	
 	@Override
