@@ -19,8 +19,8 @@ import java.awt.Dimension;
 
 /** A thin layer over LayerSet, this provides a few changes to a layer
  * set needed for the main layer set to function properly. For example
- * this class removes the functionality of the resizeLayers(width,height)
- * method and adds a resizeLayers(dimensions) used to keep the main layer
+ * this class removes the functionality of the position and dimensions
+ * methods and adds a resizeLayers(dimensions) used to keep the main layer
  * set sized to fit the window/display area.
  * @author Bryan Charles Bettis
  */
@@ -32,15 +32,63 @@ class MainLayerSet extends LayerSet
 	public MainLayerSet(int numLayers)
 	{
 		super(numLayers);
+		super.setVisible(true);
+		super.setEnforceBounds(false);
 	}
 	
 	@Override
-	public synchronized void resizeLayers(int width, int height)
+	public void setPos(int x, int y)
 	{
-		System.out.println(
-				"WARNING: Attempted to resize the main layers " +
-						"outside the graphics manager."
-				);
+	}
+	
+	@Override
+	public void setX(int x)
+	{
+	}
+	
+	@Override
+	public void setY(int y)
+	{
+	}
+	
+	@Override
+	public void setDims(int width, int height)
+	{
+	}
+	
+	@Override
+	public void setWidth(int width)
+	{
+	}
+	
+	@Override
+	public void setHeight(int height)
+	{
+	}
+	
+	@Override
+	public void centerOver(int x, int y, boolean autoUpdate)
+	{
+	}
+	
+	@Override
+	public void centerOverWindow(boolean center, boolean autoUpdate)
+	{
+	}
+	
+	@Override
+	public void centerOverWindow(boolean center)
+	{
+	}
+	
+	@Override
+	public void setVisible(boolean visible)
+	{
+	}
+	
+	@Override
+	public void setEnforceBounds(boolean enforce)
+	{
 	}
 	
 	/** Resize the layers, used to only resize the main layers when the
@@ -49,7 +97,8 @@ class MainLayerSet extends LayerSet
 	 */
 	synchronized void resizeLayers(Dimension newDims)
 	{
-		super.resizeLayers(newDims.width, newDims.height);
+		super.setWidth(newDims.width);
+		super.setHeight(newDims.height);
 	}
 
 }

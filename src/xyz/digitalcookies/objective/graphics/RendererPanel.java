@@ -448,6 +448,9 @@ public class RendererPanel extends BoundedRenderer
 		rendererPositioning.get(fRowIns).add(fColIns, obj);
 		// Add to the tagged list (for easier access)
 		renderers.put(name, obj);
+		// Update positions to prevent glitchy positioning
+		updatePositions();
+		updateDims();
 	}
 	
 	/** Update the absolute positions of contained elements. */

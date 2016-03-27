@@ -20,16 +20,12 @@ package xyz.digitalcookies.objective.graphics;
  * render in the order they are added to a layer.
  * @author Bryan Charles Bettis
  */
-public class LayerSet implements Renderer
+public class LayerSet extends BoundedRenderer
 {
 	/** Total number of layers. */
 	private int numLayers;
 	/** List of the component layers. */
 	private Layer[] layers;
-	/** Width of the layers. */
-	private int width;
-	/** Height of the layers. */
-	private int height;
 	
 	/** Standard constructor.
 	 * @param numLayers the number of layers to setup
@@ -45,28 +41,29 @@ public class LayerSet implements Renderer
 		}
 	}
 	
+	@Override
+	public void render(RenderEvent event)
+	{
+		super.render(event);
+		// Render the layers
+		for (int i = 0; i < numLayers; ++i)
+		{
+			RenderEvent e = event.clone();
+			e.setLayer(i);
+			Layer layer = layers[i];
+			synchronized(layer)
+			{
+				layer.render(e);
+			}
+		}
+	}
+	
 	/** Get the number of layers in this layer set.
 	 * @return the number of layers in this set
 	 */
 	public int getNumLayers()
 	{
 		return numLayers;
-	}
-	
-	/** Get the width of this set of layers.
-	 * @return the width of the layers in this set
-	 */
-	public int getWidth()
-	{
-		return width;
-	}
-	
-	/** Get the height of this set of layers.
-	 * @return the height of the layers in this set
-	 */
-	public int getHeight()
-	{
-		return height;
 	}
 	
 	/** Add the specified renderer to specified layer.
@@ -255,35 +252,6 @@ public class LayerSet implements Renderer
 		for (int i = 0; i < numLayers; ++i)
 		{
 			clearLayer(i);
-		}
-	}
-	
-	/** Resizes this layer set. Calling this method on the
-	 * main layer set will have no effect, because the main layer sizes
-	 * are internally adjusted by the game engine to fit the entire
-	 * display area of the window.
-	 * @param width the new width of the layers
-	 * @param height the new height of the layers
-	 */
-	public void resizeLayers(int width, int height)
-	{
-		this.width = width;
-		this.height = height;
-	}
-
-	@Override
-	public void render(RenderEvent event)
-	{
-		// Render the layers
-		for (int i = 0; i < numLayers; ++i)
-		{
-			RenderEvent e = event.clone();
-			e.setLayer(i);
-			Layer layer = layers[i];
-			synchronized(layer)
-			{
-				layer.render(e);
-			}
 		}
 	}
 }

@@ -1,5 +1,7 @@
 package xyz.digitalcookies.objective.graphics;
 
+import java.awt.Graphics2D;
+
 /** TODO Document
  * @author Bryan Charles Bettis
  */
@@ -21,6 +23,7 @@ public abstract class BoundedRenderer implements Renderer
 	private boolean autoCenter;
 	/** If auto centering over the center of the main game window. */
 	private boolean autoCenterOverWindow;
+	private boolean enforceBounds;
 	
 	/** Standard constructor. */
 	public BoundedRenderer()
@@ -31,6 +34,7 @@ public abstract class BoundedRenderer implements Renderer
 		autoCenterCoords = new int[2];
 		autoCenter = false;
 		autoCenterOverWindow = false;
+		enforceBounds = false;
 	}
 	
 	/** Update the position of this element.
@@ -164,6 +168,16 @@ public abstract class BoundedRenderer implements Renderer
 		isVisible = visible;
 	}
 	
+	public boolean isEnforcingBounds()
+	{
+		return enforceBounds;
+	}
+	
+	public void setEnforceBounds(boolean enforce)
+	{
+		enforceBounds = enforce;
+	}
+	
 	/** All bounded renderer subclasses should call super.render(event)
 	 * from their own render function, if they wish to support features
 	 * like auto updating centering coordinates over other bounded renderers
@@ -172,6 +186,7 @@ public abstract class BoundedRenderer implements Renderer
 	@Override
 	public void render(RenderEvent event)
 	{
+		// TODO replace this with a separate protected RenderEvent update(event)
 		if (autoCenterOverWindow)
 		{
 			centerOverWindow(true);
@@ -179,6 +194,18 @@ public abstract class BoundedRenderer implements Renderer
 		else if (autoCenter)
 		{
 			centerOver(true);
+		}
+		if (isEnforcingBounds())
+		{
+			event.setContext(
+					(Graphics2D)
+					event.getContext().create(
+							getX(),
+							getY(),
+							getWidth(),
+							getHeight()
+							)
+					);
 		}
 	}
 	

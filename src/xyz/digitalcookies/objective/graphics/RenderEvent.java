@@ -75,15 +75,16 @@ public class RenderEvent implements Cloneable
 	@Override
 	public RenderEvent clone()
 	{
+		RenderEvent newEvent = null;
 		try
 		{
-			return (RenderEvent) super.clone();
+			newEvent = (RenderEvent) super.clone();
 		}
 		catch (CloneNotSupportedException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
+			System.out.println("INTERNAL ERROR: Unable to clone RenderEvent.");
 		}
+		return newEvent;
 	}
 }
