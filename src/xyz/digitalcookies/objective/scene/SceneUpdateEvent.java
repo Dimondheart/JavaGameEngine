@@ -1,5 +1,5 @@
 package xyz.digitalcookies.objective.scene;
 
-public class SceneUpdateEvent
+public class SceneUpdateEvent extends SceneEvent
 {
 }

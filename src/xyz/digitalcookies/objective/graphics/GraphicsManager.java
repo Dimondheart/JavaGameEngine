@@ -41,7 +41,7 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 	/** Manages graphics loaded from files. */
 	private static GraphicsResources grm;
 	/** The current average FPS. */
-	private static double FPS;
+	private static double FPS = -1;
 	
 	/** Normal graphics system setup. */
 	public GraphicsManager()
@@ -103,9 +103,10 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 	@Override
 	public boolean runCycle()
 	{
-		// TODO Make FPS calculation actually reflect FPS
-		FPS = getAvgCPS();
-		mainWin.repaint(16);
+		if (!mainLayers.isRepainting())
+		{
+			mainLayers.repaint(0);
+		}
 		return true;
 	}
 	

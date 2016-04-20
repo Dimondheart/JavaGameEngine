@@ -286,13 +286,13 @@ public class Button extends GUIObject
 			{
 				g.setColor(interactColor);
 				// Fill the button background
-				g.fillRect(x, y, width, height);
+				g.fillRect(getX(), getY(), getWidth(), getHeight());
 			}
 			// Hovering appearance
 			else if (state == ButtonState.HOVER)
 			{
 				g.setColor(interactColor);
-				g.fillRect(x, y, width, height);
+				g.fillRect(getX(), getY(), getWidth(), getHeight());
 				g.setColor(getBGColor());
 				int tw = getWidth() - 8;
 				int th = getHeight() - 8;
@@ -305,14 +305,14 @@ public class Button extends GUIObject
 			{
 				g.setColor(getBGColor());
 				// Fill the button background
-				g.fillRect(x, y, width, height);
+				g.fillRect(getX(), getY(), getWidth(), getHeight());
 			}
 		}
 		// Draw the text over the button
 		if (!text.isEmpty())
 		{
 			g.setColor(fontColor);
-			int[] centerCoords = {x + getWidth()/2, y + getHeight()/2};
+			int[] centerCoords = {getX() + getWidth()/2, getY() + getHeight()/2};
 			int[] drawCoords = TextDrawer.centerOverPoint(g, text, centerCoords, font);
 			TextDrawer.drawText(g, text, drawCoords[0], drawCoords[1], font);
 		}

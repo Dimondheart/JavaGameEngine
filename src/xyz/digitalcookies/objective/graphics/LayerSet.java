@@ -22,8 +22,6 @@ package xyz.digitalcookies.objective.graphics;
  */
 public class LayerSet extends BoundedRenderer
 {
-	/** Total number of layers. */
-	private int numLayers;
 	/** List of the component layers. */
 	private Layer[] layers;
 	
@@ -32,7 +30,6 @@ public class LayerSet extends BoundedRenderer
 	 */
 	public LayerSet(int numLayers)
 	{
-		this.numLayers = numLayers;
 		// Setup the layers
 		layers = new Layer[numLayers];
 		for (int i = 0; i < numLayers; ++i)
@@ -46,15 +43,14 @@ public class LayerSet extends BoundedRenderer
 	{
 		super.render(event);
 		// Render the layers
-		for (int i = 0; i < numLayers; ++i)
+		for (Layer layer : layers)
 		{
-			RenderEvent e = event.clone();
-			e.setLayer(i);
-			Layer layer = layers[i];
+			RenderEvent e2 = event.clone();
 			synchronized(layer)
 			{
-				layer.render(e);
+				layer.render(e2);
 			}
+			e2.getContext().dispose();
 		}
 	}
 	
@@ -63,7 +59,7 @@ public class LayerSet extends BoundedRenderer
 	 */
 	public int getNumLayers()
 	{
-		return numLayers;
+		return layers.length;
 	}
 	
 	/** Add the specified renderer to specified layer.
@@ -81,7 +77,7 @@ public class LayerSet extends BoundedRenderer
 			Thread.dumpStack();
 			return;
 		}
-		if (layer >= numLayers)
+		if (layer >= getNumLayers())
 		{
 			System.out.println(
 					"ERROR: Attempted to add a renderer to an invalid layer"
@@ -112,7 +108,7 @@ public class LayerSet extends BoundedRenderer
 			Thread.dumpStack();
 			return;
 		}
-		for (int i = 0; i < numLayers; ++i)
+		for (int i = 0; i < getNumLayers(); ++i)
 		{
 			addRenderer(obj, i);
 		}
@@ -133,7 +129,7 @@ public class LayerSet extends BoundedRenderer
 			Thread.dumpStack();
 			return;
 		}
-		if (layer >= numLayers)
+		if (layer >= getNumLayers())
 		{
 			System.out.println(
 					"ERROR: Attempted to remove a renderer from an invalid "
@@ -164,7 +160,7 @@ public class LayerSet extends BoundedRenderer
 			Thread.dumpStack();
 			return;
 		}
-		for (int i = 0; i < numLayers; ++i)
+		for (int i = 0; i < getNumLayers(); ++i)
 		{
 			removeRenderer(obj, i);
 		}
@@ -186,7 +182,7 @@ public class LayerSet extends BoundedRenderer
 			Thread.dumpStack();
 			return;
 		}
-		if (layer >= numLayers)
+		if (layer >= getNumLayers())
 		{
 			System.out.println(
 					"ERROR: Attempted to recursively remove a renderer from an "
@@ -218,18 +214,18 @@ public class LayerSet extends BoundedRenderer
 			Thread.dumpStack();
 			return;
 		}
-		for (int i = 0; i < numLayers; ++i)
+		for (int i = 0; i < getNumLayers(); ++i)
 		{
 			recursiveRemoveRenderer(obj, i);
 		}
 	}
 	
-	/** Clear only the specified layer.
+	/** Clear the specified layer.
 	 * @param layer the index of the layer (first index at 0)
 	 */
 	public void clearLayer(int layer)
 	{
-		if (layer >= numLayers)
+		if (layer >= getNumLayers())
 		{
 			System.out.println(
 					"ERROR: Attempted to clear an invalid layer "
@@ -246,12 +242,15 @@ public class LayerSet extends BoundedRenderer
 		}
 	}
 	
-	/** Removes all Renderer(s) from all layers. */
+	/** Removes all Renderers from all layers. */
 	public void clearAllLayers()
 	{
-		for (int i = 0; i < numLayers; ++i)
+		for (Layer layer : layers)
 		{
-			clearLayer(i);
+			synchronized(layer)
+			{
+				layer.clear();
+			}
 		}
 	}
 }

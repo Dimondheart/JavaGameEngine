@@ -15,9 +15,10 @@
 
 package xyz.digitalcookies.objective.scene;
 
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Vector;
 import java.util.function.Predicate;
 
 import xyz.digitalcookies.objective.graphics.RenderEvent;
@@ -30,7 +31,7 @@ import xyz.digitalcookies.objective.graphics.Renderer;
 public class EntityContainer implements xyz.digitalcookies.objective.graphics.Renderer
 {
 	/** The list of entities in this container. */
-	protected LinkedList<Entity> entities;
+	protected Vector<Entity> entities;
 	/** The predicate to use to remove entities at the end of each
 	 * updateEntites(event).
 	 */
@@ -39,7 +40,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	/** Standard constructor. */
 	public EntityContainer()
 	{
-		entities = new LinkedList<Entity>();
+		entities = new Vector<Entity>(1, 10);
 	}
 	
 	/** Setup this entity container and add the specified entities.
@@ -48,7 +49,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 */
 	public EntityContainer(Entity... entities)
 	{
-		this();
+		this.entities = new Vector<Entity>(entities.length, 10);
 		addEntities(entities);
 	}
 	
@@ -59,7 +60,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 */
 	public EntityContainer(List<Entity> entities)
 	{
-		this();
+		this.entities = new Vector<Entity>(entities.size(), 10);
 		addEntities(entities);
 	}
 	
@@ -75,18 +76,20 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 		// Update entities
 		synchronized (entities)
 		{
-			for (Entity entity : entities)
-			{
-				synchronized (entity)
-				{
-					entity.update(event);
-				}
-			}
+			entities.forEach(
+					(Entity entity)->
+					{
+						synchronized (entity)
+						{
+							entity.update(event);
+						}
+					}
+					);
 		}
 		// Run the post-update entity removal predicate
-		synchronized (postUpdateRemoveIf)
+		if (postUpdateRemoveIf != null)
 		{
-			if (postUpdateRemoveIf != null)
+			synchronized (postUpdateRemoveIf)
 			{
 				removeIf(postUpdateRemoveIf);
 			}
@@ -99,13 +102,15 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 		// Render all entities
 		synchronized (entities)
 		{
-			for (Entity entity : entities)
-			{
-				synchronized (entity)
-				{
-					entity.render(event);
-				}
-			}
+			entities.forEach(
+					(Entity entity)->
+					{
+						synchronized (entity)
+						{
+							entity.render(event);
+						}
+					}
+					);
 		}
 	}
 	
@@ -116,6 +121,10 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 */
 	public boolean contains(Entity entity)
 	{
+		if (entity == null)
+		{
+			return false;
+		}
 		boolean result = false;
 		synchronized (entities)
 		{
@@ -170,8 +179,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 		{
 			for (Entity entity : entities)
 			{
-				boolean result = addEntity(entity);
-				if (result)
+				if (addEntity(entity))
 				{
 					changed = true;
 				}
@@ -220,7 +228,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @param entities the list of entities to remove
 	 * @return if the container was changed as a result
 	 */
-	public boolean removeEntities(List<Entity> entities)
+	public boolean removeEntities(Collection<Entity> entities)
 	{
 		boolean changed = false;
 		synchronized (this.entities)
@@ -237,9 +245,13 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	public boolean removeEntities(Entity... entities)
 	{
 		boolean changed = false;
-		synchronized (this.entities)
+		for (Entity entity : entities)
 		{
-			changed = this.entities.removeAll(Arrays.asList(entities));
+			boolean result = removeEntity(entity);
+			if (result)
+			{
+				changed = true;
+			}
 		}
 		return changed;
 	}
@@ -279,10 +291,10 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	@SuppressWarnings("unchecked")
 	public List<Entity> getEntities()
 	{
-		LinkedList<Entity> es;
+		List<Entity> es;
 		synchronized (entities)
 		{
-			es = (LinkedList<Entity>) entities.clone();
+			es = (List<Entity>) entities.clone();
 		}
 		return es;
 	}
@@ -308,7 +320,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 					);
 			return getEntities();
 		}
-		LinkedList<Entity> es = new LinkedList<Entity>();
+		List<Entity> es = new Vector<Entity>();
 		synchronized (entities)
 		{
 			for (Entity entity : entities)
@@ -329,7 +341,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * 		container; the returned container is its own independent
 	 * 		container)
 	 */
-	public EntityContainer getContainer()
+	public EntityContainer copyContainer()
 	{
 		return new EntityContainer(getEntities());
 	}
@@ -353,9 +365,9 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 					+ "Returning an array containing all entities in the "
 					+ "container."
 					);
-			return getContainer();
+			return copyContainer();
 		}
-		LinkedList<Entity> es = new LinkedList<Entity>();
+		List<Entity> es = new ArrayList<Entity>();
 		synchronized (entities)
 		{
 			for (Entity entity : entities)
@@ -366,7 +378,6 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 				}
 			}
 		}
-		
 		return new EntityContainer(es);
 	}
 	

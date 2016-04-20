@@ -8,15 +8,15 @@ import java.awt.Graphics2D;
 public abstract class BoundedRenderer implements Renderer
 {
 	/** The x coordinate of this object. */
-	protected int x;
+	private int x;
 	/** The y coordinate of this object. */
-	protected int y;
+	private int y;
 	/** The width of this object. */
-	protected int width;
+	private int width;
 	/** The height of this object. */
-	protected int height;
+	private int height;
 	/** If this bounded renderer is being rendered. */
-	protected boolean isVisible;
+	private boolean isVisible;
 	/** The coordinates to center over when normal center mode is enabled. */
 	private int[] autoCenterCoords;
 	/** If auto centering over certain coordinates. */
@@ -150,10 +150,6 @@ public abstract class BoundedRenderer implements Renderer
 		this.height = height;
 	}
 	
-	/** Check if this bounded renderer is being rendered or not.
-	 * @return true if this bounded renderer is set to render itself,
-	 * 		false if it will not be called to render
-	 */
 	public boolean isVisible()
 	{
 		return isVisible;
@@ -195,7 +191,11 @@ public abstract class BoundedRenderer implements Renderer
 		{
 			centerOver(true);
 		}
-		if (isEnforcingBounds())
+		if (!isVisible())
+		{
+			event.getContext().dispose();
+		}
+		else if (isEnforcingBounds())
 		{
 			event.setContext(
 					(Graphics2D)

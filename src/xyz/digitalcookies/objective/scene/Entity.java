@@ -15,18 +15,21 @@
 
 package xyz.digitalcookies.objective.scene;
 
+import xyz.digitalcookies.objective.graphics.RenderEvent;
+
 /** TODO add documentation
  * @author Bryan Charles Bettis
  */
 public interface Entity extends xyz.digitalcookies.objective.graphics.Renderer
 {
-	/** Check if this entity utilizes a Body. An entity does not need to 
+	/** Check if this entity utilizes a Body. An entity does not have to
 	 * currently have a body setup for this to return true. This method 
 	 * only indicates if the entity could be using a body.
 	 * @return true if the entity could be using a body, false if the
 	 * 		entity does not support use of a body
 	 */
 	public boolean utilizesBody();
+	
 	/** Tell this entity to update itself. Updating includes interaction
 	 * with other entities and general actions and changes made by the
 	 * entity.
@@ -36,7 +39,7 @@ public interface Entity extends xyz.digitalcookies.objective.graphics.Renderer
 	public void update(EntityUpdateEvent event);
 	
 	@Override
-	public default void render(xyz.digitalcookies.objective.graphics.RenderEvent event)
+	public default void render(RenderEvent event)
 	{
 	}
 }

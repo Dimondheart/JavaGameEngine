@@ -16,116 +16,96 @@
 package xyz.digitalcookies.objective.scene;
 
 import xyz.digitalcookies.objective.graphics.Renderer;
-import xyz.digitalcookies.objective.utility.StopWatch;
+import xyz.digitalcookies.objective.utility.Stopwatch;
 
 /** This class is the base class for all scenes.
  * @author Bryan Charles Bettis
  */
 public abstract class Scene implements Renderer
 {
-	/** The timing device, is paused and resumed when this scene
-	 * is activated or deactivated.
+	/** A timer that can be used for updating the scene objects.
+	 * Synchronized with the isUpdating state of this scene.
 	 */
-	private StopWatch timer;
-	/** If this scene is paused or not; affects updating
-	 * of this scene.
-	 */
-	private boolean isPaused;
+	private Stopwatch timer;
+	/** If this scene should be updated or not. */
+	private boolean doUpdate;
+	/** If this scene should be rendered or not. */
 	private boolean doRender;
-	/** The x-offset of this scene, in pixels. */
-	private int offsetX;
-	/** The y-offset of this scene, in pixels. */
-	private int offsetY;
-	private double pixelsPerUnit;
 	
+	/** Generic constructor. */
 	public Scene()
 	{
-		timer = new StopWatch();
+		timer = new Stopwatch();
 		timer.start();
-		setPaused(true);
+		setUpdating(true);
 		setRendering(false);
-		setOffset(0, 0);
-		setScale(1);
 	}
 	
+	/** Update this scene (including objects it contains).
+	 * @param event contains properties that the scene can use to affect
+	 * updating.
+	 */
 	public abstract void updateScene(SceneUpdateEvent event);
 	
-	public boolean isPaused()
+	/** Check if this scene should update itself and the scene objects it
+	 * contains. Subclasses should check this before performing updates.
+	 * @return true if this scene should update when its update method
+	 * 		is called
+	 */
+	public boolean isUpdating()
 	{
-		return isPaused;
+		return doUpdate;
 	}
 	
-	public void setPaused(boolean pause)
+	/** Set if this scene should update itself when its update method is
+	 * called.
+	 * @param update true if this scene should update when its update method
+	 * 		is called
+	 */
+	public void setUpdating(boolean update)
 	{
-		if (isPaused == pause)
+		if (doUpdate == update)
 		{
 			return;
 		}
-		isPaused = pause;
-		if (isPaused())
-		{
-			timer.pause();
-		}
-		else
+		doUpdate = update;
+		if (isUpdating())
 		{
 			timer.resume();
 		}
+		else
+		{
+			timer.pause();
+		}
 	}
 	
+	/** Check if this scene should render itself and the scene objects it
+	 * contains. Subclasses should check this before rendering.
+	 * @return true if this scene should render when its render method is
+	 * 		called
+	 */
 	public boolean isRendering()
 	{
 		return doRender;
 	}
 	
+	/** Set if this scene should be rendered when its render method is
+	 * called.
+	 * @param doRender true if this scene should be rendered when its
+	 * 		render method is called
+	 */
 	public void setRendering(boolean doRender)
 	{
 		this.doRender = doRender;
 	}
 	
-	public StopWatch getTimer()
+	/** Get the timing object this scene can use to update itself and scene
+	 * objects it contains.
+	 * @return a timer that can be used to measure time when this scene
+	 * 		is not paused
+	 */
+	public Stopwatch getTimer()
 	{
 		return timer;
-	}
-	
-	public double getOffsetX()
-	{
-		return offsetX;
-	}
-	
-	public double getOffsetY()
-	{
-		return offsetY;
-	}
-	
-	public double getScale()
-	{
-		return 1 / pixelsPerUnit;
-	}
-	
-	public void zoom(double units)
-	{
-		if (units > 0)
-		{
-			setScale(pixelsPerUnit*Math.pow(0.9, units));
-		}
-		else if (units < 0)
-		{
-			setScale(pixelsPerUnit*Math.pow(1.1, -units));
-		}
-	}
-	
-	protected void setOffset(int ox, int oy)
-	{
-		offsetX = ox;
-		offsetY = oy;
-	}
-	
-	protected void setScale(double pixelsPerUnit)
-	{
-		if (pixelsPerUnit == 0)
-		{
-			return;
-		}
-		this.pixelsPerUnit = pixelsPerUnit;
 	}
 }
