@@ -178,6 +178,19 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 		drawGraphic(g,img,x,y,img.getWidth(),img.getHeight());
 	}
 	
+	/** Draws a BufferedImage to the specified context, without resizing
+	 * the image.
+	 * @param g the Graphics2D context to draw the image to
+	 * @param i the image to draw
+	 * @param x the x coordinate of the top left corner
+	 * @param y the y coordinate of the top left corner
+	 */
+	public static void drawGraphic(Graphics2D g, BufferedImage i, int x, int y)
+	{
+		BufferedImage img;
+		drawGraphic(g,i,x,y,i.getWidth(),i.getHeight());
+	}
+	
 	/** Draws a BufferedImage to the specified context.
 	 * @param g the Graphics2D context to draw the image to
 	 * @param i the image to draw

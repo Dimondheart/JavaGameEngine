@@ -20,23 +20,23 @@ package xyz.digitalcookies.objective.utility;
  * program is paused.
  * @author Bryan Charles Bettis
  */
-public class StopWatch
+public class Stopwatch
 {
 	/** Used to make sure this stopwatch is only initialized once. */
-	private boolean isStarted = false;
+	private volatile boolean isStarted = false;
 	/** The time from when the timer was last resumed. */
-	private long started = 0;
+	private volatile long started = 0;
 	/** Elapsed time, not including when parent is paused. */
-	private long elapsed = 0;
+	private volatile long elapsed = 0;
 	/** When the timer is paused and will not change until resumed. */
-	private boolean paused = true;
+	private volatile boolean paused = true;
 	/** The clock that this clock uses to update itself. */
-	private StopWatch parentTime;
+	private Stopwatch parentTime;
 	
 	/** Basic constructor. Uses the program time for updating its internal
 	 * time.
 	 */
-	public StopWatch()
+	public Stopwatch()
 	{
 		this(null);
 	}
@@ -46,7 +46,7 @@ public class StopWatch
 	 * @param parentTime the stopwatch to use to update this clock (this
 	 * stopwatch pauses and resumes with the parent device.)
 	 */
-	public StopWatch(StopWatch parentTime)
+	public Stopwatch(Stopwatch parentTime)
 	{
 		this.parentTime = parentTime;
 	}
@@ -64,17 +64,25 @@ public class StopWatch
 			resume();
 		}
 	}
-
-	/** Get the current time in millisecond precision.
-	 * @return the current stopwatch time in milliseconds
+	
+	/** Get the current time in seconds.
+	 * @return the current time of this stopwatch in seconds
 	 */
-	public synchronized long getTimeMS()
+	public double getTimeSec()
 	{
-		return getTimeNano()/1000000;
+		return getTimeMS()/1000.0;
+	}
+
+	/** Get the current time in milliseconds.
+	 * @return the current time of this stopwatch in milliseconds
+	 */
+	public double getTimeMS()
+	{
+		return getTimeNano()/1000000.0;
 	}
 	
-	/** Get the current time in millisecond precision.
-	 * @return the current stopwatch time in nanoseconds
+	/** Get the current time in nanoseconds.
+	 * @return the current time of this stopwatch in nanoseconds
 	 */
 	public synchronized long getTimeNano()
 	{
