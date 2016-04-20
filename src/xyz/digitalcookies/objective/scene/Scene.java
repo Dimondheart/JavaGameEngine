@@ -16,7 +16,6 @@
 package xyz.digitalcookies.objective.scene;
 
 import xyz.digitalcookies.objective.graphics.Renderer;
-import xyz.digitalcookies.objective.utility.Stopwatch;
 
 /** This class is the base class for all scenes.
  * @author Bryan Charles Bettis
