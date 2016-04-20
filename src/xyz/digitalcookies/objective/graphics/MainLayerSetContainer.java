@@ -19,7 +19,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Window;
+import java.awt.image.BufferedImage;
+
 import javax.swing.JComponent;
 
 /** Handles multiple layers of rendering for a window.
@@ -35,6 +38,7 @@ class MainLayerSetContainer extends JComponent
 	private Window myWin;
 	/** The primary layer set which is drawn to the screen. */
 	private MainLayerSet mainLayers;
+	private Boolean isRepainting;
 	
 	/** Standard layer container for the specified window.
 	 * @param window the window this LayerContainer is part of
@@ -47,6 +51,7 @@ class MainLayerSetContainer extends JComponent
 		// Setup the layers
 		mainLayers = new MainLayerSet(numLayers);
 		setPreferredSize(dims);
+		isRepainting = false;
 	}
 	
 	/** Gets the main layer set.
@@ -58,20 +63,22 @@ class MainLayerSetContainer extends JComponent
 	}
 	
 	@Override
-	public synchronized void update(Graphics g)
+	public void update(Graphics g)
 	{
 	}
 	
 	@Override
 	public synchronized void paintComponent(Graphics g)
 	{
-		// TODO add a buffer or buffer flip strategy
-		Graphics2D g2 = (Graphics2D)g;
-		// Clear the graphics context
-		g2.setBackground(Color.black);
-		g2.clearRect(0, 0, myWin.getWidth(), myWin.getHeight());
-		// Render the main layer container
-		mainLayers.render(new RenderEvent(g2, -1));
+		synchronized (isRepainting)
+		{
+			isRepainting = true;
+		}
+		render((Graphics2D) g);
+		synchronized (isRepainting)
+		{
+			isRepainting = false;
+		}
 	}
 	
 	/** Resizes the main layer container.
@@ -83,5 +90,27 @@ class MainLayerSetContainer extends JComponent
 		this.setSize(newDims);
 		// Adjust the main layer set
 		mainLayers.resizeLayers(newDims);
+	}
+	
+	public void render(Graphics2D g)
+	{
+		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		// Clear the graphics context
+		g.setColor(Color.black);
+		g.fillRect(0, 0, mainLayers.getWidth(), mainLayers.getHeight());
+		// Render the main layer set
+		RenderEvent event = new RenderEvent((Graphics2D) g);
+		mainLayers.render(event);
+	}
+	
+	public boolean isRepainting()
+	{
+		boolean result;
+		synchronized (isRepainting)
+		{
+			result = isRepainting;
+		}
+		return result;
 	}
 }

@@ -41,7 +41,7 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 	/** Manages graphics loaded from files. */
 	private static GraphicsResources grm;
 	/** The current average FPS. */
-	private static double FPS;
+	private static double FPS = -1;
 	
 	/** Normal graphics system setup. */
 	public GraphicsManager()
@@ -103,9 +103,10 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 	@Override
 	public boolean runCycle()
 	{
-		// TODO Make FPS calculation actually reflect FPS
-		FPS = getAvgCPS();
-		mainWin.repaint(16);
+		if (!mainLayers.isRepainting())
+		{
+			mainLayers.repaint(0);
+		}
 		return true;
 	}
 	
@@ -175,6 +176,19 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 		BufferedImage img;
 		img = xyz.digitalcookies.objective.graphics.GraphicsManager.getResManager().getRes(name);
 		drawGraphic(g,img,x,y,img.getWidth(),img.getHeight());
+	}
+	
+	/** Draws a BufferedImage to the specified context, without resizing
+	 * the image.
+	 * @param g the Graphics2D context to draw the image to
+	 * @param i the image to draw
+	 * @param x the x coordinate of the top left corner
+	 * @param y the y coordinate of the top left corner
+	 */
+	public static void drawGraphic(Graphics2D g, BufferedImage i, int x, int y)
+	{
+		BufferedImage img;
+		drawGraphic(g,i,x,y,i.getWidth(),i.getHeight());
 	}
 	
 	/** Draws a BufferedImage to the specified context.

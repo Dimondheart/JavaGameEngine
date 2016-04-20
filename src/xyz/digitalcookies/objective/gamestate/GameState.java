@@ -25,7 +25,7 @@ import xyz.digitalcookies.objective.input.InputManager;
 public abstract class GameState
 {
 	/** A clock for timing different things in a game state. */
-	protected static xyz.digitalcookies.objective.utility.StopWatch clock;
+	protected static xyz.digitalcookies.objective.utility.Stopwatch clock;
 	
 	/** The collection of startup arguments for the next game state. */
 	protected ConcurrentHashMap<String, Object> newStateArgs;
@@ -36,7 +36,7 @@ public abstract class GameState
 	/** Basic constructor. */
 	public GameState()
 	{
-		clock = new xyz.digitalcookies.objective.utility.StopWatch();
+		clock = new xyz.digitalcookies.objective.utility.Stopwatch();
 		newStateArgs = new ConcurrentHashMap<String, Object>();
 		newState = this.getClass();
 	}
@@ -79,7 +79,7 @@ public abstract class GameState
 	/** Gets the game state's clock.
 	 * @return the core.Clock object for the current game state
 	 */
-	public static synchronized xyz.digitalcookies.objective.utility.StopWatch getClock()
+	public static synchronized xyz.digitalcookies.objective.utility.Stopwatch getClock()
 	{
 		return clock;
 	}

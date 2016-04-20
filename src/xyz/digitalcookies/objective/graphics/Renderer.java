@@ -15,15 +15,16 @@
 
 package xyz.digitalcookies.objective.graphics;
 
-/** Renderer is the base class for all classes that will be drawn to the
- * screen using the setup of this game engine. All classes that will be
- * directly drawing graphics to the main display should implement this class.
+/** Renderer is an interface for all classes that will draw to the
+ * screen and take a RenderEvent as an argument.
  * @author Bryan Charles Bettis
+ * @see RenderEvent
  */
 public interface Renderer
 {
 	/** Called to draw a Renderer to the window.
-	 * @param event the context information used to render
+	 * @param event the contextual information for rendering (including
+	 * 		a graphics context to draw to)
 	 * @see RenderEvent
 	 */
 	public abstract void render(RenderEvent event);

@@ -1,26 +1,29 @@
 package xyz.digitalcookies.objective.graphics;
 
+import java.awt.Graphics2D;
+
 /** TODO Document
  * @author Bryan Charles Bettis
  */
 public abstract class BoundedRenderer implements Renderer
 {
 	/** The x coordinate of this object. */
-	protected int x;
+	private int x;
 	/** The y coordinate of this object. */
-	protected int y;
+	private int y;
 	/** The width of this object. */
-	protected int width;
+	private int width;
 	/** The height of this object. */
-	protected int height;
+	private int height;
 	/** If this bounded renderer is being rendered. */
-	protected boolean isVisible;
+	private boolean isVisible;
 	/** The coordinates to center over when normal center mode is enabled. */
 	private int[] autoCenterCoords;
 	/** If auto centering over certain coordinates. */
 	private boolean autoCenter;
 	/** If auto centering over the center of the main game window. */
 	private boolean autoCenterOverWindow;
+	private boolean enforceBounds;
 	
 	/** Standard constructor. */
 	public BoundedRenderer()
@@ -31,6 +34,7 @@ public abstract class BoundedRenderer implements Renderer
 		autoCenterCoords = new int[2];
 		autoCenter = false;
 		autoCenterOverWindow = false;
+		enforceBounds = false;
 	}
 	
 	/** Update the position of this element.
@@ -146,10 +150,6 @@ public abstract class BoundedRenderer implements Renderer
 		this.height = height;
 	}
 	
-	/** Check if this bounded renderer is being rendered or not.
-	 * @return true if this bounded renderer is set to render itself,
-	 * 		false if it will not be called to render
-	 */
 	public boolean isVisible()
 	{
 		return isVisible;
@@ -164,6 +164,16 @@ public abstract class BoundedRenderer implements Renderer
 		isVisible = visible;
 	}
 	
+	public boolean isEnforcingBounds()
+	{
+		return enforceBounds;
+	}
+	
+	public void setEnforceBounds(boolean enforce)
+	{
+		enforceBounds = enforce;
+	}
+	
 	/** All bounded renderer subclasses should call super.render(event)
 	 * from their own render function, if they wish to support features
 	 * like auto updating centering coordinates over other bounded renderers
@@ -172,6 +182,7 @@ public abstract class BoundedRenderer implements Renderer
 	@Override
 	public void render(RenderEvent event)
 	{
+		// TODO replace this with a separate protected RenderEvent update(event)
 		if (autoCenterOverWindow)
 		{
 			centerOverWindow(true);
@@ -179,6 +190,22 @@ public abstract class BoundedRenderer implements Renderer
 		else if (autoCenter)
 		{
 			centerOver(true);
+		}
+		if (!isVisible())
+		{
+			event.getContext().dispose();
+		}
+		else if (isEnforcingBounds())
+		{
+			event.setContext(
+					(Graphics2D)
+					event.getContext().create(
+							getX(),
+							getY(),
+							getWidth(),
+							getHeight()
+							)
+					);
 		}
 	}
 	

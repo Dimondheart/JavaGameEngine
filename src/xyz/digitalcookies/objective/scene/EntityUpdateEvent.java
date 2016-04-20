@@ -15,37 +15,11 @@
 
 package xyz.digitalcookies.objective.scene;
 
-/** Entity update events are passed in to entities when calling the entities'
- * update methods. These events provide contextual information that the entity
+/** Entity update events are passed in to entities when updating an entity.
+ * These events provide contextual information that the entity
  * could use, like other entities it could interact with.
  * @author Bryan Charles Bettis
  */
-public class EntityUpdateEvent extends EntityEvent
+public class EntityUpdateEvent extends SceneEvent
 {
-	/** Contains entities that could be interacted with by entities
-	 * this event will be given to.
-	 */
-	private EntityContainer entities;
-	
-	public EntityUpdateEvent()
-	{
-		this(new EntityContainer());
-	}
-	
-	public EntityUpdateEvent(EntityContainer entities)
-	{
-		if (entities == null)
-		{
-			this.entities = new EntityContainer();
-		}
-		else
-		{
-			this.entities = entities;
-		}
-	}
-	
-	public EntityContainer getEntities()
-	{
-		return entities;
-	}
 }

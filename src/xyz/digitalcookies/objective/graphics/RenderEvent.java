@@ -19,24 +19,20 @@ import java.awt.Graphics2D;
 
 /** An event class which contains context information used to render
  * something to the screen. This includes the graphics context
- * to render to and the layer number currently being rendered.
+ * to draw to.
  * @author Bryan Charles Bettis
  */
 public class RenderEvent implements Cloneable
 {
 	/** The graphics context used for drawing. */
 	private Graphics2D g;
-	/** The Layer currently being drawn. */
-	private int layer;
 	
 	/** Basic render event constructor.
 	 * @param g the graphics context
-	 * @param layer the layer currently being rendered
 	 */
-	public RenderEvent (Graphics2D g, int layer)
+	public RenderEvent (Graphics2D g)
 	{
 		setContext(g);
-		setLayer(layer);
 	}
 	
 	/** The graphics context to draw to.
@@ -47,42 +43,32 @@ public class RenderEvent implements Cloneable
 		return g;
 	}
 	
-	/** The layer currently drawing to <b>in the most recent layer set.</b>
-	 * @return the number corresponding to the layer currently being rendered
-	 * @see LayerSet
-	 */
-	public int getLayer()
-	{
-		return layer;
-	}
-	
 	/** Set the graphics context.
 	 * @param g the new graphics context
 	 */
-	void setContext(Graphics2D g)
+	public void setContext(Graphics2D g)
 	{
 		this.g = g;
 	}
 	
-	/** Set the layer currently rendering.
-	 * @param layer the index of the current layer in the layer set
+	/** Create a copy of this render event. The new event will have its own
+	 * graphics context and other property, so modification of the
+	 * new event will not affect the original event (unless the properties
+	 * are linked elsewhere.)
 	 */
-	void setLayer(int layer)
-	{
-		this.layer = layer;
-	}
-	
 	@Override
 	public RenderEvent clone()
 	{
 		try
 		{
-			return (RenderEvent) super.clone();
+			RenderEvent newEvent = (RenderEvent) super.clone();
+			newEvent.setContext((Graphics2D) getContext().create());
+			return newEvent;
 		}
 		catch (CloneNotSupportedException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("INTERNAL ERROR: Unable to clone RenderEvent.");
 			return null;
 		}
 	}

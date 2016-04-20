@@ -15,10 +15,14 @@
 
 package xyz.digitalcookies.objective.scene;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Vector;
 import java.util.function.Predicate;
 
 import xyz.digitalcookies.objective.graphics.RenderEvent;
+import xyz.digitalcookies.objective.graphics.Renderer;
 
 /** Holds multiple entities and provides various methods for rendering,
  * updating, and so on all the entities in this container.
@@ -27,17 +31,37 @@ import xyz.digitalcookies.objective.graphics.RenderEvent;
 public class EntityContainer implements xyz.digitalcookies.objective.graphics.Renderer
 {
 	/** The list of entities in this container. */
-	protected LinkedList<Entity> entities;
-	/** Used to delay modification while operations are being performed
-	 * on contained entities.
+	protected Vector<Entity> entities;
+	/** The predicate to use to remove entities at the end of each
+	 * updateEntites(event).
 	 */
-	protected boolean delayModification = false;
 	protected Predicate<Entity> postUpdateRemoveIf;
 	
-	/** Basic constructor. */
+	/** Standard constructor. */
 	public EntityContainer()
 	{
-		entities = new LinkedList<Entity>();
+		entities = new Vector<Entity>(1, 10);
+	}
+	
+	/** Setup this entity container and add the specified entities.
+	 * @param entities the entities to add after the container
+	 * 		has been setup
+	 */
+	public EntityContainer(Entity... entities)
+	{
+		this.entities = new Vector<Entity>(entities.length, 10);
+		addEntities(entities);
+	}
+	
+	/** setup this entity container and add the entities in the specified
+	 * list.
+	 * @param entities a list of entities that should all be added to this
+	 * 		container
+	 */
+	public EntityContainer(List<Entity> entities)
+	{
+		this.entities = new Vector<Entity>(entities.size(), 10);
+		addEntities(entities);
 	}
 	
 	/** Update the entities in this entity container. The specified
@@ -49,27 +73,44 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 */
 	public void updateEntities(EntityUpdateEvent event)
 	{
-//		delayModification = true;
-//		entities.forEach((Entity e)->{e.update(event);});
-//		delayModification = false;
-		int numEntities = entities.size();
-		for (int i = 0; i < numEntities; ++i)
+		// Update entities
+		synchronized (entities)
 		{
-			entities.get(i).update(event);
+			entities.forEach(
+					(Entity entity)->
+					{
+						synchronized (entity)
+						{
+							entity.update(event);
+						}
+					}
+					);
 		}
+		// Run the post-update entity removal predicate
 		if (postUpdateRemoveIf != null)
 		{
-			removeIf(postUpdateRemoveIf);
+			synchronized (postUpdateRemoveIf)
+			{
+				removeIf(postUpdateRemoveIf);
+			}
 		}
 	}
 	
 	@Override
 	public void render(RenderEvent event)
 	{
-		int numEntities = entities.size();
-		for (int i = 0; i < numEntities; ++i)
+		// Render all entities
+		synchronized (entities)
 		{
-			entities.get(i).render(event);
+			entities.forEach(
+					(Entity entity)->
+					{
+						synchronized (entity)
+						{
+							entity.render(event);
+						}
+					}
+					);
 		}
 	}
 	
@@ -78,9 +119,18 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @param entity the entity to check for
 	 * @return true if the entity is in this container, false otherwise
 	 */
-	public synchronized boolean containsEntity(Entity entity)
+	public boolean contains(Entity entity)
 	{
-		return entities.contains(entity);
+		if (entity == null)
+		{
+			return false;
+		}
+		boolean result = false;
+		synchronized (entities)
+		{
+			result = entities.contains(entity);
+		}
+		return result;
 	}
 	
 	/** Add the specified entity to this container, only if it is not
@@ -90,38 +140,120 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * 		(e.g. entity already exists in this container, or the change has
 	 * 		been delayed while updating or rendering is in progress)
 	 */
-	public synchronized boolean addEntity(Entity entity)
+	public boolean addEntity(Entity entity)
 	{
-//		if (delayModification)
-//		{
-//			// TODO add to a queue here
-//			return false;
-//		}
-		if (containsEntity(entity))
+		// No entity specified
+		if (entity == null)
 		{
+			Thread.dumpStack();
+			System.out.println("WARNING: Null specified for argument when "
+					+ "attempting to add an entity to an entity container."
+					);
 			return false;
+		}
+		boolean result = false;
+		// Already contains entity
+		if (contains(entity))
+		{
+			result = false;
 		}
 		else
 		{
-			entities.add(entity);
-			return true;
+			synchronized (entities)
+			{
+				result = entities.add(entity);
+			}
 		}
+		return result;
+	}
+	
+	/** Remove all specified entities from this container.
+	 * @param entities the list of entities to remove
+	 * @return if the container was changed as a result
+	 */
+	public boolean addEntities(List<Entity> entities)
+	{
+		boolean changed = false;
+		// Lock the passed in list to prevent concurrent access
+		synchronized (entities)
+		{
+			for (Entity entity : entities)
+			{
+				if (addEntity(entity))
+				{
+					changed = true;
+				}
+			}
+		}
+		return changed;
+	}
+	
+	/** Add all of the specified entities to this container.
+	 * @param entities all entities that should be added
+	 * @return true if this container was changed (entities were added),
+	 * 		false otherwise (no entities added, such as when all are
+	 * 		already in this container)
+	 */
+	public boolean addEntities(Entity... entities)
+	{
+		boolean changed = false;
+		for (Entity entity : entities)
+		{
+			boolean result = addEntity(entity);
+			if (result)
+			{
+				changed = true;
+			}
+		}
+		return changed;
 	}
 	
 	/** Removes the specified entity from this container.
 	 * @param entity the entity to remove
 	 * @return true if the entity was removed, false if removal
-	 * 		failed (e.g. entity not in this container, or the change has
-	 * 		been delayed while updating or rendering is in progress)
+	 * 		failed (such as when the specified entity was not in this
+	 * 		container)
 	 */
-	public synchronized boolean removeEntity(Entity entity)
+	public boolean removeEntity(Entity entity)
 	{
-//		if (delayModification)
-//		{
-//			// TODO add to queue here
-//			return false;
-//		}
-		return entities.remove(entity);
+		boolean changed = false;
+		synchronized (entities)
+		{
+			changed = entities.remove(entity);
+		}
+		return changed;
+	}
+	
+	/** Remove all specified entities from this container.
+	 * @param entities the list of entities to remove
+	 * @return if the container was changed as a result
+	 */
+	public boolean removeEntities(Collection<Entity> entities)
+	{
+		boolean changed = false;
+		synchronized (this.entities)
+		{
+			changed = this.entities.removeAll(entities);
+		}
+		return changed;
+	}
+	
+	/** Remove all specified entities from this container.
+	 * @param entities the entities to remove
+	 * @return if the container was changed as a result
+	 */
+	public boolean removeEntities(Entity... entities)
+	{
+		boolean changed = false;
+		for (Entity entity : entities)
+		{
+			boolean result = removeEntity(entity);
+			if (result)
+			{
+				changed = true;
+			}
+		}
+		return changed;
 	}
 	
 	/** Remove all entities in this container for which the specified
@@ -129,39 +261,152 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @param filter the filter to use to test each entity
 	 * @return true if any elements were removed
 	 */
-	public synchronized boolean removeIf(Predicate<Entity> filter)
+	public boolean removeIf(Predicate<Entity> filter)
 	{
-		// TODO add ability to delay modification
-		return entities.removeIf(filter);
+		boolean changed = false;
+		synchronized (entities)
+		{
+			changed = entities.removeIf(filter);
+		}
+		return changed;
 	}
 	
-	public synchronized void setCycleRemoveIf(Predicate<Entity> filter)
+	/** Add a predicate to run after each call to updateEntities(event)
+	 * that will remove any entities that evaluate true for the given
+	 * predicate.
+	 * @param filter the predicate to evaluate entities with
+	 */
+	public void setCycleRemoveIf(Predicate<Entity> filter)
 	{
-		this.postUpdateRemoveIf = filter;
+		synchronized (postUpdateRemoveIf)
+		{
+			postUpdateRemoveIf = filter;
+		}
 	}
 	
-	/** Gets all entities contained in this container. Removing, adding, moving,
+	/** Gets all entities contained in this container. Removing, adding,
 	 * etc. entities in the returned list will not affect the container itself.
 	 * @return a linked list containing all entities in this container
 	 */
-	public synchronized Entity[] getEntities()
+	@SuppressWarnings("unchecked")
+	public List<Entity> getEntities()
 	{
-		Entity[] es = entities.toArray(new Entity[0]);
+		List<Entity> es;
+		synchronized (entities)
+		{
+			es = (List<Entity>) entities.clone();
+		}
 		return es;
 	}
 	
-	/** Cleanup this entity container. */
-	public synchronized void cleanupAll()
+	/** Get all entities in this container that evaluate true for the
+	 * specified predicate. Specifying null for the predicate is
+	 * equivalent to calling getEntities(), which returns all entities
+	 * in this container.
+	 * @param filter the filter to evaluate each entity with (entities that
+	 * 		evaluate true for this will be returned)
+	 * @return all entities in this container matching the specified
+	 * 		predicate
+	 */
+	public List<Entity> getEntities(Predicate<Entity> filter)
 	{
-		destroy();
-		entities.clear();
+		// No filter specified; return same value as getEntities()
+		if (filter == null)
+		{
+			System.out.println("INFO: No filter specified when calling the "
+					+ "filter version of entityContainer.getEntities(filter). "
+					+ "Returning an array containing all entities in the "
+					+ "container."
+					);
+			return getEntities();
+		}
+		List<Entity> es = new Vector<Entity>();
+		synchronized (entities)
+		{
+			for (Entity entity : entities)
+			{
+				if (filter.test(entity))
+				{
+					es.add(entity);
+				}
+			}
+		}
+		return es;
+	}
+	
+	/** Get a new EntityContainer with the same entities currently contained
+	 * in this entity container.
+	 * @return a new EntityContainer containing the same entities as this
+	 * 		container (the new container will not be synchronized with this
+	 * 		container; the returned container is its own independent
+	 * 		container)
+	 */
+	public EntityContainer copyContainer()
+	{
+		return new EntityContainer(getEntities());
+	}
+	
+	/** Get all entities in this container that evaluate true for the
+	 * specified predicate. Specifying null for the predicate is
+	 * equivalent to calling getContainer(), which returns a new
+	 * EntityContainer containing the same entities as this container.
+	 * @param filter the filter to evaluate each entity with (entities that
+	 * 		evaluate true for this will be returned)
+	 * @return all entities that evaluated true for the specified filter,
+	 * 		contained within a new EntityContainer
+	 */
+	public EntityContainer getSubContainer(Predicate<Entity> filter)
+	{
+		// No filter specified; return same value as getEntities()
+		if (filter == null)
+		{
+			System.out.println("INFO: No filter specified when calling the "
+					+ "filter version of entityContainer.getEntities(filter). "
+					+ "Returning an array containing all entities in the "
+					+ "container."
+					);
+			return copyContainer();
+		}
+		List<Entity> es = new ArrayList<Entity>();
+		synchronized (entities)
+		{
+			for (Entity entity : entities)
+			{
+				if (filter.test(entity))
+				{
+					es.add(entity);
+				}
+			}
+		}
+		return new EntityContainer(es);
+	}
+	
+	/** Removes all entities from this entity container. */
+	public void clear()
+	{
+		synchronized (entities)
+		{
+			entities.clear();
+		}
+	}
+	
+	@Override
+	public void destroy()
+	{
+		Renderer.super.destroy();
+		clear();
 	}
 	
 	/** Get the total number of entities within this entity container.
 	 * @return the number of entities that have been added to this container
 	 */
-	public synchronized int numEntities()
+	public int numEntities()
 	{
-		return entities.size();
+		int size = 0;
+		synchronized (entities)
+		{
+			size = entities.size();
+		}
+		return size;
 	}
 }

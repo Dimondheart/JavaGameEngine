@@ -31,10 +31,6 @@ public class RendererPanel extends BoundedRenderer
 	/** Indicates an invalid column index. */
 	private static final int INVALID_COLUMN = -10000;
 	
-	/** Number of pixels between elements in the same row. */
-	private int columnSpacing = 4;
-	/** Number of pixels between element rows. */
-	private int rowSpacing = 4;
 	/** A hash map of the BoundedRenderers in this panel attached to the
 	 * name/tag they were added with.
 	 */
@@ -43,6 +39,10 @@ public class RendererPanel extends BoundedRenderer
 	 * other.
 	 */
 	protected LinkedList<LinkedList<BoundedRenderer>> rendererPositioning;
+	/** Number of pixels between elements in the same row. */
+	private int columnSpacing = 4;
+	/** Number of pixels between element rows. */
+	private int rowSpacing = 4;
 	
 	/** Used when adding a new element to specify where to place the new
 	 * element relative to another element in the panel.
@@ -73,7 +73,7 @@ public class RendererPanel extends BoundedRenderer
 	public RendererPanel(int x, int y)
 	{
 		setPos(x, y);
-		setDims(width, height);
+		setDims(getWidth(), getHeight());
 		renderers = new ConcurrentHashMap<String, BoundedRenderer>();
 		rendererPositioning = new LinkedList<LinkedList<BoundedRenderer>>();
 	}
@@ -448,6 +448,9 @@ public class RendererPanel extends BoundedRenderer
 		rendererPositioning.get(fRowIns).add(fColIns, obj);
 		// Add to the tagged list (for easier access)
 		renderers.put(name, obj);
+		// Update positions to prevent glitchy positioning
+		updatePositions();
+		updateDims();
 	}
 	
 	/** Update the absolute positions of contained elements. */

@@ -15,6 +15,7 @@
 
 package xyz.digitalcookies.objective.graphics;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import xyz.digitalcookies.objective.input.GUIMonitor;
@@ -28,15 +29,15 @@ import xyz.digitalcookies.objective.input.gui.GUIElement;
 class Layer implements Renderer
 {
 	/** The Renderer(s) rendering to this layer. */
-	private LinkedList<Renderer> renderers;
+	private ArrayList<Renderer> renderers;
 	/** The layer sets on this layer. */
-	private LinkedList<LayerSet> layerSets;
+	private ArrayList<LayerSet> layerSets;
 	
 	/** The normal constructor for a Layer. */
 	public Layer()
 	{
-		renderers = new LinkedList<Renderer>();
-		layerSets = new LinkedList<LayerSet>();
+		renderers = new ArrayList<Renderer>();
+		layerSets = new ArrayList<LayerSet>();
 	}
 	
 	/** Add specified renderer to this layer.
@@ -50,11 +51,11 @@ class Layer implements Renderer
 			return;
 		}
 		// Add to the list of renderers
-		renderers.addLast(obj);
+		renderers.add(obj);
 		// If it is also a layer set, add it to that list
 		if (obj instanceof LayerSet)
 		{
-			layerSets.addLast((LayerSet) obj);
+			layerSets.add((LayerSet) obj);
 		}
 		// Add GUI elements to the GUI manager
 		if (obj instanceof GUIElement)
@@ -72,7 +73,7 @@ class Layer implements Renderer
 		// If it is also a layer set, remove it from that list too
 		if (obj instanceof LayerSet)
 		{
-			layerSets.remove((LayerSet) obj);
+			layerSets.remove(obj);
 		}
 		// Remove GUI elements from the GUI manager
 		if (obj instanceof GUIElement)
@@ -89,36 +90,31 @@ class Layer implements Renderer
 		// Remove from this layer
 		removeRenderer(obj);
 		// Recursively remove from all sub layer sets
-		for (LayerSet ls : layerSets)
-		{
-			ls.recursiveRemoveRenderer(obj);
-		}
+		layerSets.forEach(
+				(LayerSet ls)->
+				{
+					ls.recursiveRemoveRenderer(obj);
+				}
+				);
 	}
 	
 	@Override
-	public synchronized void render(RenderEvent e)
+	public synchronized void render(RenderEvent event)
 	{
-		// Draw each Renderer
-		for (Renderer r : renderers)
-		{
-			// Only draw bounded renderers when they are visible
-			if (r instanceof BoundedRenderer)
-			{
-				if (((BoundedRenderer) r).isVisible())
+		renderers.forEach(
+				(Renderer r)->
 				{
-					r.render(e);
+					RenderEvent e2 = event.clone();
+					r.render(e2);
+					e2.getContext().dispose();
 				}
-			}
-			else
-			{
-				r.render(e);
-			}
-		}
+				);
 	}
 	
 	/** Remove all Renderers in this layer. */
 	public synchronized void clear()
 	{
 		renderers.clear();
+		layerSets.clear();
 	}
 }
