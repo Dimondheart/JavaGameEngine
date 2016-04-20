@@ -105,10 +105,12 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 			entities.forEach(
 					(Entity entity)->
 					{
+						RenderEvent event2 = event.clone();
 						synchronized (entity)
 						{
-							entity.render(event);
+							entity.render(event2);
 						}
+						event2.getContext().dispose();
 					}
 					);
 		}

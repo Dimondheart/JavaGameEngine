@@ -17,10 +17,7 @@ package xyz.digitalcookies.objective.graphics;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.image.BufferedImage;
-
 import javax.swing.JFrame;
 
 import xyz.digitalcookies.objective.DevConfig;
@@ -147,61 +144,6 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 	public static LayerSet getMainLayerSet()
 	{
 		return mainLayers.getLayerSet();
-	}
-	
-	/** Draws a pre-loaded image to the specified graphics context.
-	 * @param g the Graphics2D context to draw the image to
-	 * @param name the "pre-loaded name" of the image to draw
-	 * @param x the x coordinate of the top left corner
-	 * @param y the y coordinate of the top left corner
-	 * @param width the width to draw the image as
-	 * @param height the height to draw the image as
-	 */
-	public static void drawGraphic(Graphics2D g, String name, int x, int y, int width, int height)
-	{
-		BufferedImage img;
-		img = xyz.digitalcookies.objective.graphics.GraphicsManager.getResManager().getRes(name);
-		drawGraphic(g,img,x,y,width,height);
-	}
-	
-	/** Draws a pre-loaded image to the specified context, without resizing
-	 * the image.
-	 * @param g the Graphics2D context to draw the image to
-	 * @param name the "pre-loaded name" of the image to draw
-	 * @param x the x coordinate of the top left corner
-	 * @param y the y coordinate of the top left corner
-	 */
-	public static void drawGraphic(Graphics2D g, String name, int x, int y)
-	{
-		BufferedImage img;
-		img = xyz.digitalcookies.objective.graphics.GraphicsManager.getResManager().getRes(name);
-		drawGraphic(g,img,x,y,img.getWidth(),img.getHeight());
-	}
-	
-	/** Draws a BufferedImage to the specified context, without resizing
-	 * the image.
-	 * @param g the Graphics2D context to draw the image to
-	 * @param i the image to draw
-	 * @param x the x coordinate of the top left corner
-	 * @param y the y coordinate of the top left corner
-	 */
-	public static void drawGraphic(Graphics2D g, BufferedImage i, int x, int y)
-	{
-		BufferedImage img;
-		drawGraphic(g,i,x,y,i.getWidth(),i.getHeight());
-	}
-	
-	/** Draws a BufferedImage to the specified context.
-	 * @param g the Graphics2D context to draw the image to
-	 * @param i the image to draw
-	 * @param x the x coordinate of the top left corner
-	 * @param y the y coordinate of the top left corner
-	 * @param width the width to draw the image as
-	 * @param height the height to draw the image as
-	 */
-	public static void drawGraphic(Graphics2D g, BufferedImage i, int x, int y, int width, int height)
-	{
-		g.drawImage(i,x,y,width,height,null);
 	}
 	
 	/** Clears all graphics data, like each Renderer, etc. */

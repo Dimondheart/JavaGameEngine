@@ -15,12 +15,14 @@
 
 package xyz.digitalcookies.objective.scene;
 
-/** A body represents the physical aspects of an entity that exist within
- * a specific scene.
+/** A body represents the basic physical aspects of an entity that exists
+ * within a specific scene, such as size, velocity, position,
+ * mass, steering forces, and so on.
  * @author Bryan Charles Bettis
  */
 public abstract class Body
 {
+	/** Basic constructor. */
 	public Body()
 	{
 	}

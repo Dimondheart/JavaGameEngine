@@ -196,7 +196,7 @@ public class FrameAnimator extends Animator
 		// Draw the current frame
 		if (centerOverCoords)
 		{
-			GraphicsManager.drawGraphic(
+			ImageDrawer.drawGraphic(
 					event.getContext(),
 					img,
 					x-imgWidth/2,
@@ -207,7 +207,7 @@ public class FrameAnimator extends Animator
 		}
 		else
 		{
-			GraphicsManager.drawGraphic(
+			ImageDrawer.drawGraphic(
 					event.getContext(),
 					img,
 					x,
