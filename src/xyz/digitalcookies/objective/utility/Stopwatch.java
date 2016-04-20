@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective.scene;
+package xyz.digitalcookies.objective.utility;
 
 /** A class for timing events. This clock uses ProgramTime
  * for getting the current time, so it is automatically paused when the
