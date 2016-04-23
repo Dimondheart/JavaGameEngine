@@ -94,7 +94,6 @@ class MainLayerSetContainer extends JComponent
 	
 	public void render(Graphics2D g)
 	{
-		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		// Clear the graphics context
 		g.setColor(Color.black);

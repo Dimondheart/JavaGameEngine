@@ -15,9 +15,10 @@
 
 package xyz.digitalcookies.objective.utility;
 
-/** A class for timing events. This clock uses ProgramTime
- * for getting the current time, so it is automatically paused when the
- * program is paused.
+/** A class for measuring elapsed time with nanosecond precision.
+ * If ProgramTime is paused, all instances of this class
+ * will also be paused (as they directly or indirectly use
+ * ProgramTime to update.)
  * @author Bryan Charles Bettis
  */
 public class Stopwatch

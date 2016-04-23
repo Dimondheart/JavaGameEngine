@@ -13,15 +13,29 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective.scene;
+package xyz.digitalcookies.objective;
 
 import java.util.HashMap;
 
-import xyz.digitalcookies.objective.EngineEvent;
-
-/** Base class for any event in the scene system.
+/** Base class for all events generate by this game engine.
  * @author Bryan Charles Bettis
  */
-public abstract class SceneEvent extends EngineEvent
+public abstract class EngineEvent
 {
+	private HashMap<String, Object> properties;
+	
+	public EngineEvent()
+	{
+		this.properties = new HashMap<String, Object>();
+	}
+	
+	public void setProperty(String property, Object value)
+	{
+		properties.put(property, value);
+	}
+	
+	public Object getProperty(String property)
+	{
+		return properties.get(property);
+	}
 }

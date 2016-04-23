@@ -15,6 +15,7 @@
 
 package xyz.digitalcookies.objective.scene;
 
+import xyz.digitalcookies.objective.graphics.RenderEvent;
 import xyz.digitalcookies.objective.graphics.Renderer;
 import xyz.digitalcookies.objective.utility.Stopwatch;
 
@@ -23,85 +24,142 @@ import xyz.digitalcookies.objective.utility.Stopwatch;
  */
 public abstract class Scene implements Renderer
 {
-	/** A timer that can be used for updating the scene objects.
-	 * Synchronized with the isUpdating state of this scene.
+	/** The name of the event property that indicates how much time has
+	 * elapsed since the last update, excluding any amount of time the
+	 * scene was paused since the last update. This property is
+	 * handled automatically by the scene base class before the child
+	 * class is called to update.
+	 */
+	public static final String UPDATE_ELAPSED = "elapsed";
+	
+	/** A timer that can be used for updating the scene.
+	 * Paused/resumed along with this scene.
 	 */
 	private Stopwatch timer;
-	/** If this scene should be updated or not. */
-	private boolean doUpdate;
+	/** If this scene is paused or not. */
+	private boolean isPaused;
 	/** If this scene should be rendered or not. */
-	private boolean doRender;
+	private boolean isVisible;
+	/** The last time an update was performed, in seconds. */
+	private double lastUpdate;
 	
 	/** Generic constructor. */
 	public Scene()
 	{
 		timer = new Stopwatch();
 		timer.start();
-		setUpdating(true);
-		setRendering(false);
+		timer.pause();
+		setPaused(true);
+		setVisible(false);
+		lastUpdate = timer.getTimeSec();
 	}
 	
-	/** Update this scene (including objects it contains).
-	 * @param event contains properties that the scene can use to affect
-	 * updating.
-	 */
-	public abstract void updateScene(SceneUpdateEvent event);
-	
-	/** Check if this scene should update itself and the scene objects it
-	 * contains. Subclasses should check this before performing updates.
-	 * @return true if this scene should update when its update method
-	 * 		is called
-	 */
-	public boolean isUpdating()
+	@Override
+	public final void render(RenderEvent event)
 	{
-		return doUpdate;
-	}
-	
-	/** Set if this scene should update itself when its update method is
-	 * called.
-	 * @param update true if this scene should update when its update method
-	 * 		is called
-	 */
-	public void setUpdating(boolean update)
-	{
-		if (doUpdate == update)
+		if (!isVisible())
 		{
 			return;
 		}
-		doUpdate = update;
-		if (isUpdating())
-		{
-			timer.resume();
-		}
-		else
-		{
-			timer.pause();
-		}
+		renderScene(event);
 	}
 	
-	/** Check if this scene should render itself and the scene objects it
-	 * contains. Subclasses should check this before rendering.
+	/** This method should perform updates for a scene that will take place
+	 * when the scene is called to update.
+	 * @param event an object containing primarily developer defined
+	 * 		properties that can be used by the scene to perform updates
+	 */
+	protected abstract void updateScene(SceneUpdateEvent event);
+	
+	/** Render the components and contents of this scene.
+	 * @param event the event containing the graphics context, etc.
+	 */
+	protected abstract void renderScene(RenderEvent event);
+	
+	/** Update this scene. Automatically returns if the scene is
+	 * paused.
+	 * @param event an object containing properties that can be used
+	 * 		by the scene to perform updates, and various properties will
+	 * 		be added, such as how long has passed since the scene was last
+	 * 		resumed or last updated
+	 */
+	public final void update(SceneUpdateEvent event)
+	{
+		if (isPaused())
+		{
+			return;
+		}
+		// Get the current time of the scene timer
+		double currTime = getTimer().getTimeSec();
+		// Set the elapsed time in the event
+		event.setProperty(Scene.UPDATE_ELAPSED, currTime - lastUpdate);
+		// Perform 'actual' updates
+		updateScene(event);
+		// Update the time of the most recent update
+		lastUpdate = currTime;
+	}
+	
+	/** Check if this scene is paused, meaning its internal timer is paused
+	 * and will return from the update method without performing scene
+	 * updates.
+	 * @return false if this scene will update when its update method
+	 * 		is called
+	 */
+	public boolean isPaused()
+	{
+		return isPaused;
+	}
+	
+	/** Set if this scene should be paused, meaning scene updates will not be
+	 * performed while paused, even if the update method is called.
+	 * @param pause false if this scene should update when its update method
+	 * 		is called
+	 */
+	public void setPaused(boolean pause)
+	{
+		// Don't change anything if already set to specified value
+		if (isPaused == pause)
+		{
+			return;
+		}
+		isPaused = pause;
+		// Pause the scene timer
+		if (isPaused())
+		{
+			getTimer().pause();
+		}
+		// Resume the scene timer
+		else
+		{
+			getTimer().resume();
+		}
+		// Update the last update to reflect the current time
+		lastUpdate = getTimer().getTimeSec();
+	}
+	
+	/** Check if this scene is visible, meaning it will perform rendering
+	 * when its render method is called.
 	 * @return true if this scene should render when its render method is
 	 * 		called
 	 */
-	public boolean isRendering()
+	public boolean isVisible()
 	{
-		return doRender;
+		return isVisible;
 	}
 	
-	/** Set if this scene should be rendered when its render method is
+	/** Set if this scene should render when its render method is
 	 * called.
-	 * @param doRender true if this scene should be rendered when its
+	 * @param visible true if this scene should be rendered when its
 	 * 		render method is called
 	 */
-	public void setRendering(boolean doRender)
+	public void setVisible(boolean visible)
 	{
-		this.doRender = doRender;
+		this.isVisible = visible;
 	}
 	
 	/** Get the timing object this scene can use to update itself and scene
 	 * objects it contains.
-	 * @return a timer that can be used to measure time when this scene
+	 * @return a timer that can be used to measure elapsed time when this scene
 	 * 		is not paused
 	 */
 	public Stopwatch getTimer()

@@ -15,10 +15,12 @@
 
 package xyz.digitalcookies.objective.input;
 
+import xyz.digitalcookies.objective.EngineEvent;
+
 /** An event for the InputManager class.
  * @author Bryan Charles Bettis
  */
-class InputManagerEvent
+class InputManagerEvent extends EngineEvent
 {
 	/** What type of event this is. */
 	private Type type;

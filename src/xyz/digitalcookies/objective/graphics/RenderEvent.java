@@ -17,12 +17,14 @@ package xyz.digitalcookies.objective.graphics;
 
 import java.awt.Graphics2D;
 
+import xyz.digitalcookies.objective.EngineEvent;
+
 /** An event class which contains context information used to render
  * something to the screen. This includes the graphics context
  * to draw to.
  * @author Bryan Charles Bettis
  */
-public class RenderEvent implements Cloneable
+public class RenderEvent extends EngineEvent implements Cloneable
 {
 	/** The graphics context used for drawing. */
 	private Graphics2D g;
