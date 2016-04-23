@@ -13,17 +13,29 @@
  * limitations under the License.
  */
 
-package xyz.digitalcookies.objective.scene;
+package xyz.digitalcookies.objective;
 
-/** A body represents the basic physical aspects of an entity that exists
- * within a specific scene, such as size, velocity, position,
- * mass, steering forces, and so on.
+import java.util.HashMap;
+
+/** Base class for all events generate by this game engine.
  * @author Bryan Charles Bettis
  */
-public abstract class Body
+public abstract class EngineEvent
 {
-	/** Basic constructor. */
-	public Body()
+	private HashMap<String, Object> properties;
+	
+	public EngineEvent()
 	{
+		this.properties = new HashMap<String, Object>();
+	}
+	
+	public void setProperty(String property, Object value)
+	{
+		properties.put(property, value);
+	}
+	
+	public Object getProperty(String property)
+	{
+		return properties.get(property);
 	}
 }

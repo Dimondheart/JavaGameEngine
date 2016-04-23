@@ -17,25 +17,11 @@ package xyz.digitalcookies.objective.scene;
 
 import java.util.HashMap;
 
-/** Base class for any event in the entity system.
+import xyz.digitalcookies.objective.EngineEvent;
+
+/** Base class for any event in the scene system.
  * @author Bryan Charles Bettis
  */
-public abstract class SceneEvent
+public abstract class SceneEvent extends EngineEvent
 {
-	private HashMap<String, Object> properties;
-	
-	public SceneEvent()
-	{
-		this.properties = new HashMap<String, Object>();
-	}
-	
-	public void setProperty(String property, Object value)
-	{
-		properties.put(property, value);
-	}
-	
-	public Object getProperty(String property)
-	{
-		return properties.get(property);
-	}
 }

@@ -16,7 +16,6 @@
 package xyz.digitalcookies.objective.graphics;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import xyz.digitalcookies.objective.input.GUIMonitor;
 import xyz.digitalcookies.objective.input.gui.GUIElement;
