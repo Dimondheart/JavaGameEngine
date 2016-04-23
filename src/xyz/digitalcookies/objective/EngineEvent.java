@@ -22,18 +22,29 @@ import java.util.HashMap;
  */
 public abstract class EngineEvent
 {
+	/** The map of event properties to values. */
 	private HashMap<String, Object> properties;
 	
+	/** Basic constructor. */
 	public EngineEvent()
 	{
 		this.properties = new HashMap<String, Object>();
 	}
 	
+	/** Add or set a property in this event.
+	 * @param property the ID of the property to add/change
+	 * @param value the value to set the property to
+	 */
 	public void setProperty(String property, Object value)
 	{
 		properties.put(property, value);
 	}
 	
+	/** Get a property from this event.
+	 * @param property the ID the property was added under
+	 * @return the value associated with the property, or null if
+	 * 		the property was not found
+	 */
 	public Object getProperty(String property)
 	{
 		return properties.get(property);

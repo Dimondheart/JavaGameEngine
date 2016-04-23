@@ -152,7 +152,7 @@ public abstract class ResourceHandler<T>
 	public void initialize()
 	{
 		System.out.println("(Re)initializing resource handler...");
-		if (rootResDir != null)
+		if (getRootResDir() != null)
 		{
 			isBuffered = false;
 			// Index the resources
@@ -392,6 +392,7 @@ public abstract class ResourceHandler<T>
 				+ packDir
 				+ File.separator
 				+ getRootResDir()
+				+ File.separator
 				);
 		LinkedList<File> dirToCheck = new LinkedList<File>();
 		dirToCheck.add(myResDir);
@@ -435,7 +436,6 @@ public abstract class ResourceHandler<T>
 				}
 			}
 		}
-		// TODO implement directory indexing
 	}
 	
 	/** Buffer resources into the resources map in this resource handler.
@@ -494,6 +494,7 @@ public abstract class ResourceHandler<T>
 							+ primaryPack
 							+ "/"
 							+ getRootResDir()
+							+ "/"
 							+ resource
 							)
 					);
@@ -514,6 +515,7 @@ public abstract class ResourceHandler<T>
 							+ secondaryPack
 							+ "/"
 							+ getRootResDir()
+							+ "/"
 							+ resource
 							)
 					);

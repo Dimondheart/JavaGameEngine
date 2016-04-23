@@ -26,13 +26,13 @@ import xyz.digitalcookies.objective.graphics.GraphicsManager;
 /** Event listener for window-related events.
  * @author Bryan Charles Bettis
  */
-public class WindowMonitor implements WindowListener, ComponentListener
+public class MainWindow implements WindowListener, ComponentListener
 {
 	/** The window this manager is listening to. */
 	private static Window myWin;
 	
 	/** Basic constructor. */
-	WindowMonitor()
+	MainWindow()
 	{
 	}
 	

@@ -18,6 +18,7 @@ package xyz.digitalcookies.objective.sound;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import xyz.digitalcookies.objective.DevConfig;
 import xyz.digitalcookies.objective.Settings;
 import xyz.digitalcookies.objective.input.InputManager;
 import xyz.digitalcookies.objective.resources.SoundResources;
@@ -93,7 +94,7 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 				(int) xyz.digitalcookies.objective.Settings.getSetting("SFX_VOLUME");
 		// Setup general sound resource manager
 		srm = new SoundResources();
-		srm.initialize("sounds/", ".wav");
+		srm.initialize(DevConfig.getString(DevConfig.SOUND_RES_DIR), ".wav");
 	}
 	
 	@Override

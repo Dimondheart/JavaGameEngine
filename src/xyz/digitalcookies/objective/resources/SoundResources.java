@@ -29,7 +29,6 @@ public class SoundResources extends ResourceHandler<InputStream>
 	/** Standard constructor. */
 	public SoundResources()
 	{
-		super();
 		setSupportsBuffering(false);
 	}
 	
@@ -45,7 +44,6 @@ public class SoundResources extends ResourceHandler<InputStream>
 		}
 		catch (FileNotFoundException e)
 		{
-			System.out.println("ERROR LOADING SOUND FILE: File not found");
 			return null;
 		}
 		// Return a buffered input stream (put the fish in a cooler)

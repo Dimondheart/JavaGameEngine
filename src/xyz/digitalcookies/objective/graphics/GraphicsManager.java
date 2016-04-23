@@ -52,9 +52,9 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 		System.out.println("Setting Up Graphics System...");
 		TextDrawer.setDefaultFont(
 				new Font(
-						(String) DevConfig.getSetting(DevConfig.DEF_FONT),
+						DevConfig.getString(DevConfig.DEF_FONT),
 						Font.PLAIN,
-						(Integer) DevConfig.getSetting(DevConfig.DEF_FONT_SIZE)
+						DevConfig.getInt(DevConfig.DEF_FONT_SIZE)
 						)
 				); 
 		// Cleanup any previous main window
@@ -63,24 +63,23 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 			mainWin.dispose();
 		}
 		// Setup the main window
-		mainWin = new JFrame((String) DevConfig.getSetting(DevConfig.MAIN_WIN_TITLE));
+		mainWin = new JFrame(DevConfig.getString(DevConfig.MAIN_WIN_TITLE));
 		// Setup the main layer container
-		Integer numMainLayers =
-				(Integer) DevConfig.getSetting(DevConfig.NUM_MAIN_LAYERS);
-		int width = 
-				(int) DevConfig.getSetting(DevConfig.INIT_MAIN_WIN_WIDTH);
-		int height = 
-				(int) DevConfig.getSetting(DevConfig.INIT_MAIN_WIN_HEIGHT);
+		int width = DevConfig.getInt(DevConfig.INIT_MAIN_WIN_WIDTH);
+		int height = DevConfig.getInt(DevConfig.INIT_MAIN_WIN_HEIGHT);
 		Dimension mainWinDims = new Dimension(width, height);
 		mainLayers = new MainLayerSetContainer(
 				mainWin,
 				mainWinDims,
-				numMainLayers
+				DevConfig.getInt(DevConfig.NUM_MAIN_LAYERS)
 				);
 		mainWin.add(mainLayers);
 		// Create the graphics resource manager
 		grm = new GraphicsResources();
-		grm.initialize("graphics/", ".png", ".bmp", ".jpg", ".jpeg");
+		grm.initialize(
+				DevConfig.getString(DevConfig.GRAPHICS_RES_DIR),
+				".png", ".bmp", ".jpg", ".jpeg"
+				);
 	}
 	
 	@Override

@@ -16,14 +16,13 @@
 package xyz.digitalcookies.objective.resources;
 
 import java.io.File;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import xyz.digitalcookies.objective.DevConfig;
 import xyz.digitalcookies.objective.EngineSetupData;
 
 /** TODO Document
  * @author Bryan Charles Bettis
- *
  */
 public class ResourcePackManager
 {
@@ -31,46 +30,26 @@ public class ResourcePackManager
 	private static String currPack = null;
 	private static boolean isBuffering = false;
 	private static String resPackDir = null;
-	private static LinkedList<String> packs = new LinkedList<String>();
+	private static ArrayList<String> indexedPacks =
+			new ArrayList<String>();
 	
 	/** Constructor hidden to prevent instantiation. */
 	private ResourcePackManager()
 	{
 	}
 	
+	/** Setup the resource pack manager. */
 	public static void setup()
 	{
-		setResDir((String) DevConfig.getSetting(DevConfig.RES_PACK_DIR));
-		ResourcePackManager.setBufferResources((boolean) DevConfig.getSetting(DevConfig.INIT_BUFFER_RES));
-		ResourcePackManager.setDefaultPack((String) DevConfig.getSetting(DevConfig.DEF_RES_PACK));
-		ResourcePackManager.setCurrentPack((String) DevConfig.getSetting(DevConfig.INIT_RES_PACK));
+		setResDir(DevConfig.getString(DevConfig.RES_PACK_DIR));
+		ResourcePackManager.setBufferResources(DevConfig.getBoolean(DevConfig.INIT_BUFFER_RES));
+		ResourcePackManager.setDefaultPack(DevConfig.getString(DevConfig.DEF_RES_PACK));
+		ResourcePackManager.setCurrentPack(DevConfig.getString(DevConfig.INIT_RES_PACK));
 	}
 	
 	public static String getResPackDir()
 	{
 		return resPackDir;
-	}
-	
-	public static void indexResourcePacks(String resDir)
-	{
-		File dir = new File(resDir);
-		if (dir.isDirectory())
-		{
-			packs.clear();
-			resPackDir = resDir;
-			for (File file : dir.listFiles())
-			{
-				System.out.println(file.getName());
-				packs.add(file.getName());
-			}
-		}
-		else
-		{
-			System.out.println(
-					"ERROR: Specified resource location is not a directory."
-					);
-			Thread.dumpStack();
-		}
 	}
 	
 	public static String getDefaultPack()
@@ -117,6 +96,32 @@ public class ResourcePackManager
 	{
 		isBuffering = doBuffer;
 		// TODO Un-buffer resources, etc.
+	}
+	
+	/** Determine and record the names of all available resource packs in
+	 * the specified root directory.
+	 * @param resDir the root directory containing the resource packs
+	 */
+	public static void indexResourcePacks(String resDir)
+	{
+		File dir = new File(resDir);
+		if (dir.isDirectory())
+		{
+			indexedPacks.clear();
+			resPackDir = resDir;
+			for (File file : dir.listFiles())
+			{
+				System.out.println(file.getName());
+				indexedPacks.add(file.getName());
+			}
+		}
+		else
+		{
+			System.out.println(
+					"ERROR: Specified resource location is not a directory."
+					);
+			Thread.dumpStack();
+		}
 	}
 	
 	/** Sets the root directory for all resource packs in ResourcePackManager.

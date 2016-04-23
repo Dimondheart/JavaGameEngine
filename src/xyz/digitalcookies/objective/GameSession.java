@@ -23,8 +23,7 @@ import xyz.digitalcookies.objective.resources.ResourcePackManager;
 import xyz.digitalcookies.objective.sound.SoundManager;
 
 /** Starts up all subsystems for managing a game session and handles
- * the main game loop (calls the game state manager). Only one instance
- * of the GameSession class should be created and started at one time.
+ * the main game loop (calls the game state manager).
  * @author Bryan Charles Bettis
  */
 public class GameSession
@@ -270,7 +269,7 @@ public class GameSession
 		else if (InputManager.isRunning())
 		{
 			// Update input devices
-			InputManager.poll();
+			InputManager.pollImmediately();
 			// Do one update cycle of the current game state
 			gsm.cycle();
 		}

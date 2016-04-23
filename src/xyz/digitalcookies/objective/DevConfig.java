@@ -23,10 +23,9 @@ import java.net.URISyntaxException;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Contains different settings that a developer can safely modify. However,
- * these settings cannot safely be changed once the program has been started
- * up. The core engine settings have string constants provided for them as
- * public constants.
+/** A collection of initial settings used by the game engine and available
+ * for the developers to use in their code. Most of these settings are
+ * set up through the engine configuration/properties file.
  * @author Bryan Charles Bettis
  */
 public class DevConfig
@@ -69,7 +68,7 @@ public class DevConfig
 	public static final String RES_PACK_DIR = "RES_PACK_DIR";
 	
 	/** The map of the different developer settings. */
-	private static volatile ConcurrentHashMap<String, Object> settings =
+	private static ConcurrentHashMap<String, Object> settings =
 			new ConcurrentHashMap<String, Object>();
 	
 	/** Hidden to prevent instantiation. */
@@ -80,8 +79,8 @@ public class DevConfig
 	/** Setup the initial developer settings. Note that once a developer
 	 * setting has been added, it cannot be changed
 	 * during runtime. If developers want to add a setting that can
-	 * be modified during runtime, they should add it to the
-	 * DynamicSettings class.
+	 * be modified during runtime, they should use the
+	 * Settings class.
 	 */
 	static void setup()
 	{
@@ -165,13 +164,22 @@ public class DevConfig
 	 */
 	public static Object getSetting(String setting)
 	{
+		// No setting name specified
+		if (setting == null)
+		{
+			System.out.println(
+					"Error: No setting name specified when attempting to get"
+					+ "a developer setting."
+					);
+			return null;
+		}
 		Object obj = settings.getOrDefault(setting, null);
 		// Print debug info if setting not found
 		if (obj == null)
 		{
 			System.out.println(
 					"WARNING: Developer setting \'"
-					+ setting
+					+ setting.toString()
 					+ "\' is not a valid developer setting. "
 					+ "Returning null instead and printing stack trace "
 					+ "for debugging. "
@@ -180,6 +188,42 @@ public class DevConfig
 			Thread.dumpStack();
 		}
 		return obj;
+	}
+	
+	/** Get the specified setting and cast it to a String.
+	 * Failed type casting exceptions are not handled.
+	 * @param setting the setting to get
+	 * @return the value of the requested setting, or null if not found
+	 */
+	public static String getString(String setting)
+	{
+		String value = null;
+		value = (String) getSetting(setting);
+		return value;
+	}
+	
+	/** Get the specified setting and cast it to a boolean.
+	 * Failed type casting exceptions are not handled.
+	 * @param setting the setting to get
+	 * @return the value of the requested setting, or false if not found
+	 */
+	public static boolean getBoolean(String setting)
+	{
+		boolean value = false;
+		value = (boolean) getSetting(setting);
+		return value;
+	}
+	
+	/** Get the specified setting and cast it to an integer.
+	 * Failed type casting exceptions are not handled.
+	 * @param setting the setting to get
+	 * @return the value of the requested setting, or 0 if not found
+	 */
+	public static int getInt(String setting)
+	{
+		int value = 0;
+		value = (int) getSetting(setting);
+		return value;
 	}
 	
 	/** Get the properties file for the game engine to use. Calls

@@ -36,15 +36,12 @@ public class GraphicsResources extends ResourceHandler<BufferedImage>
 	/** Standard constructor. */
 	public GraphicsResources()
 	{
-		super();
 		setSupportsBuffering(true);
-		// TODO setup a better default image here
 	}
 	
 	@Override
 	protected BufferedImage loadResource(File toLoad)
 	{
-		BufferedImage image = null;
 		FileInputStream fis = null;
 		// Get an input stream for the file
 		try
@@ -53,11 +50,10 @@ public class GraphicsResources extends ResourceHandler<BufferedImage>
 		}
 		catch (FileNotFoundException e)
 		{
-			System.out.println("ERROR LOADING GRAPHIC FILE: File not found");
-			e.printStackTrace();
 			return null;
 		}
 		InputStream is = new BufferedInputStream(fis);
+		BufferedImage image = null;
 		// Try to read the image
 		try
 		{
@@ -65,8 +61,7 @@ public class GraphicsResources extends ResourceHandler<BufferedImage>
 		}
 		catch (IOException e)
 		{
-			System.out.println("ERROR LOADING GRAPHIC FILE: Invalid image data");
-			image = null;
+			return null;
 		}
 		return image;
 	}
@@ -74,7 +69,6 @@ public class GraphicsResources extends ResourceHandler<BufferedImage>
 	@Override
 	protected BufferedImage getDefaultValue()
 	{
-		// TODO create a default image
 		return defImg;
 	}
 }

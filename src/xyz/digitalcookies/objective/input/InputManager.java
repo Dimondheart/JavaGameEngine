@@ -36,7 +36,7 @@ public class InputManager extends xyz.digitalcookies.objective.Subsystem
 	/** The mouse. */
 	private static Mouse mouse;
 	/** The main window event manager. */
-	private static WindowMonitor window;
+	private static MainWindow window;
 	/** Manages all the GUI object updates. */
 	private static GUIMonitor gui;
 	
@@ -72,7 +72,7 @@ public class InputManager extends xyz.digitalcookies.objective.Subsystem
 		// Create main input device managers
 		keyboard = new Keyboard();
 		mouse = new Mouse();
-		window = new WindowMonitor();
+		window = new MainWindow();
 		gui = new GUIMonitor();
 		state = InputManagerState.PAUSED;
 		// Setup the main input device managers
@@ -159,6 +159,14 @@ public class InputManager extends xyz.digitalcookies.objective.Subsystem
 	public static void poll()
 	{
 		queueEventUnlessPrev(new InputManagerEvent(Type.POLL));
+	}
+	
+	/** Immediately poll input devices. This method will not return until
+	 * polling is complete.
+	 */
+	public static void pollImmediately()
+	{
+		doPoll();
 	}
 	
 	/** Clear all buffered/stored data in input devices. */
@@ -282,7 +290,7 @@ public class InputManager extends xyz.digitalcookies.objective.Subsystem
 	}
 	
 	/** Does the polling of all input devices. */
-	private synchronized void doPoll()
+	private static synchronized void doPoll()
 	{
 		keyboard.poll();
 		mouse.poll();
@@ -291,7 +299,7 @@ public class InputManager extends xyz.digitalcookies.objective.Subsystem
 	}
 	
 	/** Does the clearing of input devices, etc. */
-	private synchronized void doClear()
+	private static synchronized void doClear()
 	{
 		queue.clear();
 		keyboard.clear();
