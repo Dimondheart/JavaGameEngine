@@ -18,7 +18,6 @@ package xyz.digitalcookies.objective.scene;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
 import java.util.function.Predicate;
 
 import xyz.digitalcookies.objective.graphics.RenderEvent;
@@ -27,29 +26,30 @@ import xyz.digitalcookies.objective.graphics.Renderer;
 /** Holds multiple entities and provides various methods for rendering,
  * updating, and so on all the entities in this container.
  * @author Bryan Charles Bettis
+ * @param <T> the type of entity this container will be storing
  */
-public class EntityContainer implements xyz.digitalcookies.objective.graphics.Renderer
+public class EntityContainer<T extends Entity> implements Renderer
 {
 	/** The list of entities in this container. */
-	protected Vector<Entity> entities;
+	private ArrayList<T> entities;
 	/** The predicate to use to remove entities at the end of each
 	 * updateEntites(event).
 	 */
-	protected Predicate<Entity> postUpdateRemoveIf;
+	private Predicate<T> postUpdateRemoveIf;
 	
 	/** Standard constructor. */
 	public EntityContainer()
 	{
-		entities = new Vector<Entity>(1, 10);
+		entities = new ArrayList<T>(1);
 	}
 	
 	/** Setup this entity container and add the specified entities.
 	 * @param entities the entities to add after the container
 	 * 		has been setup
 	 */
-	public EntityContainer(Entity... entities)
+	public EntityContainer(T... entities)
 	{
-		this.entities = new Vector<Entity>(entities.length, 10);
+		this.entities = new ArrayList<T>(entities.length);
 		addEntities(entities);
 	}
 	
@@ -58,10 +58,11 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @param entities a list of entities that should all be added to this
 	 * 		container
 	 */
-	public EntityContainer(List<Entity> entities)
+	public EntityContainer(List<T> entities)
 	{
-		this.entities = new Vector<Entity>(entities.size(), 10);
+		this.entities = new ArrayList<T>(entities.size());
 		addEntities(entities);
+		Integer i = 1;
 	}
 	
 	/** Update the entities in this entity container. The specified
@@ -77,7 +78,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 		synchronized (entities)
 		{
 			entities.forEach(
-					(Entity entity)->
+					(T entity)->
 					{
 						synchronized (entity)
 						{
@@ -103,7 +104,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 		synchronized (entities)
 		{
 			entities.forEach(
-					(Entity entity)->
+					(T entity)->
 					{
 						RenderEvent event2 = event.clone();
 						synchronized (entity)
@@ -121,7 +122,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @param entity the entity to check for
 	 * @return true if the entity is in this container, false otherwise
 	 */
-	public boolean contains(Entity entity)
+	public boolean contains(T entity)
 	{
 		if (entity == null)
 		{
@@ -142,7 +143,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * 		(e.g. entity already exists in this container, or the change has
 	 * 		been delayed while updating or rendering is in progress)
 	 */
-	public boolean addEntity(Entity entity)
+	public boolean addEntity(T entity)
 	{
 		// No entity specified
 		if (entity == null)
@@ -173,13 +174,13 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @param entities the list of entities to remove
 	 * @return if the container was changed as a result
 	 */
-	public boolean addEntities(List<Entity> entities)
+	public boolean addEntities(List<T> entities)
 	{
 		boolean changed = false;
 		// Lock the passed in list to prevent concurrent access
 		synchronized (entities)
 		{
-			for (Entity entity : entities)
+			for (T entity : entities)
 			{
 				if (addEntity(entity))
 				{
@@ -196,10 +197,10 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * 		false otherwise (no entities added, such as when all are
 	 * 		already in this container)
 	 */
-	public boolean addEntities(Entity... entities)
+	public boolean addEntities(T... entities)
 	{
 		boolean changed = false;
-		for (Entity entity : entities)
+		for (T entity : entities)
 		{
 			boolean result = addEntity(entity);
 			if (result)
@@ -216,7 +217,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * 		failed (such as when the specified entity was not in this
 	 * 		container)
 	 */
-	public boolean removeEntity(Entity entity)
+	public boolean removeEntity(T entity)
 	{
 		boolean changed = false;
 		synchronized (entities)
@@ -230,7 +231,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @param entities the list of entities to remove
 	 * @return if the container was changed as a result
 	 */
-	public boolean removeEntities(Collection<Entity> entities)
+	public boolean removeEntities(Collection<T> entities)
 	{
 		boolean changed = false;
 		synchronized (this.entities)
@@ -244,10 +245,10 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @param entities the entities to remove
 	 * @return if the container was changed as a result
 	 */
-	public boolean removeEntities(Entity... entities)
+	public boolean removeEntities(T... entities)
 	{
 		boolean changed = false;
-		for (Entity entity : entities)
+		for (T entity : entities)
 		{
 			boolean result = removeEntity(entity);
 			if (result)
@@ -263,7 +264,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @param filter the filter to use to test each entity
 	 * @return true if any elements were removed
 	 */
-	public boolean removeIf(Predicate<Entity> filter)
+	public boolean removeIf(Predicate<T> filter)
 	{
 		boolean changed = false;
 		synchronized (entities)
@@ -278,7 +279,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * predicate.
 	 * @param filter the predicate to evaluate entities with
 	 */
-	public void setCycleRemoveIf(Predicate<Entity> filter)
+	public void setCycleRemoveIf(Predicate<T> filter)
 	{
 		synchronized (postUpdateRemoveIf)
 		{
@@ -291,12 +292,12 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @return a linked list containing all entities in this container
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Entity> getEntities()
+	public List<T> getEntities()
 	{
-		List<Entity> es;
+		List<T> es;
 		synchronized (entities)
 		{
-			es = (List<Entity>) entities.clone();
+			es = (List<T>) entities.clone();
 		}
 		return es;
 	}
@@ -310,7 +311,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @return all entities in this container matching the specified
 	 * 		predicate
 	 */
-	public List<Entity> getEntities(Predicate<Entity> filter)
+	public List<T> getEntities(Predicate<T> filter)
 	{
 		// No filter specified; return same value as getEntities()
 		if (filter == null)
@@ -322,10 +323,10 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 					);
 			return getEntities();
 		}
-		List<Entity> es = new Vector<Entity>();
+		List<T> es = new ArrayList<T>();
 		synchronized (entities)
 		{
-			for (Entity entity : entities)
+			for (T entity : entities)
 			{
 				if (filter.test(entity))
 				{
@@ -343,9 +344,9 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * 		container; the returned container is its own independent
 	 * 		container)
 	 */
-	public EntityContainer copyContainer()
+	public EntityContainer<T> copyContainer()
 	{
-		return new EntityContainer(getEntities());
+		return new EntityContainer<T>(getEntities());
 	}
 	
 	/** Get all entities in this container that evaluate true for the
@@ -357,7 +358,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 	 * @return all entities that evaluated true for the specified filter,
 	 * 		contained within a new EntityContainer
 	 */
-	public EntityContainer getSubContainer(Predicate<Entity> filter)
+	public EntityContainer<T> getSubContainer(Predicate<T> filter)
 	{
 		// No filter specified; return same value as getEntities()
 		if (filter == null)
@@ -369,10 +370,10 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 					);
 			return copyContainer();
 		}
-		List<Entity> es = new ArrayList<Entity>();
+		List<T> es = new ArrayList<T>();
 		synchronized (entities)
 		{
-			for (Entity entity : entities)
+			for (T entity : entities)
 			{
 				if (filter.test(entity))
 				{
@@ -380,7 +381,7 @@ public class EntityContainer implements xyz.digitalcookies.objective.graphics.Re
 				}
 			}
 		}
-		return new EntityContainer(es);
+		return new EntityContainer<T>(es);
 	}
 	
 	/** Removes all entities from this entity container. */

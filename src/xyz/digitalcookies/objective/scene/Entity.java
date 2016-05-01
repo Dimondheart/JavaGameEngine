@@ -16,11 +16,12 @@
 package xyz.digitalcookies.objective.scene;
 
 import xyz.digitalcookies.objective.graphics.RenderEvent;
+import xyz.digitalcookies.objective.graphics.Renderer;
 
 /** TODO add documentation
  * @author Bryan Charles Bettis
  */
-public interface Entity extends xyz.digitalcookies.objective.graphics.Renderer
+public interface Entity extends Renderer
 {
 	/** Check if this entity utilizes a Body. An entity does not have to
 	 * currently have a body setup for this to return true. This method 
