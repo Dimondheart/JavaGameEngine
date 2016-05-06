@@ -62,8 +62,6 @@ public class DevConfig
 	public static final String INIT_BUFFER_RES = "INIT_BUFFER_RES";
 	/** The default resource pack. */
 	public static final String DEF_RES_PACK = "DEF_RES_PACK";
-	/** The initial primary resource pack (can be the same as the default.) */
-	public static final String INIT_RES_PACK = "INIT_RES_PACK";
 	/** The relative root directory of the resource pack directory. */
 	public static final String RES_PACK_DIR = "RES_PACK_DIR";
 	
@@ -125,14 +123,14 @@ public class DevConfig
 				SOUND_RES_DIR,
 				(String) props.getOrDefault(
 						SOUND_RES_DIR,
-						"none_specified"
+						"sounds"
 						)
 				);
 		settings.put(
 				GRAPHICS_RES_DIR,
 				(String) props.getOrDefault(
 						GRAPHICS_RES_DIR,
-						"none_specified"
+						"graphics"
 						)
 				);
 		settings.put(
@@ -143,15 +141,11 @@ public class DevConfig
 				);
 		settings.put(
 				DEF_RES_PACK,
-				(String) props.getOrDefault(DEF_RES_PACK, "none_specified")
-				);
-		settings.put(
-				INIT_RES_PACK,
-				(String) props.getOrDefault(INIT_RES_PACK, "none_specified")
+				(String) props.getOrDefault(DEF_RES_PACK, "Default")
 				);
 		settings.put(
 				RES_PACK_DIR,
-				(String) props.getOrDefault(RES_PACK_DIR, "none_specified")
+				(String) props.getOrDefault(RES_PACK_DIR, "resources")
 				);
 	}
 	

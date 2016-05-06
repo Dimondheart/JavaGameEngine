@@ -26,7 +26,7 @@ abstract class BaseSoundEvent
 	/** Basic constructor. */
 	public BaseSoundEvent()
 	{
-		this.queueTime = xyz.digitalcookies.objective.ProgramTime.getTimeMS();
+		this.queueTime = xyz.digitalcookies.objective.GameTime.getTimeMS();
 	}
 	
 	/** How long this event has been queued.
@@ -34,7 +34,7 @@ abstract class BaseSoundEvent
 	 */
 	public final long getTimeInQueue()
 	{
-		return xyz.digitalcookies.objective.ProgramTime.getTimeMS() - queueTime;
+		return xyz.digitalcookies.objective.GameTime.getTimeMS() - queueTime;
 	}
 	
 	/** Determines if this event has met any conditions that make

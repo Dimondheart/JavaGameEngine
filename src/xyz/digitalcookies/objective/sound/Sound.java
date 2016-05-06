@@ -283,7 +283,7 @@ class Sound implements Runnable
 		{
 			try
 			{
-				if(ais == null)
+				if(ais == null && is != null)
 				{
 					is.close();
 				}

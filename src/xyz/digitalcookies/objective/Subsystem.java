@@ -29,7 +29,7 @@ public abstract class Subsystem implements Runnable
 	/** Thread for this system. */
 	private Thread thread;
 	/** Used to make this subsystem stop when running in threaded mode. */
-	private boolean stopThread = false;
+	private boolean stopThread;
 	
 	/** Subclass-access only constructor.
 	 * @param clockCycleInterval the interval this system will run at, when
@@ -42,33 +42,23 @@ public abstract class Subsystem implements Runnable
 		this.threadName = threadName;
 	}
 	
-	/** Does final setup that is needed for a system before starting it. */
-	final void setup()
+	@Override
+	public final void run()
 	{
-		setupSystem();
-	}
-	
-	/** Starts this subsystem in its own thread. */
-	final void startThreaded()
-	{
-		startUnthreaded();
-		thread = new Thread(this);
-		thread.setName(threadName);
-		thread.start();
-	}
-	
-	/** Starts this subsystem. */
-	final void startUnthreaded()
-	{
-		thread = null;
-		startSystem();
-	}
-	
-	/** Stops this subsystem. */
-	final void stop()
-	{
-		stopThread();
-		stopSystem();
+		// make sure this is reset
+		stopThread = false;
+		// Calls runCycle() each iteration & breaks when needed
+		while (true)
+		{
+			clock.nextCycle();
+			if (!runCycle() || stopThread)
+			{
+				break;
+			}
+		}
+		// Stop the subsystem before returning
+		stop();
+		System.out.println(threadName + " Exiting...");
 	}
 	
 	/** Runs one cycle of this subsystem.
@@ -86,42 +76,33 @@ public abstract class Subsystem implements Runnable
 	/** Startup specific to each subsystem. */
 	protected abstract void startSystem();
 	
+	/** Does final setup that is needed for a system before starting it. */
+	public final void setup()
+	{
+		setupSystem();
+	}
+	
+	/** Starts this subsystem. */
+	public final void start()
+	{
+		startSystem();
+		thread = new Thread(this);
+		thread.setName(threadName);
+		thread.start();
+	}
+	
+	/** Stops this subsystem. */
+	public final void stop()
+	{
+		stopThread = true;
+		stopSystem();
+	}
+	
 	/** Stops the system; cleans up any resources that would need to be
 	 * released for the program to exit without calling System.exit().
 	 */
 	protected void stopSystem()
 	{
-	}
-	
-	@Override
-	public final void run()
-	{
-		// Running in unthreaded mode
-		if (thread == null)
-		{
-			runCycle();
-			return;
-		}
-		// make sure this is reset
-		stopThread = false;
-		// Calls runCycle() each iteration & breaks when needed
-		while (true)
-		{
-			clock.nextCycle();
-			if (!runCycle() || stopThread)
-			{
-				break;
-			}
-		}
-		stopThread = false;
-	}
-	
-	/** Tell this subsystem to stop running if it is running in its
-	 * own thread.
-	 */
-	final void stopThread()
-	{
-		stopThread = true;
 	}
 	
 	/** Get the average number of cycles per second of this subsystem (only

@@ -94,7 +94,7 @@ public class Stopwatch
 		// When the parent clock is the static program clock
 		else if (parentTime == null)
 		{
-			return elapsed + (xyz.digitalcookies.objective.ProgramTime.getTimeNano() - started);
+			return elapsed + (xyz.digitalcookies.objective.GameTime.getTimeNano() - started);
 		}
 		// Instantiated parent clocks
 		else
@@ -114,7 +114,7 @@ public class Stopwatch
 		else if (parentTime == null)
 		{
 			paused = true;
-			elapsed += (xyz.digitalcookies.objective.ProgramTime.getTimeNano() - started);
+			elapsed += (xyz.digitalcookies.objective.GameTime.getTimeNano() - started);
 		}
 		// Instantiated parent clocks
 		else
@@ -132,7 +132,7 @@ public class Stopwatch
 			// When the parent clock is the static program clock
 			if (parentTime == null)
 			{
-				started = xyz.digitalcookies.objective.ProgramTime.getTimeNano();
+				started = xyz.digitalcookies.objective.GameTime.getTimeNano();
 			}
 			// Instantiated parent clocks
 			else

@@ -74,7 +74,10 @@ public abstract class ResourceHandler<T>
 	 */
 	public boolean resExists(String resource)
 	{
-		return resources != null && resources.containsKey(resource);
+		return
+				resource != null
+				&& resources != null
+				&& resources.containsKey(resource);
 	}
 	
 	/** Get the specified resource.
@@ -93,9 +96,8 @@ public abstract class ResourceHandler<T>
 			{
 				// Load the resource
 				T res = loadResFromPacks(
-						ResourcePackManager.getCurrentPack(),
-						ResourcePackManager.getDefaultPack(),
-						resource
+						resource,
+						ResourcePackManager.getActivePacks()
 						);
 				// Resource not found, use default value
 				if (res == null)
@@ -114,9 +116,8 @@ public abstract class ResourceHandler<T>
 			{
 				// Load the resource
 				T res = loadResFromPacks(
-						ResourcePackManager.getCurrentPack(),
-						ResourcePackManager.getDefaultPack(),
-						resource
+						resource,
+						ResourcePackManager.getActivePacks()
 						);
 				// Resource not found, use default value
 				if (res == null)
@@ -157,15 +158,13 @@ public abstract class ResourceHandler<T>
 			isBuffered = false;
 			// Index the resources
 			indexResources(
-					ResourcePackManager.getCurrentPack(),
-					ResourcePackManager.getDefaultPack()
+					ResourcePackManager.getActivePacks()
 					);
 			// Buffer resources if specified
 			if (ResourcePackManager.isBufferingResources())
 			{
 				bufferResources(
-						ResourcePackManager.getCurrentPack(),
-						ResourcePackManager.getDefaultPack()
+						ResourcePackManager.getActivePacks()
 						);
 			}
 		}
@@ -325,24 +324,22 @@ public abstract class ResourceHandler<T>
 	 * primary pack. This method does not buffer resources; it determines
 	 * what resources are available in the specified packs, which is used later
 	 * for loading and (if enabled) buffering.
-	 * @param primaryPack the pack to first index resources from
-	 * @param secondaryPack indexed after the primary pack; fills in missing
+	 * @param packs all the packs to index, in the order they were specified
 	 * 		resources not found in the primary pack
 	 */
-	private void indexResources(String primaryPack, String secondaryPack)
+	private void indexResources(String... packs)
 	{
 		System.out.println("Indexing resources...");
 		// Clear current resource index
 		resources.clear();
-		// First index resources of the default package
-		if (primaryPack != null)
+		// Index each pack in order listed
+		for (int i = packs.length-1; i >= 0; --i)
 		{
-			indexPack(primaryPack);
-		}
-		// Then index any additional resources in current pack
-		if (secondaryPack != null && !secondaryPack.equals(primaryPack))
-		{
-			indexPack(secondaryPack);
+			String pack = packs[i];
+			if (pack != null)
+			{
+				indexPack(pack);
+			}
 		}
 	}
 	
@@ -351,12 +348,7 @@ public abstract class ResourceHandler<T>
 	 */
 	private void indexPack(String pack)
 	{
-		if (!pack.toLowerCase().contains(".zip"))
-		{
-			System.out.println("Indexing res pack directory \'" + pack + "\'");
-			indexDirectory(pack);
-		}
-		else
+		if (pack.toLowerCase().contains(".zip"))
 		{
 			System.out.println("Indexing res pack .zip \'" + pack + "\'");
 			System.out.println(
@@ -364,6 +356,11 @@ public abstract class ResourceHandler<T>
 					+ "not yet supported."
 					);
 			// TODO index .zip contents here
+		}
+		else
+		{
+			System.out.println("Indexing res pack directory \'" + pack + "\'");
+			indexDirectory(pack);
 		}
 	}
 	
@@ -440,11 +437,8 @@ public abstract class ResourceHandler<T>
 	
 	/** Buffer resources into the resources map in this resource handler.
 	 * Returns quickly if this resource handler does not support buffering.
-	 * @param primaryPack first buffer resources from this pack
-	 * @param secondaryPack if an index resource is not found in the primary
-	 * 		pack, try to load the resource from this pack
 	 */
-	private void bufferResources(String primaryPack, String secondaryPack)
+	private void bufferResources(String... packs)
 	{
 		if (!supportsBuffering())
 		{
@@ -460,7 +454,7 @@ public abstract class ResourceHandler<T>
 			String key = keys.next();
 			// Try to load the resource from the two packs
 			System.out.println("Buffering resource \'" + key + "\'...");
-			T resObj = loadResFromPacks(primaryPack, secondaryPack, key);
+			T resObj = loadResFromPacks(key, packs);
 			// Resource not found in either pack, use default value
 			if (resObj == null)
 			{
@@ -474,16 +468,13 @@ public abstract class ResourceHandler<T>
 	
 	/** Try to load the resource from the primary pack, if it fails try
 	 * the secondary pack, if that fails return null.
-	 * @param primaryPack the pack to search first
-	 * @param secondaryPack the pack to search second
 	 * @param resource the resource to search for
 	 * @return the specified resource data, or null if loading failed
 	 */
-	private T loadResFromPacks(String primaryPack, String secondaryPack, String resource)
+	private T loadResFromPacks(String resource, String... packs)
 	{
 		T resObj = null;
-		// Resource not found in primary, check secondary
-		if (!primaryPack.contains(".zip"))
+		for (int i = packs.length-1; i >= 0; --i)
 		{
 			resObj = loadResource(
 					new File(
@@ -491,39 +482,19 @@ public abstract class ResourceHandler<T>
 									File.separator, "/"
 									)
 							+ "/"
-							+ primaryPack
+							+ packs[i]
 							+ "/"
 							+ getRootResDir()
 							+ "/"
 							+ resource
 							)
 					);
+			// Found the resource
 			if (resObj != null)
 			{
-				return resObj;
+				break;
 			}
 		}
-		// Resource not found in primary, check secondary
-		if (!secondaryPack.contains(".zip"))
-		{
-			resObj = loadResource(
-					new File(
-							ResourcePackManager.getResPackDir().replace(
-									File.separator, "/"
-									)
-							+ "/"
-							+ secondaryPack
-							+ "/"
-							+ getRootResDir()
-							+ "/"
-							+ resource
-							)
-					);
-			if (resObj != null)
-			{
-				return resObj;
-			}
-		}
-		return null;
+		return resObj;
 	}
 }

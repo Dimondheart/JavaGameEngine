@@ -30,7 +30,7 @@ public abstract class Scene implements Renderer
 	 * handled automatically by the scene base class before the child
 	 * class is called to update.
 	 */
-	public static final String UPDATE_ELAPSED = "elapsed";
+	protected static final String UPDATE_ELAPSED = "elapsed";
 	
 	/** A timer that can be used for updating the scene.
 	 * Paused/resumed along with this scene.

@@ -19,7 +19,7 @@ package xyz.digitalcookies.objective;
  * completely paused (meaning InputManager is paused).
  * @author Bryan Charles Bettis
  */
-public class ProgramTime
+public class GameTime
 {
 	/** Used to make sure this timer is only initialized once. */
 	private static boolean isSetup = false;

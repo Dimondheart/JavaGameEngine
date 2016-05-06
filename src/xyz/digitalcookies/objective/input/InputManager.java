@@ -313,14 +313,14 @@ public class InputManager extends xyz.digitalcookies.objective.Subsystem
 	{
 		doClear();
 		setState(InputManagerState.PAUSED);
-		xyz.digitalcookies.objective.ProgramTime.pause();
+		xyz.digitalcookies.objective.GameTime.pause();
 	}
 	
 	/** Resume the game to normal operation. */
 	private void doResume()
 	{
 		setState(InputManagerState.NORMAL);
-		xyz.digitalcookies.objective.ProgramTime.resume();
+		xyz.digitalcookies.objective.GameTime.resume();
 	}
 	
 	/** Quit the game. */

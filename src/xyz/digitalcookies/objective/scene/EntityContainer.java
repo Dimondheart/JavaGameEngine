@@ -111,7 +111,7 @@ public class EntityContainer<T extends Entity> implements Renderer
 						{
 							entity.render(event2);
 						}
-						event2.getContext().dispose();
+						event2.getGC().dispose();
 					}
 					);
 		}

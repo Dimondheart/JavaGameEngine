@@ -24,11 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Settings
 {
-	/** How the game engine should try to handle threading of it's subsystems.
-	 * <br>
-	 * <br> <i>Type:</i> DynamicSettings.ThreadingSetting
-	 */
-	public static final String ENGINE_THREADING = "ENGINE_THREADING";
 	/** If the scroll wheel readings on the mouse should be inverted or not.
 	 * <br>
 	 * <br> <i>Type:</i> boolean, true (scroll up is positive) or false
@@ -64,23 +59,6 @@ public class Settings
 	
 	/** The map of the different dynamic settings. */
 	private static volatile ConcurrentHashMap<String, Object> settings;
-	
-	/**
-	 * @author Bryan Charles Bettis
-	 */
-	public enum ThreadingSetting
-	{
-		/** Runs all thread-able subsystems in their own threads, regardless
-		 * of the number of available virtual cores.
-		 */
-		FULL,
-		/** Run all game engine systems in the same thread. */
-		SINGLE,
-		/** Optimize threading based on the number of virtual cores
-		 * available.
-		 */
-		OPTIMIZE
-	}
 
 	/* Setup static stuff. */
 	static
@@ -93,8 +71,6 @@ public class Settings
 	private static void setupSettings()
 	{
 		// TODO load from a file, if fails then recreate settings
-		// How the core engine systems should utilize threading (ThreadingSetting)
-		settings.put(ENGINE_THREADING, ThreadingSetting.OPTIMIZE);
 		// Invert the scroll wheel on the mouse (boolean)
 		settings.put(INVERT_SCROLL_WHEEL, false);
 		// Master volume setting % (int)

@@ -32,15 +32,15 @@ public class RenderEvent extends EngineEvent implements Cloneable
 	/** Basic render event constructor.
 	 * @param g the graphics context
 	 */
-	public RenderEvent (Graphics2D g)
+	public RenderEvent(Graphics2D g)
 	{
-		setContext(g);
+		setGC(g);
 	}
 	
 	/** The graphics context to draw to.
 	 * @return the Graphics2D context of this render event
 	 */
-	public Graphics2D getContext()
+	public Graphics2D getGC()
 	{
 		return g;
 	}
@@ -48,7 +48,7 @@ public class RenderEvent extends EngineEvent implements Cloneable
 	/** Set the graphics context.
 	 * @param g the new graphics context
 	 */
-	public void setContext(Graphics2D g)
+	public void setGC(Graphics2D g)
 	{
 		this.g = g;
 	}
@@ -64,7 +64,7 @@ public class RenderEvent extends EngineEvent implements Cloneable
 		try
 		{
 			RenderEvent newEvent = (RenderEvent) super.clone();
-			newEvent.setContext((Graphics2D) getContext().create());
+			newEvent.setGC((Graphics2D) getGC().create());
 			return newEvent;
 		}
 		catch (CloneNotSupportedException e)

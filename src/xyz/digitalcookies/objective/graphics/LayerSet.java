@@ -50,7 +50,7 @@ public class LayerSet extends BoundedRenderer
 			{
 				layer.render(e2);
 			}
-			e2.getContext().dispose();
+			e2.getGC().dispose();
 		}
 	}
 	

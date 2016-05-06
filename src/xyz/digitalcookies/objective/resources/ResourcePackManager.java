@@ -17,20 +17,19 @@ package xyz.digitalcookies.objective.resources;
 
 import java.io.File;
 import java.util.ArrayList;
-
 import xyz.digitalcookies.objective.DevConfig;
 import xyz.digitalcookies.objective.EngineSetupData;
 
-/** TODO Document
+/** Manages the resource packs.
  * @author Bryan Charles Bettis
  */
 public class ResourcePackManager
 {
-	private static String defPack = null;
-	private static String currPack = null;
 	private static boolean isBuffering = false;
 	private static String resPackDir = null;
 	private static ArrayList<String> indexedPacks =
+			new ArrayList<String>();
+	private static ArrayList<String> activePacks = 
 			new ArrayList<String>();
 	
 	/** Constructor hidden to prevent instantiation. */
@@ -42,9 +41,8 @@ public class ResourcePackManager
 	public static void setup()
 	{
 		setResDir(DevConfig.getString(DevConfig.RES_PACK_DIR));
-		ResourcePackManager.setBufferResources(DevConfig.getBoolean(DevConfig.INIT_BUFFER_RES));
-		ResourcePackManager.setDefaultPack(DevConfig.getString(DevConfig.DEF_RES_PACK));
-		ResourcePackManager.setCurrentPack(DevConfig.getString(DevConfig.INIT_RES_PACK));
+		setBufferResources(DevConfig.getBoolean(DevConfig.INIT_BUFFER_RES));
+		activePacks.add(DevConfig.getString(DevConfig.DEF_RES_PACK));
 	}
 	
 	public static String getResPackDir()
@@ -52,39 +50,17 @@ public class ResourcePackManager
 		return resPackDir;
 	}
 	
-	public static String getDefaultPack()
+	/** Get all resource pack names that resources are being
+	 * loaded from. Resources are loaded from the packs in this list in reverse
+	 * order (the last pack is loaded first, then the second to last pack, and
+	 * so on.) Resources loaded from one pack will not be overridden if the
+	 * same resource is found in a later pack.
+	 * @return an array of the resource packs that are currently being used:
+	 * 		modifying this array will not change the currently active packs
+	 */
+	public static String[] getActivePacks()
 	{
-		return defPack;
-	}
-	
-	public static void setDefaultPack(String packName)
-	{
-		if (packName != null)
-		{
-			// TODO also check if pack exists
-			if (!packName.equals(currPack))
-			{
-				defPack = packName;
-			}
-		}
-		else
-		{
-			defPack = packName;
-		}
-	}
-	
-	public static String getCurrentPack()
-	{
-		return currPack;
-	}
-	
-	public static void setCurrentPack(String packName)
-	{
-		// TODO also check if pack exists
-		if (packName != null && !packName.equals(currPack))
-		{
-			currPack = packName;
-		}
+		return activePacks.toArray(new String[activePacks.size()]);
 	}
 	
 	public static boolean isBufferingResources()

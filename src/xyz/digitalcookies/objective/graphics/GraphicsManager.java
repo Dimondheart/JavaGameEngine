@@ -21,6 +21,7 @@ import java.awt.Insets;
 import javax.swing.JFrame;
 
 import xyz.digitalcookies.objective.DevConfig;
+import xyz.digitalcookies.objective.input.InputManager;
 import xyz.digitalcookies.objective.resources.GraphicsResources;
 
 /** Handles the rendering thread.
@@ -69,7 +70,6 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 		int height = DevConfig.getInt(DevConfig.INIT_MAIN_WIN_HEIGHT);
 		Dimension mainWinDims = new Dimension(width, height);
 		mainLayers = new MainLayerSetContainer(
-				mainWin,
 				mainWinDims,
 				DevConfig.getInt(DevConfig.NUM_MAIN_LAYERS)
 				);
@@ -99,10 +99,11 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 	@Override
 	public boolean runCycle()
 	{
-		if (!mainLayers.isRepainting())
+		if (InputManager.isQuitting())
 		{
-			mainLayers.repaint(0);
+			return false;
 		}
+		mainLayers.repaint(0);
 		return true;
 	}
 	

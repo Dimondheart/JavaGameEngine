@@ -34,24 +34,19 @@ class MainLayerSetContainer extends JComponent
 	/** */
 	private static final long serialVersionUID = 1L;
 	
-	/** Window this layer container is part of. */
-	private Window myWin;
 	/** The primary layer set which is drawn to the screen. */
 	private MainLayerSet mainLayers;
-	private Boolean isRepainting;
 	
 	/** Standard layer container for the specified window.
 	 * @param window the window this LayerContainer is part of
 	 * @param dims the initial dimensions of the layers
 	 * @param numLayers the number of main layers to create
 	 */
-	public MainLayerSetContainer(Window window, Dimension dims, int numLayers)
+	public MainLayerSetContainer(Dimension dims, int numLayers)
 	{
-		myWin = window;
 		// Setup the layers
 		mainLayers = new MainLayerSet(numLayers);
 		setPreferredSize(dims);
-		isRepainting = false;
 	}
 	
 	/** Gets the main layer set.
@@ -70,26 +65,7 @@ class MainLayerSetContainer extends JComponent
 	@Override
 	public synchronized void paintComponent(Graphics g)
 	{
-		synchronized (isRepainting)
-		{
-			isRepainting = true;
-		}
 		render((Graphics2D) g);
-		synchronized (isRepainting)
-		{
-			isRepainting = false;
-		}
-	}
-	
-	/** Resizes the main layer container.
-	 * @param newDims the new dimensions
-	 */
-	protected synchronized void adjustSize(Dimension newDims)
-	{
-		// Resize the whole container
-		this.setSize(newDims);
-		// Adjust the main layer set
-		mainLayers.resizeLayers(newDims);
 	}
 	
 	public void render(Graphics2D g)
@@ -103,13 +79,14 @@ class MainLayerSetContainer extends JComponent
 		mainLayers.render(event);
 	}
 	
-	public boolean isRepainting()
+	/** Resizes the main layer container.
+	 * @param newDims the new dimensions
+	 */
+	protected synchronized void adjustSize(Dimension newDims)
 	{
-		boolean result;
-		synchronized (isRepainting)
-		{
-			result = isRepainting;
-		}
-		return result;
+		// Resize the whole container
+		this.setSize(newDims);
+		// Adjust the main layer set
+		mainLayers.resizeLayers(newDims);
 	}
 }

@@ -278,7 +278,7 @@ public class Button extends GUIObject
 	public synchronized void render(RenderEvent event)
 	{
 		super.render(event);
-		Graphics2D g = event.getContext();
+		Graphics2D g = event.getGC();
 		// Button pressed
 		if (getBGColor() != null)
 		{

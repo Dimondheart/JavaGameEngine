@@ -197,7 +197,7 @@ public class FrameAnimator extends Animator
 		if (centerOverCoords)
 		{
 			ImageDrawer.drawGraphic(
-					event.getContext(),
+					event.getGC(),
 					img,
 					x-imgWidth/2,
 					y-imgHeight/2,
@@ -208,7 +208,7 @@ public class FrameAnimator extends Animator
 		else
 		{
 			ImageDrawer.drawGraphic(
-					event.getContext(),
+					event.getGC(),
 					img,
 					x,
 					y,
@@ -402,14 +402,14 @@ public class FrameAnimator extends Animator
 	{
 		isFinished = false;
 		currFrame = frame;
-		frameStart = xyz.digitalcookies.objective.ProgramTime.getTimeMS();
+		frameStart = xyz.digitalcookies.objective.GameTime.getTimeMS();
 	}
 	
 	/** Selects and updates what the next rendered frame is. */
 	private void selectFrame()
 	{
 		// Increment the animation frame
-		if (xyz.digitalcookies.objective.ProgramTime.getTimeMS() - frameStart >= interval)
+		if (xyz.digitalcookies.objective.GameTime.getTimeMS() - frameStart >= interval)
 		{
 			setFrame(currFrame+1);
 		}

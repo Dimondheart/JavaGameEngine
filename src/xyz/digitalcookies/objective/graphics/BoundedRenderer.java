@@ -193,13 +193,13 @@ public abstract class BoundedRenderer implements Renderer
 		}
 		if (!isVisible())
 		{
-			event.getContext().dispose();
+			event.getGC().dispose();
 		}
 		else if (isEnforcingBounds())
 		{
-			event.setContext(
+			event.setGC(
 					(Graphics2D)
-					event.getContext().create(
+					event.getGC().create(
 							getX(),
 							getY(),
 							getWidth(),

@@ -106,6 +106,10 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 	@Override
 	protected boolean runCycle()
 	{
+		if (InputManager.isQuitting())
+		{
+			return false;
+		}
 		// Pause/resume the current BGM based on program state
 		if (currTrack != null)
 		{
@@ -161,7 +165,7 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 			// Stop all sfx
 			else if (c == StopAllSFXEvent.class)
 			{
-				doStopAllSFX((StopAllSFXEvent) nextGen);
+				doStopAllSFX();
 			}
 			// Unknown/unused general event
 			else
@@ -176,6 +180,16 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 		// Update volume levels
 		updateVolume();
 		return true;
+	}
+	
+	@Override
+	protected void stopSystem()
+	{
+		if (currTrack != null)
+		{
+			currTrack.stop();
+		}
+		doStopAllSFX();
 	}
 	
 	/** Gets the object that manages sound files.
@@ -314,9 +328,8 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 	
 	/** Stops all currently playing sound effects and clears any queued
 	 * ones.
-	 * @param event the stop all sound effects event object
 	 */
-	private void doStopAllSFX(StopAllSFXEvent event)
+	private void doStopAllSFX()
 	{
 		sfxQueue.clear();
 		for (SFX sfx : playingSFX)

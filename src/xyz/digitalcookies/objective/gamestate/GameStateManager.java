@@ -17,73 +17,85 @@ package xyz.digitalcookies.objective.gamestate;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import xyz.digitalcookies.objective.Subsystem;
+import xyz.digitalcookies.objective.input.InputManager;
+
 /** Manages the game states, including handling cycling and transition
  * between game states.
  * @author Bryan Charles Bettis
 */
-public class GameStateManager
+public class GameStateManager extends Subsystem
 {
 	/** The current game state object. */
 	protected GameState currGS;
 	/** The initial game state; the first one this game state manager setup. */
 	private Class<? extends GameState> initGameState;
 	
-	/** Used by the cycle method to limit debug output when a game state
-	 * is not currently set.
-	 */
-	private boolean noGSSetIndicated;
-	
 	/** Basic constructor.
 	 * @param initGameState the game state to initially setup
 	 */
 	public GameStateManager(Class<? extends GameState> initGameState)
 	{
-		noGSSetIndicated = false;
+		super(10, "GameState Thread");
 		this.initGameState = initGameState;
 	}
 	
-	/** Setup this game state manager. */
-	public void setup()
+	@Override
+	protected void setupSystem()
 	{
 		setNewGameState(initGameState);
 		currGS.setup(new ConcurrentHashMap<String, Object>());
 	}
 	
-	/** Cycle the current game state. */
-	public void cycle()
+	@Override
+	protected void startSystem()
 	{
-		try
+		System.out.println("Starting game state...");
+	}
+	
+	@Override
+	protected void stopSystem()
+	{
+		cleanup();
+	}
+	
+	@Override
+	protected boolean runCycle()
+	{
+		if (InputManager.isQuitting())
 		{
-			// Loop until the current state should be transitioned
-			if (currGS.isChangeStateIndicated())
-			{
-				ConcurrentHashMap<String, Object> setupArgs = currGS.getNewStateArgs();
-				// Change the game state
-				setNewGameState(currGS.getNewState());
-				// Setup the new game state
-				currGS.setup(setupArgs);
-			}
-			// Call one cycle of events for this game state
-			currGS.cycle();
+			cleanup();
+			return false;
 		}
-		catch (NullPointerException e)
+		else if (!InputManager.isRunning() || currGS == null)
 		{
-			// The current game state is not set
-			if (!noGSSetIndicated)
-			{
-				noGSSetIndicated = true;
-				System.out.println("No game state set.");
-			}
+			return true;
 		}
+		// Update input devices
+		InputManager.pollImmediately();
+		// Loop until the current state should be transitioned
+		if (currGS.isChangeStateIndicated())
+		{
+			ConcurrentHashMap<String, Object> setupArgs = currGS.getNewStateArgs();
+			// Change the game state
+			setNewGameState(currGS.getNewState());
+			// Setup the new game state
+			currGS.setup(setupArgs);
+		}
+		// Call one cycle of events for this game state
+		currGS.cycle();
+		return true;
 	}
 	
 	/** Cleans up the current game state. */
-	public void cleanup()
+	private void cleanup()
 	{
-		currGS.cleanup();
-		xyz.digitalcookies.objective.input.InputManager.clear();
+		if (currGS != null)
+		{
+			currGS.cleanup();
+		}
+		InputManager.clear();
 		currGS = null;
-		noGSSetIndicated = false;
 	}
 	
 	/** Cleans up any previous game state and creates then sets up the
@@ -92,11 +104,7 @@ public class GameStateManager
 	 */
 	private void setNewGameState(Class<? extends GameState> newState)
 	{
-		// Cleanup after previous game state (if any)
-		if (currGS != null)
-		{
-			cleanup();
-		}
+		cleanup();
 		// Create the new game state
 		try
 		{
@@ -108,9 +116,9 @@ public class GameStateManager
 			e.printStackTrace();
 			System.out.println(
 					"ERROR: GameState \'" +
-							newState.getName() +
-							"\' cannot be instantiated"
-							);
+					newState.getName() +
+					"\' cannot be instantiated"
+					);
 			return;
 		}
 		// Unable to access the class
@@ -119,10 +127,10 @@ public class GameStateManager
 			e.printStackTrace();
 			System.out.println(
 					"ERROR: GameState \'" +
-							newState.getName() +
-							"\' is not accessable from " +
-							this.getClass().getPackage().getName()
-							);
+					newState.getName() +
+					"\' is not accessable from " +
+					this.getClass().getPackage().getName()
+					);
 			return;
 		}
 	}
