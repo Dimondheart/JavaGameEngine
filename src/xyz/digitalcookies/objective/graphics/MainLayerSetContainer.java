@@ -20,9 +20,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.Window;
-import java.awt.image.BufferedImage;
-
 import javax.swing.JComponent;
 
 /** Handles multiple layers of rendering for a window.
@@ -38,7 +35,6 @@ class MainLayerSetContainer extends JComponent
 	private MainLayerSet mainLayers;
 	
 	/** Standard layer container for the specified window.
-	 * @param window the window this LayerContainer is part of
 	 * @param dims the initial dimensions of the layers
 	 * @param numLayers the number of main layers to create
 	 */
@@ -68,6 +64,9 @@ class MainLayerSetContainer extends JComponent
 		render((Graphics2D) g);
 	}
 	
+	/** Render the main layer set.
+	 * @param g the root graphics context to draw to
+	 */
 	public void render(Graphics2D g)
 	{
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

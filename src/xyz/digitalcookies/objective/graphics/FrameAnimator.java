@@ -17,6 +17,7 @@ package xyz.digitalcookies.objective.graphics;
 
 import java.awt.image.BufferedImage;
 
+import xyz.digitalcookies.objective.Game;
 import xyz.digitalcookies.objective.graphics.GraphicsManager;
 
 /** Handles animations using images as frames.
@@ -402,14 +403,14 @@ public class FrameAnimator extends Animator
 	{
 		isFinished = false;
 		currFrame = frame;
-		frameStart = xyz.digitalcookies.objective.GameTime.getTimeMS();
+		frameStart = (long) Game.getTimeMilli();
 	}
 	
 	/** Selects and updates what the next rendered frame is. */
 	private void selectFrame()
 	{
 		// Increment the animation frame
-		if (xyz.digitalcookies.objective.GameTime.getTimeMS() - frameStart >= interval)
+		if ((long) Game.getTimeMilli() - frameStart >= interval)
 		{
 			setFrame(currFrame+1);
 		}

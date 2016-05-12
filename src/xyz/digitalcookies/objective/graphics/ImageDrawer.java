@@ -19,6 +19,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 /** TODO Document
+ * TODO revamp this classes static methods
  * @author Bryan Charles Bettis
  */
 public class ImageDrawer

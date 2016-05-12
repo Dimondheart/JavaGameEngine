@@ -33,21 +33,9 @@ public class SoundResources extends ResourceHandler<InputStream>
 	}
 	
 	@Override
-	protected InputStream loadResource(File toLoad)
+	protected InputStream loadResource(InputStream toLoad)
 	{
-		// Initialize variable (conclude that I don't have any fish)
-		FileInputStream fish = null;
-		// Get an input stream for the file (catch a fish)
-		try
-		{
-			fish = new FileInputStream(toLoad);
-		}
-		catch (FileNotFoundException e)
-		{
-			return null;
-		}
-		// Return a buffered input stream (put the fish in a cooler)
-		return new BufferedInputStream(fish);
+		return toLoad;
 	}
 	
 	@Override

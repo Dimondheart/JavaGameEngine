@@ -15,6 +15,8 @@
 
 package xyz.digitalcookies.objective.utility;
 
+import xyz.digitalcookies.objective.Game;
+
 /** A class for measuring elapsed time with nanosecond precision.
  * If ProgramTime is paused, all instances of this class
  * will also be paused (as they directly or indirectly use
@@ -71,13 +73,13 @@ public class Stopwatch
 	 */
 	public double getTimeSec()
 	{
-		return getTimeMS()/1000.0;
+		return getTimeMilli()/1000.0;
 	}
 
 	/** Get the current time in milliseconds.
 	 * @return the current time of this stopwatch in milliseconds
 	 */
-	public double getTimeMS()
+	public double getTimeMilli()
 	{
 		return getTimeNano()/1000000.0;
 	}
@@ -94,7 +96,7 @@ public class Stopwatch
 		// When the parent clock is the static program clock
 		else if (parentTime == null)
 		{
-			return elapsed + (xyz.digitalcookies.objective.GameTime.getTimeNano() - started);
+			return elapsed + (Game.getTimeNano() - started);
 		}
 		// Instantiated parent clocks
 		else
@@ -114,7 +116,7 @@ public class Stopwatch
 		else if (parentTime == null)
 		{
 			paused = true;
-			elapsed += (xyz.digitalcookies.objective.GameTime.getTimeNano() - started);
+			elapsed += (Game.getTimeNano() - started);
 		}
 		// Instantiated parent clocks
 		else
@@ -129,12 +131,12 @@ public class Stopwatch
 		if (paused && isStarted)
 		{
 			paused = false;
-			// When the parent clock is the static program clock
+			// When the parent watch is the game time
 			if (parentTime == null)
 			{
-				started = xyz.digitalcookies.objective.GameTime.getTimeNano();
+				started = Game.getTimeNano();
 			}
-			// Instantiated parent clocks
+			// Instantiated parent watch
 			else
 			{
 				started = parentTime.getTimeNano();

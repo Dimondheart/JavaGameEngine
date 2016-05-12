@@ -15,8 +15,7 @@
 
 package xyz.digitalcookies.objective.gamestate;
 
-import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.HashMap;
 import xyz.digitalcookies.objective.input.InputManager;
 
 /** Base Class for a game state.
@@ -28,7 +27,7 @@ public abstract class GameState
 	protected static xyz.digitalcookies.objective.utility.Stopwatch clock;
 	
 	/** The collection of startup arguments for the next game state. */
-	protected ConcurrentHashMap<String, Object> newStateArgs;
+	protected HashMap<String, Object> newStateArgs;
 	
 	/** The Class of the next game state to transition to. */
 	private Class<? extends GameState> newState;
@@ -37,14 +36,14 @@ public abstract class GameState
 	public GameState()
 	{
 		clock = new xyz.digitalcookies.objective.utility.Stopwatch();
-		newStateArgs = new ConcurrentHashMap<String, Object>();
+		newStateArgs = new HashMap<String, Object>();
 		newState = this.getClass();
 	}
 	
 	/** Performs setup operations specific to each game state.
 	 * @param args a hash map of arguments the state can use to set up
 	 */
-	protected abstract void setupState(ConcurrentHashMap<String, Object> args);
+	protected abstract void setupState(HashMap<String, Object> args);
 	/** State-specific cycle operations. */
 	protected abstract void cycleState();
 	/** Cleanup operations specific to a game state. */
@@ -53,7 +52,7 @@ public abstract class GameState
 	/** Performs setup operations for a game state.
 	 * @param args a hash map of arguments the state can use to set up
 	 */
-	public void setup(ConcurrentHashMap<String, Object> args)
+	public void setup(HashMap<String, Object> args)
 	{
 		// Game-state-specific setup
 		setupState(args);
@@ -104,7 +103,7 @@ public abstract class GameState
 	 * game state.
 	 * @return the hash map of arguments the next state can use for setup
 	 */
-	public ConcurrentHashMap<String, Object> getNewStateArgs()
+	public HashMap<String, Object> getNewStateArgs()
 	{
 		return newStateArgs;
 	}

@@ -15,8 +15,7 @@
 
 package xyz.digitalcookies.objective.gamestate;
 
-import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.HashMap;
 import xyz.digitalcookies.objective.Subsystem;
 import xyz.digitalcookies.objective.input.InputManager;
 
@@ -41,10 +40,10 @@ public class GameStateManager extends Subsystem
 	}
 	
 	@Override
-	protected void setupSystem()
+	protected void setupSystem(HashMap<String, Object> config)
 	{
 		setNewGameState(initGameState);
-		currGS.setup(new ConcurrentHashMap<String, Object>());
+		currGS.setup(new HashMap<String, Object>());
 	}
 	
 	@Override
@@ -76,7 +75,7 @@ public class GameStateManager extends Subsystem
 		// Loop until the current state should be transitioned
 		if (currGS.isChangeStateIndicated())
 		{
-			ConcurrentHashMap<String, Object> setupArgs = currGS.getNewStateArgs();
+			HashMap<String, Object> setupArgs = currGS.getNewStateArgs();
 			// Change the game state
 			setNewGameState(currGS.getNewState());
 			// Setup the new game state

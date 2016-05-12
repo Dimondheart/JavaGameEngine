@@ -40,24 +40,13 @@ public class GraphicsResources extends ResourceHandler<BufferedImage>
 	}
 	
 	@Override
-	protected BufferedImage loadResource(File toLoad)
+	protected BufferedImage loadResource(InputStream toLoad)
 	{
-		FileInputStream fis = null;
-		// Get an input stream for the file
-		try
-		{
-			fis = new FileInputStream(toLoad);
-		}
-		catch (FileNotFoundException e)
-		{
-			return null;
-		}
-		InputStream is = new BufferedInputStream(fis);
 		BufferedImage image = null;
 		// Try to read the image
 		try
 		{
-			image = ImageIO.read(is);
+			image = ImageIO.read(toLoad);
 		}
 		catch (IOException e)
 		{

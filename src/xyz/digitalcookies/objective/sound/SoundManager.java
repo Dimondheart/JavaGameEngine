@@ -15,10 +15,11 @@
 
 package xyz.digitalcookies.objective.sound;
 
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import xyz.digitalcookies.objective.DevConfig;
+import xyz.digitalcookies.objective.Game;
 import xyz.digitalcookies.objective.Settings;
 import xyz.digitalcookies.objective.input.InputManager;
 import xyz.digitalcookies.objective.resources.SoundResources;
@@ -30,7 +31,9 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 {
 	/** Maximum number of sound effects to play at once. */
 	private static final int MAX_PLAYING_SFX = 50;
-	/** Manages sound data loaded from files. */
+	/** Manages sound data loaded from files.
+	 * TODO make this set-able by developers (custom resource format handling)
+	 */
 	private static SoundResources srm;
 	/** Queue used only for sound effects. */
 	private static volatile ConcurrentLinkedDeque<SFXEvent> sfxQueue;
@@ -42,6 +45,7 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 	private static BGM currTrack;
 	/** The last volume settings used to update the volume of playing
 	 * sounds.
+	 * TODO eliminate this
 	 */
 	private int[] currVolLvls;
 	
@@ -77,7 +81,7 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 	}
 	
 	@Override
-	protected void setupSystem()
+	protected void setupSystem(HashMap<String, Object> config)
 	{
 		System.out.println("Setting Up Sound System...");
 		// Setup queues
@@ -94,7 +98,7 @@ public class SoundManager extends xyz.digitalcookies.objective.Subsystem
 				(int) xyz.digitalcookies.objective.Settings.getSetting("SFX_VOLUME");
 		// Setup general sound resource manager
 		srm = new SoundResources();
-		srm.initialize(DevConfig.getString(DevConfig.SOUND_RES_DIR), ".wav");
+		srm.initialize((String) config.get(Game.SOUND_RES_DIR), ".wav");
 	}
 	
 	@Override

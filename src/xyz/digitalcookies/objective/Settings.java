@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /** The collection of settings that can change during a game, such as
  * volume levels, resource usage settings, etc.  The core engine settings
  * have string constants provided for them as public constants.
+ * TODO consider merging this into the Game class
  * @author Bryan Charles Bettis
  */
 public class Settings

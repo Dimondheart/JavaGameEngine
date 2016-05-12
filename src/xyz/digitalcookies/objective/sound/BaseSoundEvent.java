@@ -15,6 +15,8 @@
 
 package xyz.digitalcookies.objective.sound;
 
+import xyz.digitalcookies.objective.Game;
+
 /** Base class for all sound system events.
  * @author Bryan Charles Bettis
  */
@@ -26,7 +28,7 @@ abstract class BaseSoundEvent
 	/** Basic constructor. */
 	public BaseSoundEvent()
 	{
-		this.queueTime = xyz.digitalcookies.objective.GameTime.getTimeMS();
+		this.queueTime = (long) Game.getTimeMilli();
 	}
 	
 	/** How long this event has been queued.
@@ -34,7 +36,7 @@ abstract class BaseSoundEvent
 	 */
 	public final long getTimeInQueue()
 	{
-		return xyz.digitalcookies.objective.GameTime.getTimeMS() - queueTime;
+		return (long) (Game.getTimeMilli() - queueTime);
 	}
 	
 	/** Determines if this event has met any conditions that make

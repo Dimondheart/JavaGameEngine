@@ -15,6 +15,8 @@
 
 package xyz.digitalcookies.objective;
 
+import java.util.HashMap;
+
 /** Subsystems are some of the core systems of this game engine which each
  * handle certain aspects of the engine, such as graphics or sounds. This class
  * is used internally; it is not part of the game engine API.
@@ -71,15 +73,15 @@ public abstract class Subsystem implements Runnable
 	/** Does final setup for the system. Subclasses should perform final setup
 	 * here that will have to be run each time the game is restarted.
 	 */
-	protected abstract void setupSystem();
+	protected abstract void setupSystem(HashMap<String, Object> config);
 	
 	/** Startup specific to each subsystem. */
 	protected abstract void startSystem();
 	
 	/** Does final setup that is needed for a system before starting it. */
-	public final void setup()
+	public final void setup(HashMap<String, Object> config)
 	{
-		setupSystem();
+		setupSystem(config);
 	}
 	
 	/** Starts this subsystem. */

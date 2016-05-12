@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import xyz.digitalcookies.objective.input.gui.GUIElement;
 
 /** TODO document
+ * TODO eliminate or consider revising purpose
  * @author Bryan Charles Bettis
  */
 public class GUIMonitor

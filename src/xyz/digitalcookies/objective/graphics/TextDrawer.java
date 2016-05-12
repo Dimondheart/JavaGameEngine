@@ -19,6 +19,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 
 /** Contains a bunch of methods used to draw text to a graphics context.
+ * TODO revamp this classes static methods
  * @author Bryan Charles Bettis
  */
 public class TextDrawer

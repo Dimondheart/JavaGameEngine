@@ -16,6 +16,7 @@
 package xyz.digitalcookies.objective;
 
 /** Manages timing for the thread of an object that instantiates it.
+ * TODO improve this class
  * @author Bryan Charles Bettis
  */
 class ThreadManager

@@ -18,11 +18,13 @@ package xyz.digitalcookies.objective.input;
 import static xyz.digitalcookies.objective.input.InputManagerEvent.Type;
 
 import java.awt.Window;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import xyz.digitalcookies.objective.graphics.GraphicsManager;
 
 /** Manages all input devices (keyboard, etc.) for the main window.
+ * TODO consider removing the event-driven setup of this class
  * @author Bryan Charles Bettis
  */
 public class InputManager extends xyz.digitalcookies.objective.Subsystem
@@ -64,7 +66,7 @@ public class InputManager extends xyz.digitalcookies.objective.Subsystem
 	}
 	
 	@Override
-	protected void setupSystem()
+	protected void setupSystem(HashMap<String, Object> config)
 	{
 		System.out.println("Setting Up User Input System...");
 		// Setup the event queue
@@ -313,14 +315,12 @@ public class InputManager extends xyz.digitalcookies.objective.Subsystem
 	{
 		doClear();
 		setState(InputManagerState.PAUSED);
-		xyz.digitalcookies.objective.GameTime.pause();
 	}
 	
 	/** Resume the game to normal operation. */
 	private void doResume()
 	{
 		setState(InputManagerState.NORMAL);
-		xyz.digitalcookies.objective.GameTime.resume();
 	}
 	
 	/** Quit the game. */

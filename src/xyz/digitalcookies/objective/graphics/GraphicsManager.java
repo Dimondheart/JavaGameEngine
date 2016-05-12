@@ -18,9 +18,11 @@ package xyz.digitalcookies.objective.graphics;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
+import java.util.HashMap;
+
 import javax.swing.JFrame;
 
-import xyz.digitalcookies.objective.DevConfig;
+import xyz.digitalcookies.objective.Game;
 import xyz.digitalcookies.objective.input.InputManager;
 import xyz.digitalcookies.objective.resources.GraphicsResources;
 
@@ -36,7 +38,9 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 	private static JFrame mainWin;
 	/** The layer container for the main set of layers. */
 	private static MainLayerSetContainer mainLayers;
-	/** Manages graphics loaded from files. */
+	/** Manages graphics loaded from files.
+	 * TODO make this set-able by developers (custom resource format handling)
+	 */
 	private static GraphicsResources grm;
 	/** The current average FPS. */
 	private static double FPS = -1;
@@ -48,14 +52,14 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 	}
 	
 	@Override
-	protected void setupSystem()
+	protected void setupSystem(HashMap<String, Object> config)
 	{
 		System.out.println("Setting Up Graphics System...");
 		TextDrawer.setDefaultFont(
 				new Font(
-						DevConfig.getString(DevConfig.DEF_FONT),
+						(String) config.get(Game.DEF_FONT),
 						Font.PLAIN,
-						DevConfig.getInt(DevConfig.DEF_FONT_SIZE)
+						(int) config.get(Game.DEF_FONT_SIZE)
 						)
 				); 
 		// Cleanup any previous main window
@@ -64,20 +68,20 @@ public class GraphicsManager extends xyz.digitalcookies.objective.Subsystem
 			mainWin.dispose();
 		}
 		// Setup the main window
-		mainWin = new JFrame(DevConfig.getString(DevConfig.MAIN_WIN_TITLE));
+		mainWin = new JFrame((String) config.get(Game.MAIN_WIN_TITLE));
 		// Setup the main layer container
-		int width = DevConfig.getInt(DevConfig.INIT_MAIN_WIN_WIDTH);
-		int height = DevConfig.getInt(DevConfig.INIT_MAIN_WIN_HEIGHT);
+		int width = (int) config.get(Game.INIT_WIN_WIDTH);
+		int height = (int) config.get(Game.INIT_WIN_HEIGHT);
 		Dimension mainWinDims = new Dimension(width, height);
 		mainLayers = new MainLayerSetContainer(
 				mainWinDims,
-				DevConfig.getInt(DevConfig.NUM_MAIN_LAYERS)
+				(int) config.get(Game.NUM_LAYERS)
 				);
 		mainWin.add(mainLayers);
 		// Create the graphics resource manager
 		grm = new GraphicsResources();
 		grm.initialize(
-				DevConfig.getString(DevConfig.GRAPHICS_RES_DIR),
+				(String) config.get(Game.GRAPHICS_RES_DIR),
 				".png", ".bmp", ".jpg", ".jpeg"
 				);
 	}
